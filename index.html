@@ -183,13 +183,10 @@ const KEY = 'cc-studio-v1';
 const PASTELS = [['#FFE6D5','#C2520A'],['#D3F2E4','#1D6B4B'],['#FFE3D4','#9A4A26'],['#FDE1DA','#9E3366'],['#D8ECFC','#235B8A'],['#FFF3CC','#7D5E0A']];
 
 function defaultModules(){
+  // The program's sessions. Edit content here; tools/build-summaries.cjs builds a summary page + PDF per session from it.
   return [
     {id:'m0',num:1,title:'הקמה, חיבור לגיט ואתר תדמית ראשון',goal:'להתקין הכל, להתחבר ולבנות אתר ראשון כבר בסשן הראשון',
-      points:['התקנו את Claude במחשב','נרשמנו ל-Claude Code (מנוי Pro ומעלה)','התחברנו ל-Git ול-GitHub','ראינו דוגמה לאתר דמו','יצרנו אתר תדמית ראשוני'],
-      commands:['claude','git status','git push'],
-      tips:['תבנית לבקשה טובה: "אני רוצה [מה לשנות] באתר. המטרה: [למה]. סגנון: [צבעים / תחושה]. לפני שאתה מתחיל, תציג לי תוכנית קצרה. אל תעלה לגיט עד שאאשר."','כשהכל נראה טוב, פשוט לכתוב: "תעלה את השינויים לגיט"'],
-      homework:'להשלים באתר טקסטים, תמונות ולוגו, לבדוק איך הוא נראה בטלפון, לבקש "תעלה את השינויים לגיט", ולחבר את הריפו ל-Vercel דרך vercel.com/new.',
-      headline:'התחלנו לעבוד עם Claude Code', short:'הקמה ואתר ראשון',
+      headline:'התחלנו לעבוד עם Claude Code', short:'הקמה ואתר ראשון', product:'אתר תדמית ראשוני',
       lead:'תודה על הסשן! בסשן התקנו את Claude, חיברנו אותו ל-Git, ראינו אתר דמו לדוגמה, נרשמנו ל-Claude Code ובנינו יחד אתר תדמית ראשוני. ריכזתי כאן הכל כדי שיהיה קל להמשיך.',
       steps:[
         {t:'התקנו את אפליקציית Claude',d:'הורדנו מהאתר הרשמי, התקנו במחשב והתחברנו לחשבון.',links:['claude.com/download']},
@@ -201,46 +198,51 @@ function defaultModules(){
       next:['להשלים טקסטים, תמונות ולוגו באתר','לבדוק את האתר גם בטלפון','לבקש מ-Claude: "תעלה את השינויים לגיט"','לחבר את הריפו ל-Vercel ולפרסם (vercel.com/new)'],
       prompt:'אני רוצה [מה לשנות או להוסיף] באתר.\nהמטרה: [למה זה חשוב, מה הגולש צריך להרגיש או לעשות].\nסגנון: [צבעים / תחושה / דוגמה שאהבתי].\nלפני שאתה מתחיל, תציג לי תוכנית קצרה. אל תעלה לגיט עד שאאשר.',
       tip:'כדאי לבקש שינוי אחד בכל הודעה ולבדוק אותו בדפדפן לפני שממשיכים. ככה קל לראות מה עבד ולתקן מהר.'},
-    {id:'m1',num:2,title:'היכרות והתקנה',goal:'להבין מה זה Claude Code ולהריץ אותו בפעם הראשונה',
-      points:['מה זה Claude Code ובמה הוא שונה מצ׳אט רגיל','התקנה על המחשב והתחברות לחשבון','היכרות עם הטרמינל ועם אפליקציית הדסקטופ','הבקשה הראשונה: לתת ל-Claude לבנות משהו קטן'],
-      commands:['claude','/help','/login'],
-      tips:['אפשר לכתוב ל-Claude בעברית רגילה, בדיוק כמו לאדם','לפתוח את Claude תמיד מתוך תיקיית הפרויקט'],
-      homework:'להתקין את Claude Code, לפתוח תיקייה חדשה ולבקש ממנו לבנות דף HTML פשוט עם הודעת "שלום".'},
-    {id:'m2',num:3,title:'עבודה עם קבצים ושיחה נכונה',goal:'לנהל שיחה יעילה ולתת ל-Claude לקרוא ולערוך קבצים',
-      points:['איך מנסחים בקשה טובה: הקשר, מטרה ודוגמה','הפניה לקבצים עם @','אישור עריכות וקריאת השינויים','עצירה באמצע עם Esc ותיקון כיוון'],
-      commands:['@שם-קובץ','/clear','Esc'],
-      tips:['בקשה אחת ברורה עדיפה על חמש בקשות מעורבבות','אחרי משימה גדולה כדאי לפתוח שיחה חדשה עם /clear'],
-      homework:'לבקש מ-Claude לשפר את הדף מהשיעור הקודם: להוסיף עיצוב, תמונה וכפתור.'},
-    {id:'m3',num:4,title:'הרשאות ומצבי עבודה',goal:'לשלוט במה ש-Claude רשאי לעשות לבד',
-      points:['מה Claude שואל לפני שהוא פועל ולמה','מעבר בין מצבי עבודה עם Shift+Tab','Plan mode: לתכנן לפני שכותבים קוד','הגדרת הרשאות קבועות לפקודות בטוחות'],
-      commands:['Shift+Tab','/permissions'],
-      tips:['במשימה גדולה מתחילים ב-Plan mode ומאשרים תוכנית','לא לאשר פקודות שלא מבינים, תמיד אפשר לשאול "מה זה עושה?"'],
-      homework:'לתכנן ב-Plan mode פרויקט קטן (למשל רשימת משימות) ולאשר את התוכנית לפני הביצוע.'},
-    {id:'m4',num:5,title:'CLAUDE.md וזיכרון',goal:'ללמד את Claude על הפרויקט כדי שלא נחזור על עצמנו',
-      points:['מה זה קובץ CLAUDE.md ולמה הוא חשוב','יצירה אוטומטית עם /init','מה כדאי לכתוב בו: סגנון, כללים, פקודות','זיכרון אישי מול זיכרון של פרויקט'],
-      commands:['/init','/memory'],
-      tips:['כל פעם שמתקנים את Claude על אותו דבר פעמיים, זה סימן להוסיף כלל ל-CLAUDE.md','לשמור את הקובץ קצר וממוקד'],
-      homework:'להריץ /init בפרויקט, לקרוא את הקובץ שנוצר ולהוסיף לו 3 כללים משלך.'},
-    {id:'m5',num:6,title:'Git ו-GitHub',goal:'לשמור גרסאות ולגבות את העבודה בענן',
-      points:['מה זה Git ולמה צריך אותו','commit: נקודת שמירה עם הסבר','חיבור לריפו ב-GitHub ודחיפה (push)','לבקש מ-Claude לעשות commit בשבילך'],
-      commands:['git status','git add .','git commit -m "..."','git push'],
-      tips:['commit קטן ותכוף עדיף על אחד ענק','אפשר פשוט לכתוב ל-Claude: "תעשה commit לשינויים"'],
-      homework:'ליצור ריפו ב-GitHub, לחבר אליו את הפרויקט ולדחוף את הגרסה הראשונה.'},
-    {id:'m6',num:7,title:'העלאה לאוויר עם Vercel',goal:'להפוך את הפרויקט לאתר חי עם כתובת',
-      points:['חיבור Vercel לחשבון GitHub','ייבוא הריפו ופריסה ראשונה','עדכון אוטומטי בכל push','חיבור דומיין משלך'],
-      commands:['git push'],
-      tips:['התוכנית החינמית של Vercel מספיקה לפרויקטים אישיים','כל push לענף main מעדכן את האתר תוך דקה'],
-      homework:'להעלות את הפרויקט ל-Vercel ולשלוח לי את הקישור לאתר החי.'},
-    {id:'m7',num:8,title:'MCP, Skills ופקודות',goal:'לחבר את Claude לכלים נוספים ולהרחיב את היכולות שלו',
-      points:['מה זה MCP ואיך מחברים שרת','Skills: הוראות מוכנות למשימות חוזרות','פקודות סלאש מותאמות אישית','בחירת מודל לפי המשימה'],
-      commands:['/mcp','claude mcp add','/model'],
-      tips:['להתחיל עם חיבור אחד שימושי ולא עשרה בבת אחת','Skill טוב חוסך כתיבת אותן הוראות בכל פעם מחדש'],
-      homework:'לחבר שרת MCP אחד (למשל לדפדפן או ל-GitHub) ולהשתמש בו במשימה אמיתית.'},
-    {id:'m8',num:9,title:'עבודה מתקדמת וטיפים',goal:'לעבוד מהר יותר ולנהל פרויקטים גדולים',
-      points:['המשך שיחה קודמת וחזרה אחורה','דחיסת שיחה ארוכה עם /compact','חלוקת משימה גדולה לשלבים','בדיקה עצמית: לבקש מ-Claude לבדוק את העבודה שלו'],
-      commands:['claude -c','/resume','/compact','Esc Esc'],
-      tips:['לבקש תמיד מ-Claude להריץ ולבדוק את מה שבנה','שיחה ממוקדת אחת לכל משימה'],
-      homework:'לבנות פרויקט קטן מההתחלה ועד אתר חי, לבד, ולהביא שאלות לסשן הבא.'}
+
+    {id:'m1',num:2,title:'העמקה: סקילים, פקודות ועבודה חכמה',goal:'להכיר את הכלים שהופכים את Claude Code לעוזר שעובד בדיוק כמו שאת רוצה',
+      headline:'מכירים לעומק את Claude Code', short:'סקילים ופקודות', product:'סקיל ראשון משלך',
+      lead:'תודה על הסשן! הפעם העמקנו ביכולות של Claude Code: פקודות, זיכרון, מצב תכנון, סקילים וחיבורים לכלים חיצוניים. ריכזתי כאן הכל כדי שיהיה קל לחזור ולתרגל.',
+      steps:[
+        {t:'פקודות סלאש',d:'פקודות שמתחילות ב-/ וחוסכות זמן: ניקוי שיחה, דחיסת שיחה ארוכה, חזרה לשיחה קודמת ובחירת מודל.',links:['/clear','/compact','/resume','/model']},
+        {t:'CLAUDE.md: הזיכרון של הפרויקט',d:'קובץ שבו כותבים ל-Claude כללים קבועים: סגנון, צבעים, מה מותר ומה אסור. הפקודה /init יוצרת אותו לבד, ומאז Claude קורא אותו בכל פעם.',links:['/init','CLAUDE.md']},
+        {t:'מצב תכנון והרשאות',d:'עם Shift+Tab עוברים בין מצבי עבודה. במצב תכנון Claude קודם מציג תוכנית, ורק אחרי אישור מתחיל לבנות. ככה שולטים במה שהוא עושה לבד.',links:['Shift+Tab']},
+        {t:'סקילים (Skills)',d:'סקיל הוא "מתכון" מוכן למשימה חוזרת, למשל סיכום פגישה או יצירת פוסט. Claude משתמש בו לבד כשזה רלוונטי, או שמפעילים אותו עם / ושם הסקיל.',links:['/שם-הסקיל']},
+        {t:'יצרנו סקיל ראשון משלך',d:'ביקשנו מ-Claude לכתוב סקיל למשימה שחוזרת אצלך בעסק, ובדקנו שהוא עובד. סקיל טוב חוסך לכתוב את אותן הוראות כל פעם מחדש.'},
+        {t:'חיבורים לכלים חיצוניים',d:'דרך מחברים (MCP) Claude יכול לעבוד עם כלים כמו GitHub, Gmail או הדפדפן. מתחילים בחיבור אחד שימושי ולא בעשרה.',links:['/mcp']}],
+      have:['שליטה בפקודות הסלאש הבסיסיות','קובץ CLAUDE.md עם הכללים של הפרויקט','הבנה מתי לעבוד במצב תכנון','סקיל ראשון משלך שעובד'],
+      next:['להוסיף 3 כללים משלך ל-CLAUDE.md','להשתמש בסקיל שיצרנו במשימה אמיתית','לרשום 2 משימות חוזרות שכדאי להפוך לסקיל','לנסות חיבור אחד לכלי שאת משתמשת בו'],
+      prompt:'צור לי סקיל בשם [שם קצר באנגלית].\nהוא צריך [מה הסקיל עושה, צעד אחר צעד].\nהתוצאה צריכה להיראות כך: [דוגמה].\nלפני שאתה כותב, תציג לי תוכנית קצרה ותשאל מה חסר.',
+      tip:'כל פעם שאת מתקנת את Claude על אותו דבר פעמיים, זה סימן להוסיף כלל ל-CLAUDE.md או לבנות סקיל.'},
+
+    {id:'m2',num:3,title:'חיבורים: Vercel ו-Supabase',goal:'להעלות את האתר לאוויר ולחבר אותו למסד נתונים אמיתי',
+      headline:'מחברים את האתר ל-Vercel ול-Supabase', short:'Vercel ו-Supabase', product:'אתר חי עם מסד נתונים',
+      lead:'תודה על הסשן! חיברנו את האתר לעולם: העלינו אותו ל-Vercel עם כתובת אמיתית, וחיברנו אותו ל-Supabase כדי שיוכל לשמור מידע, למשל פניות מטופס. ריכזתי כאן את כל השלבים.',
+      steps:[
+        {t:'העלינו את האתר ל-Vercel',d:'חיברנו את Vercel לחשבון GitHub, ייבאנו את הריפו ולחצנו Deploy. מאז כל "תעלה לגיט" מעדכן את האתר החי לבד.',links:['vercel.com/new']},
+        {t:'משתני סביבה ו-Redeploy',d:'מפתחות והגדרות סודיות שומרים ב-Vercel, ב-Settings ואז ב-Environment Variables, ולא בקוד. אחרי כל שינוי במשתנים עושים Redeploy.'},
+        {t:'דומיין משלך',d:'ב-Settings ואז ב-Domains מוסיפים את הדומיין, ומעדכנים אצל חברת הדומיין את רשומות ה-DNS לפי מה ש-Vercel מראה.'},
+        {t:'פתחנו פרויקט ב-Supabase',d:'Supabase הוא מסד נתונים בענן. פתחנו פרויקט ויצרנו טבלה ראשונה, למשל טבלת פניות.',links:['supabase.com/dashboard']},
+        {t:'חיברנו את האתר ל-Supabase',d:'את כתובת הפרויקט ואת המפתח הציבורי שמנו כמשתני סביבה ב-Vercel. את המפתח הסודי (service_role) לא שמים אף פעם באתר עצמו.'},
+        {t:'טופס ששומר פניות',d:'ביקשנו מ-Claude טופס יצירת קשר ששומר כל פנייה בטבלה, והפעלנו הרשאות (RLS) כדי שזרים לא יוכלו לקרוא את הנתונים.'}],
+      have:['אתר חי בכתובת vercel.app','עדכון אוטומטי של האתר בכל העלאה לגיט','פרויקט ב-Supabase עם טבלה ראשונה','טופס באתר ששומר פניות'],
+      next:['לחבר דומיין משלך ב-Vercel','לשלוח לעצמך פנייה מהטופס ולבדוק שהיא נשמרה','לבדוק שהאתר נראה טוב בטלפון','לחשוב איזה מידע נוסף כדאי לשמור'],
+      prompt:'אני רוצה שהאתר ישמור [איזה מידע] ב-Supabase.\nהשדות: [שם, טלפון, מייל, הודעה...].\nמי יכול לראות את המידע: [רק אני / כל מי שמחובר].\nתסביר לי אילו משתני סביבה להוסיף ב-Vercel, ואל תכתוב מפתחות סודיים בקוד.',
+      tip:'אף פעם לא להדביק מפתח סודי בצ\'אט, בקוד או בגיט. מפתחות שומרים רק במשתני סביבה ב-Vercel.'},
+
+    {id:'m3',num:4,title:'מבנה האתר וממשק ניהול לבעל העסק',goal:'להתאים את האתר לתוכן של העסק ולבנות ממשק שבו בעל העסק מנהל אותו בעצמו',
+      headline:'בונים ממשק ניהול שמנהל את האתר', short:'מבנה האתר וממשק ניהול', product:'ממשק ניהול לאתר',
+      lead:'תודה על הסשן! התאמנו את מבנה האתר לתוכן שהעסק צריך, ובנינו ממשק ניהול שבו בעל העסק מוסיף ומוריד תוכן בעצמו, עוקב אחרי הגלישות ומאשר פניות ותגובות. ריכזתי כאן את כל השלבים.',
+      steps:[
+        {t:'התאמנו את מבנה האתר לתוכן',d:'מיפינו איזה תוכן העסק צריך (שירותים, גלריה, המלצות, מאמרים) ובנינו את הדפים והאזורים סביבו, כך שכל תוכן יושב במקום ברור.',links:['Shift+Tab']},
+        {t:'התוכן עבר למסד הנתונים',d:'במקום לכתוב את התוכן בתוך הקוד, שמרנו אותו בטבלאות ב-Supabase. ככה אפשר לשנות אותו בלי לגעת בקוד ובלי לבקש מ-Claude.',links:['supabase.com/dashboard']},
+        {t:'ממשק ניהול נעול לבעל העסק',d:'בנינו אזור ניהול עם שם משתמש וסיסמה, שרק בעל העסק נכנס אליו. את הסיסמה שמרנו כמשתנה סביבה ב-Vercel.'},
+        {t:'הוספה, עריכה והסרה של תוכן',d:'מהממשק אפשר להוסיף שירות, להחליף תמונה, לערוך טקסט או להסתיר פריט, והשינוי מופיע באתר מיד.'},
+        {t:'מעקב אחרי גלישות',d:'הפעלנו מעקב כניסות (למשל Vercel Analytics), כדי לראות כמה אנשים נכנסים, לאילו דפים ומאיפה הם מגיעים.',links:['Vercel Analytics']},
+        {t:'אישור לפני פרסום',d:'פניות, המלצות ותגובות שמגיעות מהאתר נכנסות קודם לממשק, ומופיעות באתר רק אחרי שבעל העסק מאשר אותן.'}],
+      have:['אתר שהמבנה שלו בנוי סביב התוכן של העסק','תוכן שנשמר ב-Supabase ולא בקוד','ממשק ניהול נעול שבו מוסיפים ומורידים תוכן','מעקב גלישות ואישור פניות לפני פרסום'],
+      next:['להכניס דרך הממשק את כל התוכן האמיתי של העסק','לאשר או לדחות את הפניות וההמלצות שמחכות','להציץ פעם בשבוע בנתוני הגלישה','לרשום מה עוד חסר בממשק לסשן הבא'],
+      prompt:'אני רוצה שבממשק הניהול אפשר יהיה [להוסיף / לערוך / לאשר] [איזה תוכן].\nזה צריך לעבוד כך: [מה קורה, צעד אחר צעד].\nמה יופיע באתר אחרי השינוי: [תיאור].\nלפני שאתה מתחיל, תציג לי תוכנית קצרה. אל תעלה לגיט עד שאאשר.',
+      tip:'כל דבר שבעל העסק ירצה לשנות בעצמו (טקסט, תמונה, מחיר) כדאי לשמור במסד הנתונים ולא בקוד. ככה הוא לא תלוי באף אחד.'}
   ];
 }
 function defaults(){
@@ -248,7 +250,7 @@ function defaults(){
     students:[],sessions:[],modules:defaultModules(),mails:[]};
 }
 function load(){
-  try{const d=JSON.parse(localStorage.getItem(KEY)); if(d){const b=defaults(); return {...b,...d,settings:{...b.settings,...(d.settings||{})}};}}catch(e){}
+  try{const d=JSON.parse(localStorage.getItem(KEY)); if(d){const b=defaults(); return {...b,...d,modules:defaultModules(),settings:{...b.settings,...(d.settings||{})}};}}catch(e){}
   return defaults();
 }
 let db = load();
@@ -274,6 +276,9 @@ const sessionById = id => db.sessions.find(s=>s.id===id);
 const moduleById = id => db.modules.find(m=>m.id===id);
 const sortedModules = () => [...db.modules].sort((a,b)=>a.num-b.num);
 const sessTitle = s => s.title || (moduleById(s.moduleId)?.title) || 'סשן';
+// each program topic has its own public summary page and PDF under /guide (built by tools/build-summaries.cjs)
+const summaryId = s => (s && defaultModules().some(m=>m.id===s.moduleId)) ? s.moduleId : '';
+const summaryFiles = s => { const id=summaryId(s); return id ? {page:location.origin+'/guide/summary-'+id+'.html', pdf:location.origin+'/guide/summary-'+id+'.pdf', name:'סיכום-סשן-'+(moduleById(id)?.num||'')+'.pdf'} : null; };
 function endTime(s){ if(!s.time) return ''; const [h,m]=s.time.split(':').map(Number); const e=h*60+m+(+s.duration||0); return String(Math.floor(e/60)%24).padStart(2,'0')+':'+String(e%60).padStart(2,'0'); }
 const timeRange = s => s.time ? `${s.time}–${endTime(s)}` : '';
 const hrs = min => { const h=(+min||0)/60; return (Math.round(h*100)/100).toLocaleString('he-IL')+(h===1?' שעה':' שעות'); };
@@ -310,6 +315,7 @@ const NAV = [
   ['sessions','סשנים','◷','var(--sky)'],
   ['students','לקוחות','☺','var(--pink)'],
   ['mail','דיוורים','✉','var(--peach)'],
+  ['billing','תשלומים','₪','var(--mint)'],
 ];
 function renderNav(route){
   const pend = pendingSummaries().reduce((a,x)=>a+x.miss.length,0);
@@ -318,7 +324,7 @@ function renderNav(route){
 }
 function route(){
   const [r,arg] = (location.hash.slice(1)||'sessions').split('/');
-  const views = {students:vStudents,student:vStudent,sessions:vSessions,mail:vMail};
+  const views = {students:vStudents,student:vStudent,sessions:vSessions,mail:vMail,billing:vBilling};
   const v = views[r] || vSessions;
   renderNav(r);
   $('#main').innerHTML = v(arg);
@@ -420,6 +426,44 @@ function vSessions(){
   (planned.length?`<div class="card" style="margin-bottom:18px"><h3>📅 מתוכננים</h3><div class="list">${planned.map(sessionItem).join('')}</div></div>`:'') +
   (done.length?`<div class="card"><h3>✓ הועברו</h3><div class="list">${done.map(s=>sessionItem(s).replace('<button class="btn sm ghost" data-act="editSession"', `${s.studentIds.length?`<button class="btn sm ${s.studentIds.some(id=>!summarySent(s,id))?'pri':''}" data-act="mailSession" data-id="${s.id}">💌 ${s.studentIds.some(id=>!summarySent(s,id))?'שליחת סיכום':'שליחה שוב'}</button>`:''}<button class="btn sm ghost" data-act="editSession"`)).join('')}</div></div>`:'') +
   (!planned.length&&!done.length?`<div class="card empty"><div class="big">☕</div>${db.sessions.length?"אין סשנים להצגה":"עוד אין סשנים. מתחילים בהוספת לקוח, ואז סשן."}<div class="row" style="justify-content:center;margin-top:12px">${db.students.length?"":'<button class="btn" data-act="newStudent">+ לקוח חדש</button>'}<button class="btn pri" data-act="newSession">+ סשן חדש</button>${db.sessions.length||db.students.length?"":'<button class="btn ghost" data-act="demo">טעינת נתוני דוגמה</button>'}</div></div>`:'');
+}
+
+
+let billMonth = 'all';
+function vBilling(){
+  const HMs = m => { const [y,mo]=m.split('-').map(Number); return HM[mo-1]+' '+y; };
+  const months = [...new Set(db.sessions.filter(s=>s.status==='done').map(s=>s.date.slice(0,7)))].sort().reverse();
+  if(billMonth!=='all' && !months.includes(billMonth)) billMonth='all';
+  const inM = s => s.status==='done' && (billMonth==='all' || s.date.startsWith(billMonth));
+  // one line per client per session
+  const lines = [];
+  db.sessions.filter(inM).forEach(s=>s.studentIds.forEach(id=>{ const st=student(id); if(st) lines.push({s,st,price:+s.price||0,paid:!!s.paid?.[id]}); }));
+  const charged = lines.reduce((a,l)=>a+l.price,0), paid = lines.filter(l=>l.paid).reduce((a,l)=>a+l.price,0);
+  const open = lines.filter(l=>!l.paid).sort((a,b)=>a.s.date.localeCompare(b.s.date));
+  const byClient = db.students.map(st=>{ const ls=lines.filter(l=>l.st.id===st.id); const c=ls.reduce((a,l)=>a+l.price,0), p=ls.filter(l=>l.paid).reduce((a,l)=>a+l.price,0); return {st,n:ls.length,c,p,bal:c-p}; })
+    .filter(r=>r.n).sort((a,b)=>b.bal-a.bal || a.st.name.localeCompare(b.st.name));
+  return header('תשלומים', billMonth==='all'?'כל הסשנים שהועברו':'סשנים שהועברו ב'+HMs(billMonth)) +
+  `<div class="row" style="margin-bottom:18px"><div class="tabs">${[['all','הכל'],...months.slice(0,6).map(m=>[m,HMs(m)])].map(([k,l])=>`<button class="${billMonth===k?'on':''}" onclick="billMonth='${k}';rerender()">${l}</button>`).join('')}</div></div>
+  <div class="grid g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="lbl">סה״כ חויב</div><div class="val">${money(charged)}</div><div class="sub">${lines.length} סשנים</div></div>
+    <div class="kpi k2"><div class="lbl">שולם</div><div class="val">${money(paid)}</div><div class="sub">${lines.length-open.length} סשנים</div></div>
+    <div class="kpi k4"><div class="lbl">ממתין לתשלום</div><div class="val">${money(charged-paid)}</div><div class="sub">${open.length} סשנים</div></div>
+    <div class="kpi k3"><div class="lbl">לקוחות עם יתרה</div><div class="val">${byClient.filter(r=>r.bal>0).length}</div><div class="sub">מתוך ${byClient.length}</div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>⏳ ממתינים לתשלום</h3>
+      ${open.length?`<table class="tb"><thead><tr><th>תאריך</th><th>לקוח</th><th class="hide-m">נושא</th><th>סכום</th><th></th></tr></thead><tbody>
+      ${open.map(l=>`<tr><td class="num">${fdate(l.s.date)}</td><td><a href="#student/${l.st.id}" style="text-decoration:none;font-weight:600">${esc(l.st.name)}</a></td><td class="hide-m small muted">${esc(sessTitle(l.s))}</td><td><b>${money(l.price)}</b></td>
+        <td><button class="btn sm mint" onclick="togglePaid('${l.s.id}','${l.st.id}',true)">✓ שולם</button></td></tr>`).join('')}</tbody></table>`
+      :'<div class="empty small"><div class="big">🌿</div>הכל שולם, אין תשלומים פתוחים</div>'}
+    </div>
+    <div class="card"><h3>👤 לפי לקוח</h3>
+      ${byClient.length?`<div class="list">${byClient.map(r=>`<div class="item">${avatar(r.st)}<div class="grow"><div class="t">${esc(r.st.name)}</div><div class="s">${r.n} סשנים · שולם ${money(r.p)} מתוך ${money(r.c)}</div></div>
+        ${r.bal>0?`<span class="badge b-peach">יתרה ${money(r.bal)}</span><button class="btn sm" data-act="payAll" data-id="${r.st.id}">✓ הכל שולם</button>`:'<span class="badge b-mint">הכל שולם</span>'}</div>`).join('')}</div>`
+      :'<div class="empty small">עוד אין סשנים שהועברו</div>'}
+    </div>
+  </div>
+  <div class="hint" style="margin-top:14px">המחיר נקבע בכל סשן (בעריכת הסשן). אפשר לסמן תשלום גם מדף הלקוח.</div>`;
 }
 
 /* ============ modals ============ */
@@ -536,7 +580,7 @@ function vMail(){
         <div class="muted small" style="margin-top:6px">אפשר כמה כתובות עם פסיק ביניהן. למשל לעצמך, לבדיקה.</div></div>
       <div class="field"><label>נושא המייל</label><input class="in" id="m_subject" value="${esc(mail.subject)}" oninput="mail.subject=this.value;mail.subjectEdited=true"></div>
       <div class="field"><label>מילה אישית (לא חובה)</label><textarea class="in" id="m_note" placeholder="היה כיף לעבוד איתך היום..." oninput="mail.note=this.value;mailPreview()">${esc(mail.note)}</textarea></div>
-      <div class="attach">📎 מצורף: <b>סיכום-סשן.pdf</b></div>
+      ${summaryFiles(sess)?`<div class="attach">📎 מצורף: <b>${esc(summaryFiles(sess).name)}</b></div>`:'<div class="muted small">לסשן בנושא חופשי אין קובץ PDF מצורף</div>'}
       <div class="list" style="gap:8px;margin-top:14px">
         <button class="btn pri" style="justify-content:center;padding:13px;font-size:16px" id="resendBtn" onclick="sendResend()">💌 שליחת הסיכום</button>
         <button class="btn ghost sm" style="justify-content:center" onclick="markSent()">כבר שלחתי בדרך אחרת · סימון כנשלח</button>
@@ -615,8 +659,7 @@ function buildMail(recOverride){
     ${m.prompt?E.h2('להמשך העבודה: מבנה של פרומפט טוב')+E.prompt(m.prompt):''}
     ${m.tip?E.tip(m.tip):(m.tips?.length?E.tip(m.tips[0]):'')}
     ${nextSess?`<div style="background:#FFF8DE;border:1px solid #F2D46B;border-radius:12px;padding:12px 16px;font-size:15px;color:${C.ink};margin-top:14px">📅 <b>הסשן הבא:</b> ${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}</div>`:''}
-    ${E.button(location.origin+'/guide/summary.html','לצפייה בסיכום באתר ←')}
-    <div style="font-size:13px;color:${C.muted};margin-top:8px">📎 הסיכום מצורף גם כקובץ PDF</div>
+    ${summaryFiles(s)?E.button(summaryFiles(s).page,'לצפייה בסיכום באתר ←')+`<div style="font-size:13px;color:${C.muted};margin-top:8px">📎 הסיכום מצורף גם כקובץ PDF</div>`:''}
     ${E.sign()}`;
   return {subject, html:E.wrap(html)};
 }
@@ -645,7 +688,8 @@ async function sendResend(){
   const n = withMail.length + extras.length;
   if(!n) return toast('לנמענים שנבחרו אין כתובת מייל');
   if(!confirm(`לשלוח ${n===1?'מייל אחד':n+' מיילים'} עכשיו?\n\n${[...withMail.map(s=>s.name+' <'+s.email+'>'), ...extras].join('\n')}`)) return;
-  const pack = (to, b) => ({to:[to],subject:mail.subjectEdited? mail.subject : b.subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, attachments:[{filename:'סיכום-סשן.pdf',path:location.origin+'/guide/session-summary.pdf'}]});
+  const pack = (to, b) => ({to:[to],subject:mail.subjectEdited? mail.subject : b.subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, ...(files?{attachments:[{filename:files.name,path:files.pdf}]}:{})});
+  const files = summaryFiles(sessionById(mail.sessionId));
   const general = buildMail([]);
   const emails = [...withMail.map(s=>pack(s.email, buildMail([s]))), ...extras.map(x=>pack(x, general))];
   const btn=$('#resendBtn'); if(btn){ btn.disabled=true; btn.textContent='בשליחה...'; }
@@ -662,6 +706,7 @@ function unlogMail(id){ db.mails=db.mails.filter(m=>m.id!==id); save(); rerender
 /* ============ actions ============ */
 const ACTIONS = {
   newStudent:()=>studentForm(),
+  payAll:id=>{ if(!confirm('לסמן את כל הסשנים של הלקוח כשולמו?')) return; db.sessions.forEach(s=>{ if(s.status==='done'&&s.studentIds.includes(id)&&(billMonth==='all'||s.date.startsWith(billMonth))){ s.paid=s.paid||{}; s.paid[id]=true; } }); save(); rerender(); toast('סומן כשולם ✓'); },
   editStudent:id=>studentForm(student(id)),
   newSession:id=>sessionForm({},id),
   editSession:id=>sessionForm(JSON.parse(JSON.stringify(sessionById(id)))),
@@ -689,14 +734,14 @@ function loadDemo(){
     mk(-49,'x1',0,'18:00','m1',['d4'],'done',['d4']),
     mk(-42,'x2',0,'18:00','m2',['d4'],'done',['d4']),
     mk(-35,'x3',0,'18:00','m3',['d4'],'done',['d4']),
-    mk(-28,'x4',0,'18:00','m4',['d4'],'done',['d4']),
+    mk(-28,'x4',0,'18:00','m0',['d4'],'done',['d4']),
     mk(-21,'x5',0,'20:00','m1',['d1','d2'],'done',['d1','d2']),
     mk(-14,'x6',0,'20:00','m2',['d1','d2'],'done',['d1']),
     mk(-7,'x7',0,'20:00','m3',['d1','d2'],'done',[] ,{highlights:['תכננו ב-Plan mode את תיק העבודות של נועה','עברנו על מצבי ההרשאות והגדרנו הרשאות קבועות','יוסי בנה טופס הזמנה ראשון']}),
     mk(-3,'x8',0,'10:00','m1',['d3'],'done',['d3']),
-    mk(-14,'x9',0,'18:00','m5',['d4'],'done',['d4']),
-    mk(-10,'x10',0,'18:00','m6',['d4'],'done',[]),
-    mk(2,'x11',0,'20:00','m4',['d1','d2'],'planned',[]),
+    mk(-14,'x9',0,'18:00','m2',['d4'],'done',['d4']),
+    mk(-10,'x10',0,'18:00','m3',['d4'],'done',[]),
+    mk(2,'x11',0,'20:00','m0',['d1','d2'],'planned',[]),
     mk(4,'x12',0,'10:00','m2',['d3'],'planned',[]),
   ];
   db.sessions.forEach(s=>{ if(s.id==='x1'||s.id==='x2') s.date=dayOffset(s.id==='x1'?-70:-63); if(s.id==='x3') s.date=dayOffset(-56); if(s.id==='x4') s.date=dayOffset(-45); });
