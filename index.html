@@ -229,7 +229,7 @@ function defaultModules(){
   ];
 }
 function defaults(){
-  return {settings:{instructor:'',business:'ספיד אוטומציות',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:'',guide:''},
+  return {settings:{instructor:'',business:'ספיד אוטומציות',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:'',guide:'',program:'דיגיטל בספיד: אתר תדמית ומערכת ניהול חכמה'},
     students:[],sessions:[],modules:defaultModules(),mails:[]};
 }
 function load(){
@@ -510,7 +510,8 @@ function vSettings(){
   return header('הגדרות', 'הפרטים האלה מופיעים בחתימה של כל מייל') +
   `<div class="grid g2"><div class="card"><h3>👩‍🏫 פרטי העסק</h3>
     <div class="f2"><div class="field"><label>שם המנחה</label><input class="in" id="s_instructor" value="${esc(S.instructor)}" placeholder="השם שלך"></div>
-    <div class="field"><label>שם העסק / הסדנה</label><input class="in" id="s_business" value="${esc(S.business)}"></div>
+    <div class="field"><label>שם העסק</label><input class="in" id="s_business" value="${esc(S.business)}"></div>
+    <div class="field" style="grid-column:1/-1"><label>שם התוכנית (מופיע בכותרת של כל מייל)</label><input class="in" id="s_program" value="${esc(S.program)}"></div>
     <div class="field"><label>המייל שלך</label><input class="in" id="s_email" value="${esc(S.email)}" dir="ltr" placeholder="you@gmail.com"></div>
     <div class="field"><label>טלפון</label><input class="in" id="s_phone" value="${esc(S.phone)}" dir="ltr"></div>
     <div class="field"><label>מחיר ברירת מחדל לסשן (₪)</label><input class="in" id="s_price" type="number" value="${esc(S.price)}"></div>
@@ -682,7 +683,7 @@ function mailPreview(){
 /* email building blocks: tables + inline styles so it survives pasting into Gmail */
 const E = {
   font:"font-family:Arial,'Segoe UI',Helvetica,sans-serif;",
-  wrap(inner){ return `<div dir="rtl" style="background:#FBF5F0;padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #F1E5DB;direction:rtl;text-align:right"><tr><td style="padding:18px 32px 14px;border-top:5px solid #F26A12;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="40" height="37" style="display:block;width:40px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:16px;font-weight:bold;color:#1E1B1A">${esc(db.settings.business||'')}</td></tr></table></td></tr><tr><td style="padding:0">${inner}</td></tr></table></div>`; },
+  wrap(inner){ return `<div dir="rtl" style="background:#FBF5F0;padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #F1E5DB;direction:rtl;text-align:right"><tr><td style="padding:18px 32px 14px;border-top:5px solid #F26A12;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="40" height="37" style="display:block;width:40px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:16px;font-weight:bold;color:#1E1B1A">${esc(db.settings.business||'')}${db.settings.program?`<div style="font-size:12.5px;font-weight:normal;color:#E8620C;margin-top:2px">${esc(db.settings.program)}</div>`:''}</td></tr></table></td></tr><tr><td style="padding:0">${inner}</td></tr></table></div>`; },
   logo(){ return new URL('logo.png', location.href).href; },
   hero(kicker,title,sub,bg='#FFE8D6',fg='#A2440A'){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};padding:32px 32px 28px;text-align:right">
      <div style="font-size:13px;color:${fg};opacity:.8;font-weight:bold;letter-spacing:.3px">${kicker}</div>
@@ -760,9 +761,10 @@ function buildMail(recOverride){
     return {subject, html:E.wrap(html)};
   }
   // welcome
-  const subject = `ברוכים הבאים ל${S.business||'סדנת Claude Code'}! 🌷`;
-  let html = E.hero('ברוכים הבאים', 'מתחילים ללמוד Claude Code ✨', 'שמחה מאוד שהצטרפת. הנה כל מה שצריך לדעת לפני שמתחילים.','#FDE6DF','#B0412C')
-    + E.p(`${greet(rec)}<br>Claude Code הוא עוזר שכותב קוד יחד איתך. מתארים לו במילים מה רוצים לבנות, והוא בונה, מסביר ומתקן. במפגשים נלמד צעד אחר צעד, בלי צורך בניסיון קודם בתכנות.`)
+  const subject = `ברוכים הבאים ל${S.program||S.business||'סדנת Claude Code'}! 🌷`;
+  let html = E.hero('ברוכים הבאים', esc(S.program||'מתחילים ללמוד Claude Code ✨'), 'שמחה מאוד שהצטרפת. הנה כל מה שצריך לדעת לפני שמתחילים.','#FDE6DF','#B0412C')
+    + E.p(`${greet(rec)}<br>בתוכנית נבנה יחד את המעטפת הדיגיטלית של העסק: אתר תדמית, ניהול ועדכון שלו, ומערכת ניהול חכמה שמחברת בין האתר למייל. את הכל נעשה עם Claude Code.`)
+    + E.p(`Claude Code הוא עוזר שכותב קוד יחד איתך. מתארים לו במילים מה רוצים לבנות, והוא בונה, מסביר ומתקן. במפגשים נלמד צעד אחר צעד, בלי צורך בניסיון קודם בתכנות.`)
     + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
     + E.box('🗺','מה נלמד בתוכנית',sortedModules().map(m=>`<div style="padding:3px 0"><b style="color:#E8620C">${m.num}.</b>&nbsp; ${esc(m.title)}</div>`).join(''),'#FFF1E6','#FFB27A')
     + E.box('🎒','לפני הסשן הראשון',E.ul(['לפתוח חשבון ב-claude.ai (מנוי Pro ומעלה כולל את Claude Code)','להוריד את אפליקציית Claude לדסקטופ','לחשוב על רעיון קטן שהייתם רוצים לבנות']),'#FFF8DE','#F2D46B')
@@ -845,7 +847,7 @@ const ACTIONS = {
   editModule:id=>moduleForm(id?moduleById(id):null),
   resetModules:()=>{ if(!confirm('לשחזר את תוכנית הלימוד המקורית? שינויים שעשית בנושאים יימחקו.')) return; db.modules=defaultModules(); save(); rerender(); },
   savePass:()=>{ try{ localStorage.setItem(PASS_KEY,val('s_pass')); }catch(e){} testPass(); },
-  saveSettings:()=>{ ['instructor','business','email','phone','site','guide','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
+  saveSettings:()=>{ ['instructor','business','program','email','phone','site','guide','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
   exportData:()=>{ const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`claude-studio-backup-${todayISO()}.json`; a.click(); },
   demo:()=>{ if((db.students.length||db.sessions.length) && !confirm('זה יחליף את הנתונים הקיימים בנתוני דוגמה. להמשיך?')) return; loadDemo(); },
   wipe:()=>{ if(!confirm('למחוק את כל הנתונים? כדאי להוריד גיבוי קודם.')) return; if(!confirm('בטוח? אי אפשר לבטל את זה.')) return; db=defaults(); save(); location.hash='dashboard'; rerender(); },
