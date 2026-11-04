@@ -656,24 +656,24 @@ function mailPreview(){
 /* email building blocks: tables + inline styles, in the design of the session-summary page */
 const C = {orange:'#FF6B0F', orangeSoft:'#FFF1E7', orangeLine:'#FFD3B5', ink:'#141414', ink2:'#3B3B3B', muted:'#6E6E6E', line:'#ECE7E2', bg:'#FBF9F7', ok:'#1F9D63', okSoft:'#E8F7EF'};
 const E = {
-  font:"font-family:Heebo,Arial,'Segoe UI',Helvetica,sans-serif;",
+  font:"font-family:Heebo,'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Hebrew',Roboto,'Noto Sans Hebrew','Helvetica Neue',Arial,sans-serif;",
   logo(){ return new URL('/logo.png', location.href).href; },
   wrap(inner){ return `<div dir="rtl" style="background:${C.bg};padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid ${C.line};direction:rtl;text-align:right">
     <tr><td style="padding:20px 30px 16px;border-bottom:2px solid ${C.ink}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="vertical-align:middle;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="36" style="display:block;width:36px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:18px;font-weight:800;color:${C.ink}">ספיד <span style="color:${C.orange}">Automation</span></td></tr></table></td>
+      <td style="vertical-align:middle;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="36" style="display:block;width:36px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:18px;font-weight:700;color:${C.ink}">ספיד <span style="color:${C.orange}">Automation</span></td></tr></table></td>
       <td style="vertical-align:middle;text-align:left;font-size:13px;font-weight:700;color:${C.muted}">סיכום סשן</td></tr></table></td></tr>
-    <tr><td style="padding:0 30px 26px;text-align:right">${inner}</td></tr></table></div>`; },
-  h2(t){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0 12px"><tr><td style="width:6px;background:${C.orange};border-radius:3px">&nbsp;</td><td style="padding-right:10px;font-size:19px;font-weight:800;color:${C.ink}">${t}</td></tr></table>`; },
+    <tr><td style="padding:0 30px 26px;text-align:right;${E.font}">${inner}</td></tr></table></div>`; },
+  h2(t){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0 12px"><tr><td style="width:6px;background:${C.orange};border-radius:3px">&nbsp;</td><td style="padding-right:10px;font-size:19px;font-weight:700;color:${C.ink}">${t}</td></tr></table>`; },
   meta(items){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${items.map(([l,v],i)=>`<td style="width:${Math.floor(100/items.length)}%;padding-left:${i<items.length-1?8:0}px;vertical-align:top"><div style="background:#ffffff;border:1px solid ${C.line};border-radius:14px;padding:11px 14px;text-align:right"><div style="font-size:12px;color:${C.muted};font-weight:700">${l}</div><div style="font-size:16px;font-weight:700;color:${C.ink};margin-top:2px">${v}</div></div></td>`).join('')}</tr></table>`; },
   steps(items){ return items.map((x,i)=>`<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px"><tr>
-      <td style="width:46px;vertical-align:top"><div style="width:34px;height:34px;line-height:34px;border-radius:50%;background:${C.orange};color:#ffffff;font-weight:800;font-size:15px;text-align:center">${i+1}</div></td>
+      <td style="width:46px;vertical-align:top"><div style="width:34px;height:34px;line-height:34px;border-radius:50%;background:${C.orange};color:#ffffff;font-weight:700;font-size:15px;text-align:center">${i+1}</div></td>
       <td style="background:#ffffff;border:1px solid ${C.line};border-radius:14px;padding:11px 15px;text-align:right">
         <div style="font-size:16px;font-weight:700;color:${C.ink}">${esc(x.t)}</div>
         ${x.d?`<div style="font-size:14px;line-height:1.65;color:${C.ink2};margin-top:2px">${esc(x.d)}</div>`:''}
         ${x.links?.length?`<div style="margin-top:6px">${x.links.map(l=>`<span style="display:inline-block;direction:ltr;font-size:12.5px;background:${C.orangeSoft};border:1px solid ${C.orangeLine};color:#B4520A;border-radius:99px;padding:1px 10px;margin-left:4px">${esc(l)}</span>`).join('')}</div>`:''}
       </td></tr></table>`).join(''); },
   lists(have,next){
-    const col=(title,items,mark,color)=>`<div style="background:#ffffff;border:1px solid ${C.line};border-radius:14px;padding:13px 16px;text-align:right"><div style="font-size:15px;font-weight:700;color:${C.ink};margin-bottom:6px">${title}</div>${items.map(t=>`<div style="font-size:14px;line-height:1.6;color:${C.ink2};padding:2px 0"><span style="color:${color};font-weight:800">${mark}</span>&nbsp; ${esc(t)}</div>`).join('')}</div>`;
+    const col=(title,items,mark,color)=>`<div style="background:#ffffff;border:1px solid ${C.line};border-radius:14px;padding:13px 16px;text-align:right"><div style="font-size:15px;font-weight:700;color:${C.ink};margin-bottom:6px">${title}</div>${items.map(t=>`<div style="font-size:14px;line-height:1.6;color:${C.ink2};padding:2px 0"><span style="color:${color};font-weight:700">${mark}</span>&nbsp; ${esc(t)}</div>`).join('')}</div>`;
     const cols=[have.length?col('מה יש לך עכשיו',have,'✓',C.ok):'', next.length?col('הצעדים הבאים',next,'☐',C.orange):''].filter(Boolean);
     if(!cols.length) return '';
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px"><tr>${cols.map((c,i)=>`<td style="width:${100/cols.length}%;vertical-align:top;padding-left:${i<cols.length-1?10:0}px">${c}</td>`).join('')}</tr></table>`; },
@@ -690,9 +690,9 @@ const E = {
     const items = nm ? (nm.steps||[]).slice(0,4).map(x=>x.t) : [];
     return `<div style="background:#FFF8DE;border:1px solid #F2D46B;border-radius:14px;padding:14px 18px;margin-top:16px;text-align:right">
       <div style="font-size:13px;font-weight:700;color:#9A7410">📅 הסשן הבא · ${when}</div>
-      <div style="font-size:17px;font-weight:800;color:${C.ink};margin-top:4px">${nm?`סשן ${nm.num}: `:''}${esc(title)}</div>
+      <div style="font-size:17px;font-weight:700;color:${C.ink};margin-top:4px">${nm?`סשן ${nm.num}: `:''}${esc(title)}</div>
       ${nm?.goal?`<div style="font-size:14px;line-height:1.6;color:${C.ink2};margin-top:2px">${esc(nm.goal)}</div>`:''}
-      ${items.length?`<div style="font-size:14px;color:${C.ink};margin-top:8px;font-weight:700">מה נעשה:</div>${items.map(t=>`<div style="font-size:14px;line-height:1.6;color:${C.ink2};padding:1px 0"><span style="color:${C.orange};font-weight:800">←</span>&nbsp; ${esc(t)}</div>`).join('')}`:''}
+      ${items.length?`<div style="font-size:14px;color:${C.ink};margin-top:8px;font-weight:700">מה נעשה:</div>${items.map(t=>`<div style="font-size:14px;line-height:1.6;color:${C.ink2};padding:1px 0"><span style="color:${C.orange};font-weight:700">←</span>&nbsp; ${esc(t)}</div>`).join('')}`:''}
     </div>`; },
   button(href,label){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px"><tr><td style="background:${C.orange};border-radius:12px"><a href="${esc(href)}" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px">${label}</a></td></tr></table>`; },
   sign(){ const S=db.settings; return `<div style="margin-top:26px;padding-top:16px;border-top:1px solid ${C.line};font-size:14.5px;color:${C.ink2};line-height:1.7">
@@ -700,8 +700,8 @@ const E = {
      <div style="font-weight:700;color:${C.ink};margin-top:6px">${S.instructor?esc(S.instructor)+' | ':''}ספיד Automation</div>
      <div style="font-size:13px;color:${C.muted}">שאלות? אפשר פשוט לענות למייל הזה.</div></div>`; },
 };
-// full email document: loads Heebo where the mail app allows web fonts (Apple Mail, iPhone); Gmail and Outlook fall back to Arial
-function emailDoc(inner){ return `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&display=swap" rel="stylesheet"><style>body,table,td,div,a,span{font-family:Heebo,Arial,Helvetica,sans-serif}</style></head><body style="margin:0;padding:0;background:#FBF9F7">${inner}</body></html>`; }
+// full email document: loads Heebo where the mail app allows web fonts (Apple Mail, iPhone); Gmail and Outlook fall back to the reader's modern system font (Segoe UI, San Francisco, Roboto)
+function emailDoc(inner){ return `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&display=swap" rel="stylesheet"><style>body,table,td,div,a,span{font-family:Heebo,'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Hebrew',Roboto,'Noto Sans Hebrew','Helvetica Neue',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:#FBF9F7">${inner}</body></html>`; }
 function greet(rec){ return rec.length===1 ? `היי ${esc(firstName(rec[0].name))},` : rec.length ? 'היי לכולם,' : 'היי,'; }
 function buildMail(recOverride){
   const rec = recOverride || mailRecipients();
@@ -716,7 +716,7 @@ function buildMail(recOverride){
   const headline = m.headline
     ? esc(m.headline).replace('Claude Code',`<span style="color:${C.orange}">Claude Code</span>`)
     : `סיכום הסשן: <span style="color:${C.orange}">${esc(sessTitle(s))}</span>`;
-  const html = `<div style="font-size:28px;line-height:1.25;font-weight:800;color:${C.ink};margin:24px 0 8px">${headline}</div>
+  const html = `<div style="font-size:28px;line-height:1.25;font-weight:700;letter-spacing:-0.4px;color:${C.ink};margin:24px 0 8px">${headline}</div>
     <div style="font-size:16px;line-height:1.7;color:${C.ink2};margin-bottom:18px">${greet(rec)}<br>${esc(m.lead||'תודה על הסשן! ריכזתי כאן את כל מה שעשינו, כדי שיהיה קל לחזור לזה ולהמשיך.')}</div>
     ${E.meta([['תאריך',fdate(s.date)],['משך הסשן',hrs(s.duration)],['נושא',esc(m.short||sessTitle(s))]])}
     ${mail.note?E.note(mail.note):''}
