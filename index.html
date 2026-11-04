@@ -680,6 +680,14 @@ const E = {
   prompt(t){ return `<div style="background:#ffffff;border:1px solid ${C.line};border-right:5px solid ${C.orange};border-radius:12px;padding:12px 18px;font-size:14.5px;line-height:1.8;color:${C.ink}">${esc(t).replace(/\n/g,'<br>').replace(/\[([^\]]+)\]/g,`<span style="background:${C.orangeSoft};color:#B4520A;border-radius:5px;padding:0 5px;font-weight:700">$1</span>`)}</div>`; },
   tip(t){ return `<div style="background:${C.okSoft};border:1px solid #BFE8D2;border-radius:12px;padding:10px 16px;font-size:14.5px;line-height:1.65;color:${C.ink};margin-top:12px"><b>טיפ:</b> ${esc(t)}</div>`; },
   note(t){ return `<div style="background:${C.orangeSoft};border:1px solid ${C.orangeLine};border-radius:12px;padding:12px 16px;font-size:15px;line-height:1.7;color:${C.ink};margin-top:16px">💬 ${esc(t).replace(/\n/g,'<br>')}</div>`; },
+  // payment line for this client and session (only when there's one client and a price)
+  payRow(s, rec){
+    if(rec.length!==1 || !(+s.price>0)) return '';
+    const paid = !!s.paid?.[rec[0].id];
+    const [bg, line, color] = paid ? [C.okSoft, '#BFE8D2', C.ok] : [C.orangeSoft, C.orangeLine, '#B4520A'];
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:10px"><tr><td style="background:${bg};border:1px solid ${line};border-radius:12px;padding:10px 16px;text-align:right;font-size:15px;color:${C.ink}">
+      💳 <b>תשלום על הסשן:</b>&nbsp; <span style="color:${color};font-weight:700">${paid?'✓ שולם':'ממתין לתשלום'}</span>&nbsp; <span style="color:${C.muted}">(<span dir="ltr">${money(s.price)}</span>)</span>
+    </td></tr></table>`; },
   // "next session": the planned date if there is one, and what the next topic in the program covers
   nextBox(nextSess, m, s, rec){
     const all = defaultModules();
@@ -737,6 +745,7 @@ function buildMail(recOverride){
   const html = `<div style="font-size:28px;line-height:1.25;font-weight:700;letter-spacing:-0.4px;color:${C.ink};margin:24px 0 8px">${headline}</div>
     <div style="font-size:16px;line-height:1.7;color:${C.ink2};margin-bottom:18px">${greet(rec)}<br>${esc(m.lead||'תודה על הסשן! ריכזתי כאן את כל מה שעשינו, כדי שיהיה קל לחזור לזה ולהמשיך.')}</div>
     ${E.meta([['תאריך',fdate(s.date)],['משך הסשן',hrs(s.duration)],['נושא',esc(m.short||sessTitle(s))]])}
+    ${E.payRow(s, rec)}
     ${mail.note?E.note(mail.note):''}
     ${steps.length?E.h2('מה עשינו בסשן')+E.steps(steps):''}
     ${E.lists(m.have||[], next)}
