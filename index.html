@@ -711,7 +711,7 @@ function buildMail(recOverride){
   const m = {...(defaultModules().find(x=>x.id===s.moduleId)||{}), ...(moduleById(s.moduleId)||{})};
   const steps = s.highlights?.length ? s.highlights.map(t=>({t})) : (m.steps?.length ? m.steps : (m.points||[]).map(t=>({t})));
   const next = s.homework ? [s.homework] : (m.next?.length ? m.next : (m.homework?[m.homework]:[]));
-  const subject = `סיכום הסשן שלנו: ${sessTitle(s)} ✨`;
+  const subject = `סיכום הסשן שלנו: ${sessTitle(s)} · ${fdate(s.date)} ✨`;
   const nextSess = db.sessions.filter(x=>x.status==='planned' && x.date>=s.date && x.studentIds.some(id=>rec.some(r=>r.id===id))).sort((a,b)=>a.date.localeCompare(b.date))[0];
   const headline = m.headline
     ? esc(m.headline).replace('Claude Code',`<span style="color:${C.orange}">Claude Code</span>`)

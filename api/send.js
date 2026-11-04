@@ -42,6 +42,8 @@ module.exports = async (req, res) => {
     const to = (Array.isArray(m.to) ? m.to : [m.to]).filter(isEmail);
     if (!to.length || !m.subject || !m.html) return res.status(400).json({ error: 'מייל חסר נמען, נושא או תוכן' });
     const item = { from: RESEND_FROM, to, subject: String(m.subject).slice(0, 300), html: String(m.html) };
+    // A unique ref stops Gmail from threading repeated summaries and hiding their content behind "...".
+    item.headers = { 'X-Entity-Ref-ID': require('crypto').randomUUID() };
     if (m.text) item.text = String(m.text);
     if (isEmail(m.replyTo)) item.reply_to = m.replyTo.trim();
     else if (isEmail(REPLY_TO)) item.reply_to = REPLY_TO.trim();
