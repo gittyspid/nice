@@ -74,12 +74,12 @@ function loginPage({ error = '', user = '', next = '/', status = 200, closed = f
 <link rel="icon" type="image/png" href="${LOGO}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#FBF8F5;--ink:#1E1B1A;--muted:#857C75;--line:#F0E8E1;--orange:#E8620C;--orange-h:#CF560A;--lav:#FFE6D5;--mint:#DDF3E6;--peach:#FFEBC8;--pink:#FDE1DA;--pink-d:#C24B37;--shadow:0 1px 2px rgba(40,30,25,.04),0 18px 50px rgba(232,98,12,.10)}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{font-family:'Rubik','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--ink);display:grid;place-items:center;padding:24px;position:relative;overflow:hidden;font-size:15px}
+body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--ink);display:grid;place-items:center;padding:24px;position:relative;overflow:hidden;font-size:15px}
 .blob{position:fixed;border-radius:50%;filter:blur(10px);opacity:.75;z-index:0}
 .b1{width:420px;height:420px;background:var(--lav);top:-140px;right:-120px}
 .b2{width:340px;height:340px;background:var(--mint);bottom:-120px;left:-90px}

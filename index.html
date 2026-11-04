@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#FBF8F5; --card:#FFFFFF; --ink:#1E1B1A; --muted:#857C75; --line:#F0E8E1; --soft:#F8F2EC;
@@ -16,7 +16,7 @@
   --r:18px; --shadow:0 1px 2px rgba(40,30,25,.04),0 8px 24px rgba(232,98,12,.07);
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Rubik','Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Heebo','Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5}
 a{color:inherit}
 button,input,select,textarea{font:inherit;color:inherit}
 .app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
@@ -138,6 +138,7 @@ textarea.in{min-height:84px;resize:vertical}
 code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#FCEDE2;color:#C2520A;padding:2px 7px;border-radius:7px;font-size:13px;direction:ltr;display:inline-block}
 /* mail */
 .mailgrid{display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:start}
+.attach{display:flex;align-items:center;gap:6px;background:var(--lav);color:#A2440A;border-radius:12px;padding:9px 14px;font-size:14px}
 .preview{background:#F5EEE8;border-radius:var(--r);padding:22px;max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:20px}
 .preview .bar2{display:flex;gap:6px;margin-bottom:12px;align-items:center;color:var(--muted);font-size:12px}
 .preview .bar2 i{width:10px;height:10px;border-radius:50%;background:#EBDCD0;display:inline-block}
@@ -169,7 +170,8 @@ code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#FCEDE2;col
   <aside class="side">
     <div class="brand"><div class="logo"><img src="logo.png" alt="ספיד אוטומציות"></div><div><b id="brandName">ספיד אוטומציות</b><small>ניהול סשנים ודיוורים</small></div></div>
     <nav class="nav" id="nav"></nav>
-    <div class="foot">💾 הנתונים נשמרים בדפדפן הזה בלבד. מומלץ לגבות מדי פעם במסך ההגדרות.</div>
+    <div class="foot">💾 הנתונים נשמרים בדפדפן הזה בלבד. כדאי לגבות מדי פעם.
+      <div class="row" style="gap:6px;margin-top:8px"><button class="btn sm" data-act="exportData">⬇ גיבוי</button><label class="btn sm">⬆ שחזור<input type="file" accept=".json" hidden onchange="importData(this.files[0])"></label></div></div>
     <a class="btn ghost sm" href="/logout" style="justify-content:center">⎋ יציאה</a>
   </aside>
   <main id="main"></main>
@@ -186,7 +188,19 @@ function defaultModules(){
       points:['התקנו את Claude במחשב','נרשמנו ל-Claude Code (מנוי Pro ומעלה)','התחברנו ל-Git ול-GitHub','ראינו דוגמה לאתר דמו','יצרנו אתר תדמית ראשוני'],
       commands:['claude','git status','git push'],
       tips:['תבנית לבקשה טובה: "אני רוצה [מה לשנות] באתר. המטרה: [למה]. סגנון: [צבעים / תחושה]. לפני שאתה מתחיל, תציג לי תוכנית קצרה. אל תעלה לגיט עד שאאשר."','כשהכל נראה טוב, פשוט לכתוב: "תעלה את השינויים לגיט"'],
-      homework:'להשלים באתר טקסטים, תמונות ולוגו, לבדוק איך הוא נראה בטלפון, לבקש "תעלה את השינויים לגיט", ולחבר את הריפו ל-Vercel דרך vercel.com/new.'},
+      homework:'להשלים באתר טקסטים, תמונות ולוגו, לבדוק איך הוא נראה בטלפון, לבקש "תעלה את השינויים לגיט", ולחבר את הריפו ל-Vercel דרך vercel.com/new.',
+      headline:'התחלנו לעבוד עם Claude Code', short:'הקמה ואתר ראשון',
+      lead:'תודה על הסשן! בסשן התקנו את Claude, חיברנו אותו ל-Git, ראינו אתר דמו לדוגמה, נרשמנו ל-Claude Code ובנינו יחד אתר תדמית ראשוני. ריכזתי כאן הכל כדי שיהיה קל להמשיך.',
+      steps:[
+        {t:'התקנו את אפליקציית Claude',d:'הורדנו מהאתר הרשמי, התקנו במחשב והתחברנו לחשבון.',links:['claude.com/download']},
+        {t:'התחברנו ל-Git ול-GitHub',d:'התקנו את Git, התחברנו לחשבון GitHub ויצרנו ריפו ריק לפרויקט. ככה כל עבודה נשמרת בענן עם היסטוריה מלאה.',links:['git-scm.com','github.com/new']},
+        {t:'ראינו דוגמה לאתר דמו',d:'הסתכלנו על אתר שנבנה כולו עם Claude Code, כדי לראות מה אפשר להשיג ואיך נראה התהליך מבפנים.'},
+        {t:'נרשמנו ל-Claude Code',d:'הפעלנו מנוי בתשלום (Pro ומעלה), כי בלעדיו אין גישה ללשונית Code. אחר כך פתחנו את הלשונית ובחרנו תיקייה לפרויקט.',links:['claude.com/pricing']},
+        {t:'יצרנו אתר תדמית ראשוני',d:'כתבנו פרומפט עם פרטי העסק, ו-Claude בנה את הגרסה הראשונה של האתר. אחר כך ביקשנו תיקונים וראינו את התוצאה בדפדפן.'}],
+      have:['אפליקציית Claude מותקנת ומחוברת','Git מותקן וחשבון GitHub פעיל','מנוי פעיל ל-Claude Code','תיקיית פרויקט עם אתר תדמית ראשוני'],
+      next:['להשלים טקסטים, תמונות ולוגו באתר','לבדוק את האתר גם בטלפון','לבקש מ-Claude: "תעלה את השינויים לגיט"','לחבר את הריפו ל-Vercel ולפרסם (vercel.com/new)'],
+      prompt:'אני רוצה [מה לשנות או להוסיף] באתר.\nהמטרה: [למה זה חשוב, מה הגולש צריך להרגיש או לעשות].\nסגנון: [צבעים / תחושה / דוגמה שאהבתי].\nלפני שאתה מתחיל, תציג לי תוכנית קצרה. אל תעלה לגיט עד שאאשר.',
+      tip:'כדאי לבקש שינוי אחד בכל הודעה ולבדוק אותו בדפדפן לפני שממשיכים. ככה קל לראות מה עבד ולתקן מהר.'},
     {id:'m1',num:2,title:'היכרות והתקנה',goal:'להבין מה זה Claude Code ולהריץ אותו בפעם הראשונה',
       points:['מה זה Claude Code ובמה הוא שונה מצ׳אט רגיל','התקנה על המחשב והתחברות לחשבון','היכרות עם הטרמינל ועם אפליקציית הדסקטופ','הבקשה הראשונה: לתת ל-Claude לבנות משהו קטן'],
       commands:['claude','/help','/login'],
@@ -293,13 +307,9 @@ function toast(msg){ document.querySelectorAll('.toast').forEach(t=>t.remove());
 
 /* ============ nav / router ============ */
 const NAV = [
-  ['dashboard','לוח בקרה','✦','var(--lav)'],
-  ['students','משתתפים','☺','var(--pink)'],
   ['sessions','סשנים','◷','var(--sky)'],
+  ['students','לקוחות','☺','var(--pink)'],
   ['mail','דיוורים','✉','var(--peach)'],
-  ['billing','חשבונות','₪','var(--mint)'],
-  ['curriculum','תוכנית לימוד','❖','var(--butter)'],
-  ['settings','הגדרות','⚙','#EFEDF5'],
 ];
 function renderNav(route){
   const pend = pendingSummaries().reduce((a,x)=>a+x.miss.length,0);
@@ -307,9 +317,9 @@ function renderNav(route){
   $('#brandName').textContent = db.settings.business || 'ספיד אוטומציות';
 }
 function route(){
-  const [r,arg] = (location.hash.slice(1)||'dashboard').split('/');
-  const views = {dashboard:vDashboard,students:vStudents,student:vStudent,sessions:vSessions,mail:vMail,billing:vBilling,curriculum:vCurriculum,settings:vSettings};
-  const v = views[r] || vDashboard;
+  const [r,arg] = (location.hash.slice(1)||'sessions').split('/');
+  const views = {students:vStudents,student:vStudent,sessions:vSessions,mail:vMail};
+  const v = views[r] || vSessions;
   renderNav(r);
   $('#main').innerHTML = v(arg);
   if(r==='mail') mailMount();
@@ -321,57 +331,6 @@ function rerender(){ const y=window.scrollY; route(); window.scrollTo(0,y); }
 /* ============ views ============ */
 function header(title, sub, actions=''){ return `<div class="top"><div><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</div><div class="row">${actions}</div></div>`; }
 
-function vDashboard(){
-  const name = firstName(db.settings.instructor);
-  const hr = new Date().getHours();
-  const hello = hr<12?'בוקר טוב':hr<17?'צהריים טובים':hr<21?'ערב טוב':'לילה טוב';
-  if(!db.students.length && !db.sessions.length){
-    return header(`${hello}${name?', '+esc(name):''} 👋`, 'בואי נתחיל לבנות את מערכת הסשנים שלך') +
-    `<div class="card empty"><div class="big">🌷</div><h2 style="margin:0 0 6px;color:var(--ink)">עוד אין כאן נתונים</h2>
-     <p>אפשר להתחיל להוסיף משתתפים וסשנים, או לטעון נתוני דוגמה כדי לראות איך המערכת נראית.</p>
-     <div class="row" style="justify-content:center;margin-top:14px">
-       <button class="btn pri" data-act="newStudent">+ משתתף ראשון</button>
-       <button class="btn" data-act="demo">טעינת נתוני דוגמה</button>
-       <a class="btn ghost" href="#settings">הגדרת פרטי העסק</a></div></div>`;
-  }
-  const active = db.students.filter(s=>s.status==='active').length;
-  const done = db.sessions.filter(s=>s.status==='done');
-  let charged=0, paid=0;
-  db.students.forEach(s=>{const st=studentStats(s.id); charged+=st.charged; paid+=st.paid;});
-  const upcoming = db.sessions.filter(s=>s.status==='planned').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
-  const pend = pendingSummaries().slice(0,5);
-  const debtors = db.students.map(s=>({s,b:studentStats(s.id).balance})).filter(x=>x.b>0).sort((a,b)=>b.b-a.b).slice(0,5);
-  // revenue chart last 6 months
-  const months=[]; const now=new Date();
-  for(let i=5;i>=0;i--){ const d=new Date(now.getFullYear(), now.getMonth()-i, 1); months.push({k:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, l:HM[d.getMonth()], paid:0, open:0}); }
-  done.forEach(s=>{ const m=months.find(x=>x.k===s.date.slice(0,7)); if(!m) return; s.studentIds.forEach(id=>{ if(s.paid?.[id]) m.paid+=+s.price||0; else m.open+=+s.price||0; }); });
-  const max = Math.max(1,...months.map(m=>m.paid+m.open));
-  return header(`${hello}${name?', '+esc(name):''} 👋`, `${fdateLong(todayISO())} · הנה תמונת המצב שלך`,
-      `<button class="btn" data-act="newStudent">+ משתתף</button><button class="btn pri" data-act="newSession">+ סשן חדש</button>`) +
-  `<div class="grid g4" style="margin-bottom:18px">
-     <div class="kpi k1"><span class="emo">☺</span><div class="lbl">משתתפים פעילים</div><div class="val">${active}</div><div class="sub">מתוך ${db.students.length} רשומים</div></div>
-     <div class="kpi k2"><span class="emo">✓</span><div class="lbl">סשנים שהועברו</div><div class="val">${done.length}</div><div class="sub">${db.sessions.filter(s=>s.status==='planned').length} מתוכננים</div></div>
-     <div class="kpi k3"><span class="emo">₪</span><div class="lbl">נגבה עד היום</div><div class="val">${money(paid)}</div><div class="sub">מתוך ${money(charged)} שחויבו</div></div>
-     <div class="kpi k4"><span class="emo">⏳</span><div class="lbl">ממתין לתשלום</div><div class="val">${money(charged-paid)}</div><div class="sub">${debtors.length} משתתפים עם יתרה</div></div>
-   </div>
-   <div class="grid g2" style="margin-bottom:18px">
-     <div class="card"><h3>📅 הסשנים הקרובים</h3>
-       ${upcoming.length? `<div class="list">${upcoming.map(sessionItem).join('')}</div>` : `<div class="empty small">אין סשנים מתוכננים. <a href="#" data-act="newSession">לקבוע סשן</a></div>`}
-     </div>
-     <div class="card"><h3>✉ סיכומים שעוד לא נשלחו</h3>
-       ${pend.length? `<div class="list">${pend.map(({s,miss})=>`<div class="item"><div class="grow"><div class="t">${esc(sessTitle(s))}</div><div class="s">${fdate(s.date)} · ${miss.map(id=>esc(firstName(student(id).name))).join(', ')}</div></div><button class="btn sm pink" data-act="mailSession" data-id="${s.id}">שליחת סיכום</button></div>`).join('')}</div>` : `<div class="empty small"><div class="big">💌</div>כל הסיכומים נשלחו, כל הכבוד!</div>`}
-     </div>
-   </div>
-   <div class="grid g2">
-     <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h3 style="margin:0">📈 הכנסות לפי חודש</h3><div class="legend"><span><i style="background:#BFE9D5"></i>שולם</span><span><i style="background:#FFD0BA"></i>ממתין</span></div></div>
-       <div class="bars">${months.map(m=>`<div class="bar"><small class="num">${m.paid+m.open?money(m.paid+m.open):''}</small><div class="stack" title="שולם ${money(m.paid)} · ממתין ${money(m.open)}"><div class="paid" style="height:${m.paid/max*100}%"></div><div class="open" style="height:${m.open/max*100}%"></div></div><small>${m.l}</small></div>`).join('')}</div>
-     </div>
-     <div class="card"><h3>💳 יתרות פתוחות</h3>
-       ${debtors.length? `<div class="list">${debtors.map(({s,b})=>`<div class="item">${avatar(s)}<div class="grow"><div class="t">${esc(s.name)}</div><div class="s">${esc(s.email||'')}</div></div><b class="num" style="color:var(--peach-d)">${money(b)}</b><button class="btn sm" data-act="mailStatement" data-id="${s.id}">סיכום חשבון</button></div>`).join('')}</div>` : `<div class="empty small"><div class="big">🌿</div>אין יתרות פתוחות</div>`}
-     </div>
-   </div>`;
-}
-
 function sessionItem(s){
   const d = pd(s.date);
   const studs = s.studentIds.map(student).filter(Boolean);
@@ -381,7 +340,7 @@ function sessionItem(s){
   return `<div class="item">
     <div class="datechip"><b>${d.getDate()}</b><small>${HM[d.getMonth()].slice(0,3)}׳</small></div>
     <div class="grow"><div class="t">${m?`<span class="muted small">סשן ${m.num} · </span>`:''}${esc(sessTitle(s))}</div>
-      <div class="s">${s.time?esc(timeRange(s))+' · ':''}${studs.map(x=>esc(x.name)).join(', ')||'ללא משתתפים'}</div></div>
+      <div class="s">${s.time?'<span dir="ltr">'+esc(timeRange(s))+'</span> · ':''}${studs.map(x=>esc(x.name)).join(', ')||'ללא לקוחות'}</div></div>
     <div class="avs hide-m">${studs.slice(0,4).map(avatar).join('')}</div>
     ${s.status==='planned'?'<span class="badge b-sky">מתוכנן</span>':''}
     ${ps==='paid'?'<span class="badge b-mint">שולם</span>':ps==='partial'?'<span class="badge b-butter">שולם חלקית</span>':ps==='open'?'<span class="badge b-peach">ממתין לתשלום</span>':''}
@@ -394,7 +353,7 @@ let stuFilter = {q:'', st:'all'};
 function vStudents(){
   const list = db.students.filter(s=>(stuFilter.st==='all'||s.status===stuFilter.st) && (!stuFilter.q || (s.name+' '+(s.email||'')+' '+(s.phone||'')).toLowerCase().includes(stuFilter.q.toLowerCase())));
   const total = db.modules.length || 1;
-  return header('משתתפים', `${db.students.length} משתתפים במערכת`, `<button class="btn pri" data-act="newStudent">+ משתתף חדש</button>`) +
+  return header('לקוחות', `${db.students.length} לקוחות במערכת`, `<button class="btn pri" data-act="newStudent">+ לקוח חדש</button>`) +
   `<div class="row" style="margin-bottom:18px">
      <input class="in search" placeholder="🔍 חיפוש לפי שם, מייל או טלפון" value="${esc(stuFilter.q)}" oninput="stuFilter.q=this.value;rerender();this&&setTimeout(()=>{const i=document.querySelector('.search');i.focus();i.setSelectionRange(i.value.length,i.value.length)})">
      <div class="tabs">${[['all','הכל'],['active','פעילים'],['lead','מתעניינים'],['done','סיימו']].map(([k,l])=>`<button class="${stuFilter.st===k?'on':''}" onclick="stuFilter.st='${k}';rerender()">${l}</button>`).join('')}</div>
@@ -407,7 +366,7 @@ function vStudents(){
         <span class="muted">${st.next?`הבא: ${fdate(st.next.date)}`:st.last?`אחרון: ${fdate(st.last.date)}`:'עוד לא נקבע סשן'}</span>
         ${st.balance>0?`<span class="badge b-peach">יתרה ${money(st.balance)}</span>`:st.charged?'<span class="badge b-mint">הכל שולם</span>':''}
       </div>
-    </div>`;}).join('')}</div>` : `<div class="card empty"><div class="big">🌸</div>${db.students.length?'לא נמצאו משתתפים':'עוד אין משתתפים'}<div style="margin-top:12px"><button class="btn pri" data-act="newStudent">+ משתתף חדש</button></div></div>`);
+    </div>`;}).join('')}</div>` : `<div class="card empty"><div class="big">🌸</div>${db.students.length?'לא נמצאו לקוחות':'עוד אין לקוחות'}<div style="margin-top:12px"><button class="btn pri" data-act="newStudent">+ לקוח חדש</button></div></div>`);
 }
 function statusBadge(st){ return st==='active'?'<span class="badge b-mint">פעיל</span>':st==='lead'?'<span class="badge b-sky">מתעניין</span>':'<span class="badge b-gray">סיים</span>'; }
 
@@ -418,7 +377,7 @@ function vStudent(id){
   return `<div class="top"><div class="row" style="gap:16px"><a href="#students" class="btn ghost">→</a>
       <span class="av" style="width:62px;height:62px;font-size:22px;background:${bg};color:${fg}">${esc(initials(s.name))}</span>
       <div><h1>${esc(s.name)}</h1><p>${[s.email,s.phone].filter(Boolean).map(esc).join(' · ')||'אין פרטי קשר'} ${statusBadge(s.status)}</p></div></div>
-    <div class="row"><button class="btn" data-act="editStudent" data-id="${s.id}">✎ עריכה</button><button class="btn" data-act="mailStatement" data-id="${s.id}">₪ סיכום חשבון</button><button class="btn pri" data-act="newSession" data-id="${s.id}">+ סשן</button></div></div>
+    <div class="row"><button class="btn" data-act="editStudent" data-id="${s.id}">✎ עריכה</button><button class="btn pri" data-act="newSession" data-id="${s.id}">+ סשן</button></div></div>
   <div class="grid g4" style="margin-bottom:18px">
     <div class="kpi k1"><div class="lbl">סשנים שהועברו</div><div class="val">${st.done.length}</div></div>
     <div class="kpi k2"><div class="lbl">נושאים שנלמדו</div><div class="val">${st.mods.size}<span style="font-size:16px;opacity:.6">/${db.modules.length}</span></div></div>
@@ -459,78 +418,8 @@ function vSessions(){
   return header('סשנים', `${db.sessions.filter(s=>s.status==='done').length} הועברו · ${db.sessions.filter(s=>s.status==='planned').length} מתוכננים`, `<button class="btn pri" data-act="newSession">+ סשן חדש</button>`) +
   `<div class="tabs" style="margin-bottom:18px">${[['all','הכל'],['planned','מתוכננים'],['done','הועברו'],['unsent','ללא סיכום'],['unpaid','ממתינים לתשלום']].map(([k,l])=>`<button class="${sessFilter===k?'on':''}" onclick="sessFilter='${k}';rerender()">${l}</button>`).join('')}</div>` +
   (planned.length?`<div class="card" style="margin-bottom:18px"><h3>📅 מתוכננים</h3><div class="list">${planned.map(sessionItem).join('')}</div></div>`:'') +
-  (done.length?`<div class="card"><h3>✓ הועברו</h3><div class="list">${done.map(s=>sessionItem(s).replace('<button class="btn sm ghost" data-act="editSession"', `${s.studentIds.some(id=>!summarySent(s,id))?`<button class="btn sm pink" data-act="mailSession" data-id="${s.id}">שליחת סיכום</button>`:''}<button class="btn sm ghost" data-act="editSession"`)).join('')}</div></div>`:'') +
-  (!planned.length&&!done.length?`<div class="card empty"><div class="big">☕</div>אין סשנים להצגה<div style="margin-top:12px"><button class="btn pri" data-act="newSession">+ סשן חדש</button></div></div>`:'');
-}
-
-let billMonth = 'all';
-function vBilling(){
-  const months = [...new Set(db.sessions.filter(s=>s.status==='done').map(s=>s.date.slice(0,7)))].sort().reverse();
-  const inM = s => s.status==='done' && (billMonth==='all' || s.date.startsWith(billMonth));
-  const rows = db.students.map(st=>{
-    const ss = db.sessions.filter(s=>inM(s)&&s.studentIds.includes(st.id));
-    const charged = ss.reduce((a,s)=>a+(+s.price||0),0);
-    const paid = ss.filter(s=>s.paid?.[st.id]).reduce((a,s)=>a+(+s.price||0),0);
-    return {st, n:ss.length, charged, paid, bal:charged-paid};
-  }).filter(r=>r.n).sort((a,b)=>b.bal-a.bal);
-  const T = rows.reduce((a,r)=>({c:a.c+r.charged,p:a.p+r.paid,n:a.n+r.n}),{c:0,p:0,n:0});
-  const mLabel = k => { const [y,m]=k.split('-'); return `${HM[+m-1]} ${y}`; };
-  return header('חשבונות', 'מעקב חיובים, תשלומים ויתרות') +
-  `<div class="row" style="margin-bottom:18px"><span class="muted small">תקופה:</span>
-     <select class="in" style="width:auto" onchange="billMonth=this.value;rerender()"><option value="all">כל התקופות</option>${months.map(k=>`<option value="${k}" ${billMonth===k?'selected':''}>${mLabel(k)}</option>`).join('')}</select></div>
-   <div class="grid g4" style="margin-bottom:18px">
-     <div class="kpi k1"><div class="lbl">חיובים בסשנים</div><div class="val">${T.n}</div></div>
-     <div class="kpi k3"><div class="lbl">סה״כ חויב</div><div class="val">${money(T.c)}</div></div>
-     <div class="kpi k2"><div class="lbl">שולם</div><div class="val">${money(T.p)}</div><div class="sub">${T.c?Math.round(T.p/T.c*100):0}% גבייה</div></div>
-     <div class="kpi k4"><div class="lbl">יתרה פתוחה</div><div class="val">${money(T.c-T.p)}</div></div>
-   </div>
-   <div class="card">${rows.length?`<table class="tb"><thead><tr><th>משתתף</th><th class="num">סשנים</th><th class="num hide-m">חויב</th><th class="num">שולם</th><th class="num">יתרה</th><th></th></tr></thead><tbody>
-   ${rows.map(r=>`<tr><td><div class="row" style="gap:10px;flex-wrap:nowrap">${avatar(r.st)}<a href="#student/${r.st.id}" style="text-decoration:none;font-weight:600">${esc(r.st.name)}</a></div></td>
-     <td class="num">${r.n}</td><td class="num hide-m">${money(r.charged)}</td><td class="num" style="color:var(--mint-d)">${money(r.paid)}</td>
-     <td class="num"><b style="color:${r.bal>0?'var(--peach-d)':'var(--mint-d)'}">${money(r.bal)}</b></td>
-     <td><div class="row" style="justify-content:flex-end;flex-wrap:nowrap">${r.bal>0?`<button class="btn sm mint" data-act="payAll" data-id="${r.st.id}">✓ סימון כשולם</button>`:''}<button class="btn sm" data-act="mailStatement" data-id="${r.st.id}">✉ סיכום חשבון</button></div></td></tr>`).join('')}
-   </tbody></table>`:`<div class="empty"><div class="big">🧾</div>עוד אין סשנים שהועברו בתקופה הזו</div>`}</div>`;
-}
-
-function vCurriculum(){
-  const mods = sortedModules();
-  return header('תוכנית לימוד', 'הנושאים של הסשנים. התוכן כאן נכנס אוטומטית למיילי הסיכום', `<button class="btn" data-act="resetModules">שחזור ברירת מחדל</button><button class="btn pri" data-act="editModule">+ נושא חדש</button>`) +
-  (db.students.length?`<div class="card" style="margin-bottom:18px"><h3>🗺 מפת התקדמות: למי כבר העברתי מה</h3><div class="mx"><table><thead><tr><th></th>${mods.map(m=>`<th title="${esc(m.title)}">${m.num}</th>`).join('')}<th>סה״כ</th></tr></thead><tbody>
-    ${db.students.filter(s=>s.status!=='lead').map(s=>{const st=studentStats(s.id); return `<tr><td class="nm"><a href="#student/${s.id}" style="text-decoration:none">${esc(s.name)}</a></td>${mods.map(m=>{const ok=st.mods.has(m.id); const pl=!ok&&st.all.some(x=>x.moduleId===m.id&&x.status==='planned'); return `<td class="c ${ok?'y':pl?'p':''}" title="${esc(m.title)}${ok?' · הועבר':pl?' · מתוכנן':''}">${ok?'✓':pl?'◷':''}</td>`}).join('')}<td class="nm muted small">${st.mods.size}/${mods.length}</td></tr>`}).join('')}
-    </tbody></table></div><div class="legend" style="margin-top:8px"><span><i style="background:var(--mint)"></i>הועבר</span><span><i style="background:var(--butter)"></i>מתוכנן</span><span><i style="background:var(--soft)"></i>עוד לא</span></div></div>`:'') +
-  `<div class="grid g3">${mods.map((m,i)=>{const [bg,fg]=PASTELS[i%PASTELS.length]; return `<div class="mod">
-     <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><div class="row" style="flex-wrap:nowrap"><span class="n" style="background:${bg};color:${fg}">${m.num}</span><b>${esc(m.title)}</b></div><button class="btn sm ghost" data-act="editModule" data-id="${m.id}">✎</button></div>
-     <div class="muted small">${esc(m.goal)}</div>
-     <ul>${m.points.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
-     <div class="row" style="gap:6px">${m.commands.map(c=>`<code>${esc(c)}</code>`).join('')}</div>
-   </div>`}).join('')}</div>`;
-}
-
-function vSettings(){
-  const S = db.settings;
-  return header('הגדרות', 'הפרטים האלה מופיעים בחתימה של כל מייל') +
-  `<div class="grid g2"><div class="card"><h3>👩‍🏫 פרטי העסק</h3>
-    <div class="f2"><div class="field"><label>שם המנחה</label><input class="in" id="s_instructor" value="${esc(S.instructor)}" placeholder="השם שלך"></div>
-    <div class="field"><label>שם העסק</label><input class="in" id="s_business" value="${esc(S.business)}"></div>
-    <div class="field" style="grid-column:1/-1"><label>שם התוכנית (מופיע בכותרת של כל מייל)</label><input class="in" id="s_program" value="${esc(S.program)}"></div>
-    <div class="field"><label>המייל שלך</label><input class="in" id="s_email" value="${esc(S.email)}" dir="ltr" placeholder="you@gmail.com"></div>
-    <div class="field"><label>טלפון</label><input class="in" id="s_phone" value="${esc(S.phone)}" dir="ltr"></div>
-    <div class="field"><label>מחיר ברירת מחדל לסשן (₪)</label><input class="in" id="s_price" type="number" value="${esc(S.price)}"></div>
-    <div class="field"><label>אתר / קישור</label><input class="in" id="s_site" value="${esc(S.site)}" dir="ltr" placeholder="https://"></div>
-    <div class="field" style="grid-column:1/-1"><label>קישור למדריך המלא (יופיע בכל מייל סיכום)</label><input class="in" id="s_guide" value="${esc(S.guide)}" dir="ltr" placeholder="https://"></div>
-    <div class="field" style="grid-column:1/-1"><label class="chk"><input type="checkbox" id="s_attach" ${S.attachPdf!==false?"checked":""}>📎 לצרף לכל מייל "סיכום סשן" את סיכום הסשן כקובץ PDF</label></div></div>
-    <div class="field"><label>פרטי תשלום (יופיעו בסיכום החשבון)</label><textarea class="in" id="s_payment" placeholder="למשל: ביט / פייבוקס למספר 050-0000000, או העברה בנקאית">${esc(S.payment)}</textarea></div>
-    <div class="field"><label>משפט סיום לחתימה</label><input class="in" id="s_signature" value="${esc(S.signature)}"></div>
-    <button class="btn pri" data-act="saveSettings">שמירה</button>
-  </div>
-  <div class="grid" style="align-content:start">
-    <div class="card"><h3>🚀 שליחה דרך Resend</h3><p class="muted small" style="margin-top:0">הסיסמה שהגדרת ב-Vercel במשתנה ADMIN_PASSWORD. היא נשמרת רק בדפדפן הזה ולא נכנסת לקובץ הגיבוי.</p>
-      <div class="field"><label>סיסמת שליחה</label><input class="in" type="password" id="s_pass" dir="ltr" value="${esc(getPass())}" autocomplete="off"></div>
-      <div class="row"><button class="btn pri" data-act="savePass">שמירה ובדיקת חיבור</button><span class="small muted" id="passStatus"></span></div></div>
-    <div class="card"><h3>💾 גיבוי ושחזור</h3><p class="muted small" style="margin-top:0">הנתונים נשמרים רק בדפדפן הזה. כדי לעבור מחשב או לשמור עותק, יש להוריד קובץ גיבוי.</p>
-      <div class="row"><button class="btn" data-act="exportData">⬇ הורדת גיבוי</button><label class="btn">⬆ שחזור מגיבוי<input type="file" accept=".json" hidden onchange="importData(this.files[0])"></label></div></div>
-    <div class="card"><h3>🧪 נתוני דוגמה</h3><div class="row"><button class="btn" data-act="demo">טעינת נתוני דוגמה</button><button class="btn danger" data-act="wipe">מחיקת כל הנתונים</button></div></div>
-  </div></div>`;
+  (done.length?`<div class="card"><h3>✓ הועברו</h3><div class="list">${done.map(s=>sessionItem(s).replace('<button class="btn sm ghost" data-act="editSession"', `${s.studentIds.length?`<button class="btn sm ${s.studentIds.some(id=>!summarySent(s,id))?'pri':''}" data-act="mailSession" data-id="${s.id}">💌 ${s.studentIds.some(id=>!summarySent(s,id))?'שליחת סיכום':'שליחה שוב'}</button>`:''}<button class="btn sm ghost" data-act="editSession"`)).join('')}</div></div>`:'') +
+  (!planned.length&&!done.length?`<div class="card empty"><div class="big">☕</div>${db.sessions.length?"אין סשנים להצגה":"עוד אין סשנים. מתחילים בהוספת לקוח, ואז סשן."}<div class="row" style="justify-content:center;margin-top:12px">${db.students.length?"":'<button class="btn" data-act="newStudent">+ לקוח חדש</button>'}<button class="btn pri" data-act="newSession">+ סשן חדש</button>${db.sessions.length||db.students.length?"":'<button class="btn ghost" data-act="demo">טעינת נתוני דוגמה</button>'}</div></div>`:'');
 }
 
 /* ============ modals ============ */
@@ -547,7 +436,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 const val = id => document.getElementById(id)?.value?.trim() ?? '';
 
 function studentForm(s={}){
-  modal(`<h2>${s.id?'עריכת משתתף':'משתתף חדש'}</h2>
+  modal(`<h2>${s.id?'עריכת לקוח':'לקוח חדש'}</h2>
    <div class="field"><label>שם מלא *</label><input class="in" id="f_name" value="${esc(s.name)}"></div>
    <div class="f2"><div class="field"><label>מייל</label><input class="in" id="f_email" dir="ltr" value="${esc(s.email)}"></div>
    <div class="field"><label>טלפון</label><input class="in" id="f_phone" dir="ltr" value="${esc(s.phone)}"></div></div>
@@ -563,7 +452,7 @@ function saveStudent(id){
   save(); closeModal(); rerender(); toast('נשמר ✓');
 }
 function delStudent(id){
-  if(!confirm('למחוק את המשתתף? הוא יוסר גם מהסשנים.')) return;
+  if(!confirm('למחוק את הלקוח? הוא יוסר גם מהסשנים.')) return;
   db.students=db.students.filter(s=>s.id!==id);
   db.sessions.forEach(s=>s.studentIds=s.studentIds.filter(x=>x!==id));
   save(); closeModal(); location.hash='students'; rerender();
@@ -571,7 +460,7 @@ function delStudent(id){
 
 function sessionForm(s={}, preStudent){
   const isNew=!s.id;
-  if(isNew){ s={date:todayISO(),time:'18:00',duration:90,status:'planned',price:db.settings.price,studentIds:preStudent?[preStudent]:[],paid:{}};
+  if(isNew){ s={date:todayISO(),time:'18:00',duration:120,status:'planned',price:db.settings.price,studentIds:preStudent?[preStudent]:[],paid:{},moduleId:'m0'};
     if(preStudent){ const st=studentStats(preStudent); const nm=sortedModules().find(m=>!st.mods.has(m.id)); if(nm) s.moduleId=nm.id; } }
   modal(`<h2>${isNew?'סשן חדש':'עריכת סשן'}</h2>
    <div class="f3"><div class="field"><label>תאריך</label><input class="in" type="date" id="f_date" value="${esc(s.date)}"></div>
@@ -579,9 +468,9 @@ function sessionForm(s={}, preStudent){
    <div class="field"><label>משך (דקות)</label><input class="in" type="number" id="f_dur" value="${esc(s.duration)}"></div></div>
    <div class="f2"><div class="field"><label>נושא מתוכנית הלימוד</label><select class="in" id="f_mod"><option value="">— נושא חופשי —</option>${sortedModules().map(m=>`<option value="${m.id}" ${s.moduleId===m.id?'selected':''}>${m.num}. ${esc(m.title)}</option>`).join('')}</select></div>
    <div class="field"><label>כותרת (לא חובה)</label><input class="in" id="f_title" value="${esc(s.title)}" placeholder="אם ריק, ייכנס שם הנושא"></div></div>
-   <div class="field"><label>משתתפים</label><div class="checks" id="f_studs">${db.students.length?db.students.map(st=>`<label class="chk"><input type="checkbox" value="${st.id}" ${s.studentIds.includes(st.id)?'checked':''}>${esc(st.name)}</label>`).join(''):'<span class="muted small">עוד אין משתתפים. כדאי להוסיף קודם משתתף.</span>'}</div></div>
+   <div class="field"><label>לקוחות</label><div class="checks" id="f_studs">${db.students.length?db.students.map(st=>`<label class="chk"><input type="checkbox" value="${st.id}" ${s.studentIds.includes(st.id)?'checked':''}>${esc(st.name)}</label>`).join(''):'<span class="muted small">עוד אין לקוחות. כדאי להוסיף קודם לקוח.</span>'}</div></div>
    <div class="f2"><div class="field"><label>סטטוס</label><div class="tabs" id="f_status">${[['planned','מתוכנן'],['done','הועבר']].map(([k,l])=>`<button type="button" data-v="${k}" class="${s.status===k?'on':''}" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('donebox').style.display=this.dataset.v==='done'?'':'none'">${l}</button>`).join('')}</div></div>
-   <div class="field"><label>מחיר למשתתף (₪)</label><input class="in" type="number" id="f_price" value="${esc(s.price)}"></div></div>
+   <div class="field"><label>מחיר ללקוח (₪)</label><input class="in" type="number" id="f_price" value="${esc(s.price)}"></div></div>
    <div id="donebox" style="${s.status==='done'?'':'display:none'}">
      <div class="field"><label>מה עשינו בסשן (שורה לכל נקודה. אם ריק, ייכנסו הנקודות מתוכנית הלימוד)</label><textarea class="in" id="f_high" placeholder="בנינו יחד דף נחיתה&#10;חיברנו את הפרויקט ל-GitHub">${esc((s.highlights||[]).join('\n'))}</textarea></div>
      <div class="field"><label>משימה לתרגול (אם ריק, תיכנס המשימה מתוכנית הלימוד)</label><textarea class="in" id="f_hw" style="min-height:60px">${esc(s.homework)}</textarea></div>
@@ -609,66 +498,46 @@ function saveSession(id, thenMail){
 function delSession(id){ if(!confirm('למחוק את הסשן?')) return; db.sessions=db.sessions.filter(s=>s.id!==id); db.mails=db.mails.filter(m=>m.sessionId!==id); save(); closeModal(); rerender(); }
 function togglePaid(sessId, sid, on){ const s=sessionById(sessId); s.paid=s.paid||{}; if(on) s.paid[sid]=true; else delete s.paid[sid]; save(); rerender(); toast(on?'סומן כשולם ✓':'הסימון בוטל'); }
 
-function moduleForm(m){
-  const isNew=!m; m=m||{num:(Math.max(0,...db.modules.map(x=>x.num))+1),title:'',goal:'',points:[],commands:[],tips:[],homework:''};
-  modal(`<h2>${isNew?'נושא חדש':'עריכת נושא'}</h2>
-   <div class="f2"><div class="field"><label>מספר</label><input class="in" type="number" id="f_num" value="${m.num}"></div><div class="field"><label>שם הנושא *</label><input class="in" id="f_mtitle" value="${esc(m.title)}"></div></div>
-   <div class="field"><label>מטרת הסשן</label><input class="in" id="f_goal" value="${esc(m.goal)}"></div>
-   <div class="field"><label>מה לומדים (שורה לכל נקודה)</label><textarea class="in" id="f_points">${esc(m.points.join('\n'))}</textarea></div>
-   <div class="field"><label>פקודות לזכור (שורה לכל פקודה)</label><textarea class="in" id="f_cmds" dir="ltr" style="text-align:left;min-height:64px">${esc(m.commands.join('\n'))}</textarea></div>
-   <div class="field"><label>טיפים (שורה לכל טיפ)</label><textarea class="in" id="f_tips" style="min-height:64px">${esc(m.tips.join('\n'))}</textarea></div>
-   <div class="field"><label>משימה לתרגול</label><textarea class="in" id="f_mhw" style="min-height:56px">${esc(m.homework)}</textarea></div>
-   <div class="acts"><button class="btn pri" onclick="saveModule('${m.id||''}')">שמירה</button><button class="btn ghost" onclick="closeModal()">ביטול</button>
-   ${isNew?'':`<button class="btn ghost danger" style="margin-inline-start:auto" onclick="delModule('${m.id}')">מחיקה</button>`}</div>`);
-}
-function saveModule(id){
-  const lines = x => val(x).split('\n').map(s=>s.trim()).filter(Boolean);
-  const title=val('f_mtitle'); if(!title) return toast('צריך שם לנושא');
-  const data={num:+val('f_num')||1,title,goal:val('f_goal'),points:lines('f_points'),commands:lines('f_cmds'),tips:lines('f_tips'),homework:val('f_mhw')};
-  if(id) Object.assign(moduleById(id),data); else db.modules.push({id:uid(),...data});
-  save(); closeModal(); rerender(); toast('נשמר ✓');
-}
-function delModule(id){ if(!confirm('למחוק את הנושא?')) return; db.modules=db.modules.filter(m=>m.id!==id); save(); closeModal(); rerender(); }
-
-/* ============ mail center ============ */
-let mail = {type:'summary', sessionId:'', studentIds:[], note:'', subject:'', subjectEdited:false, bcc:true};
-const MAIL_TYPES = [['summary','סיכום סשן','💌'],['statement','סיכום חשבון','🧾'],['reminder','תזכורת לסשן','⏰'],['welcome','ברוכים הבאים','🌷']];
-function mailTypeBadge(t){ const c={summary:'b-pink',statement:'b-mint',reminder:'b-sky',welcome:'b-lav'}[t]; const l=MAIL_TYPES.find(x=>x[0]===t); return `<span class="badge ${c}">${l?l[2]+' '+l[1]:t}</span>`; }
+let mail = {sessionId:'', studentIds:[], note:'', subject:'', subjectEdited:false};
+function mailTypeBadge(){ return '<span class="badge b-pink">💌 סיכום סשן</span>'; }
 function openMail(opts){
-  mail = {type:'summary',sessionId:'',studentIds:[],note:'',subject:'',subjectEdited:false,bcc:true,...opts};
-  if(mail.type==='summary' && mail.sessionId && !opts.studentIds){ const s=sessionById(mail.sessionId); const miss=s.studentIds.filter(id=>!summarySent(s,id)); mail.studentIds = miss.length?miss:[...s.studentIds]; }
+  mail = {sessionId:'',studentIds:[],note:'',subject:'',subjectEdited:false,...opts};
+  if(mail.sessionId && !opts.studentIds){ const s=sessionById(mail.sessionId); const miss=s.studentIds.filter(id=>!summarySent(s,id)); mail.studentIds = miss.length?miss:[...s.studentIds]; }
   if(location.hash==='#mail') route(); else location.hash='mail';
 }
 function vMail(){
-  const done = db.sessions.filter(s=>s.status==='done').sort((a,b)=>b.date.localeCompare(a.date));
-  const planned = db.sessions.filter(s=>s.status==='planned').sort((a,b)=>a.date.localeCompare(b.date));
-  const needSession = mail.type==='summary' || mail.type==='reminder';
-  const pool = needSession ? (mail.type==='summary'?done:planned) : [];
-  if(needSession && !pool.find(s=>s.id===mail.sessionId)){ mail.sessionId = pool[0]?.id||''; const s=sessionById(mail.sessionId); mail.studentIds = s?(mail.type==='summary'?(s.studentIds.filter(id=>!summarySent(s,id)).length?s.studentIds.filter(id=>!summarySent(s,id)):[...s.studentIds]):[...s.studentIds]):[]; }
+  const done = db.sessions.filter(s=>s.status==='done').sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  if(!done.find(s=>s.id===mail.sessionId)){
+    const first = done.find(s=>s.studentIds.some(id=>!summarySent(s,id))) || done[0];
+    mail.sessionId = first?.id||'';
+    const s=sessionById(mail.sessionId);
+    const miss = s ? s.studentIds.filter(id=>!summarySent(s,id)) : [];
+    mail.studentIds = s ? (miss.length?miss:[...s.studentIds]) : [];
+    mail.subjectEdited=false;
+  }
   const sess = sessionById(mail.sessionId);
-  const candidates = needSession ? (sess?sess.studentIds.map(student).filter(Boolean):[]) : db.students;
-  const log = [...db.mails].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
-  return header('מרכז דיוורים', 'בוחרים סוג מייל, רואים תצוגה מקדימה, ושולחים ישר מ-Gmail') +
+  const candidates = sess ? sess.studentIds.map(student).filter(Boolean) : [];
+  const log = [...db.mails].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,15);
+  const pend = pendingSummaries();
+  const names = s => s.studentIds.map(id=>student(id)?.name).filter(Boolean).join(', ');
+  return header('דיוורים', 'שליחת סיכום סשן ללקוח, עם הסיכום המלא מצורף כ-PDF') +
   `<div class="mailgrid"><div class="grid" style="align-content:start">
     <div class="card">
-      <div class="field"><label>סוג הדיוור</label><div class="checks">${MAIL_TYPES.map(([k,l,e])=>`<label class="chk"><input type="radio" name="mt" value="${k}" ${mail.type===k?'checked':''} onchange="mail.type=this.value;mail.subjectEdited=false;mail.sessionId='';rerender()">${e} ${l}</label>`).join('')}</div></div>
-      ${needSession?`<div class="field"><label>${mail.type==='summary'?'איזה סשן?':'לאיזה סשן מתוכנן?'}</label>
-        ${pool.length?`<select class="in" onchange="mail.sessionId=this.value;mail.subjectEdited=false;const s=sessionById(this.value);mail.studentIds=s?[...s.studentIds]:[];rerender()">${pool.map(s=>`<option value="${s.id}" ${s.id===mail.sessionId?'selected':''}>${fdate(s.date)} · ${esc(sessTitle(s))} (${s.studentIds.length})</option>`).join('')}</select>`:`<div class="muted small">${mail.type==='summary'?'אין עדיין סשנים שהועברו':'אין סשנים מתוכננים'}</div>`}</div>`:''}
-      <div class="field"><label>נמענים</label><div class="checks">${candidates.length?candidates.map(st=>`<label class="chk" title="${esc(st.email||'אין מייל')}"><input type="checkbox" value="${st.id}" ${mail.studentIds.includes(st.id)?'checked':''} onchange="mailToggle('${st.id}',this.checked)">${esc(st.name)}${!st.email?' ⚠':''}${mail.type==='summary'&&sess&&summarySent(sess,st.id)?' ✓':''}</label>`).join(''):'<span class="muted small">אין נמענים</span>'}</div>
-        ${mail.type==='summary'&&sess&&sess.studentIds.some(id=>summarySent(sess,id))?'<div class="muted small" style="margin-top:6px">✓ = כבר קיבלו סיכום לסשן הזה</div>':''}
-        ${mail.type==='statement'&&mail.studentIds.length>1?'<div class="muted small" style="margin-top:6px">בסיכום חשבון כדאי לבחור משתתף אחד, כי כל אחד מקבל את החשבון שלו.</div>':''}</div>
-      ${mail.studentIds.length>1?`<label class="chk" style="margin-bottom:14px"><input type="checkbox" ${mail.bcc?'checked':''} onchange="mail.bcc=this.checked">שליחה בעותק מוסתר (BCC), כך שהנמענים לא יראו זה את המייל של זה</label>`:''}
+      ${done.length?`
+      <div class="field"><label>איזה סשן?</label>
+        <select class="in" onchange="mail.sessionId=this.value;mail.subjectEdited=false;const s=sessionById(this.value);mail.studentIds=s?[...s.studentIds]:[];rerender()">${done.map(s=>`<option value="${s.id}" ${s.id===mail.sessionId?'selected':''}>${fdate(s.date)} · ${esc(names(s)||sessTitle(s))}${s.studentIds.some(id=>!summarySent(s,id))?'':' ✓'}</option>`).join('')}</select></div>
+      <div class="field"><label>נשלח אל</label><div class="checks">${candidates.length?candidates.map(st=>`<label class="chk" title="${esc(st.email||'אין מייל')}"><input type="checkbox" value="${st.id}" ${mail.studentIds.includes(st.id)?'checked':''} onchange="mailToggle('${st.id}',this.checked)">${esc(st.name)}${!st.email?' ⚠ אין מייל':''}${sess&&summarySent(sess,st.id)?' ✓':''}</label>`).join(''):'<span class="muted small">אין לקוחות בסשן הזה</span>'}</div>
+        ${sess&&sess.studentIds.some(id=>summarySent(sess,id))?'<div class="muted small" style="margin-top:6px">✓ = כבר קיבלו את הסיכום</div>':''}</div>
       <div class="field"><label>נושא המייל</label><input class="in" id="m_subject" value="${esc(mail.subject)}" oninput="mail.subject=this.value;mail.subjectEdited=true"></div>
-      <div class="field"><label>מילה אישית (לא חובה)</label><textarea class="in" id="m_note" placeholder="היה כיף לראות את ההתקדמות שלך היום..." oninput="mail.note=this.value;mailPreview()">${esc(mail.note)}</textarea></div>
-      <div class="list" style="gap:8px">
-        <button class="btn pri" style="justify-content:center;padding:12px" id="resendBtn" onclick="sendResend()">🚀 שליחה עכשיו</button>
-        <button class="btn" style="justify-content:center" onclick="sendGmail()">✉ העתקה ופתיחה ב-Gmail</button>
-        <div class="row" style="gap:8px"><button class="btn" style="flex:1;justify-content:center" onclick="copyMail()">⧉ העתקת המייל המעוצב</button><button class="btn" style="flex:1;justify-content:center" onclick="sendMailto()">תוכנת מייל אחרת</button></div>
-        <button class="btn mint" style="justify-content:center" onclick="markSent()">✓ סימון כנשלח</button>
-      </div>
-      <div class="hint" style="margin-top:14px"><b>שליחה עכשיו:</b> המייל יוצא ישר דרך Resend מהדומיין שלך. כל נמען מקבל מייל אישי עם השם שלו, ותשובות מגיעות למייל שבהגדרות.<br><b>Gmail:</b> המייל המעוצב מועתק ו-Gmail נפתח. בגוף המייל לוחצים <b>Ctrl+V</b> ושולחים.</div>
+      <div class="field"><label>מילה אישית (לא חובה)</label><textarea class="in" id="m_note" placeholder="היה כיף לעבוד איתך היום..." oninput="mail.note=this.value;mailPreview()">${esc(mail.note)}</textarea></div>
+      <div class="attach">📎 מצורף: <b>סיכום-סשן.pdf</b></div>
+      <div class="list" style="gap:8px;margin-top:14px">
+        <button class="btn pri" style="justify-content:center;padding:13px;font-size:16px" id="resendBtn" onclick="sendResend()">💌 שליחת הסיכום</button>
+        <button class="btn ghost sm" style="justify-content:center" onclick="markSent()">כבר שלחתי בדרך אחרת · סימון כנשלח</button>
+      </div>`:`<div class="empty small"><div class="big">📭</div>עוד אין סשנים שהועברו.<br>אחרי שמסמנים סשן כ"הועבר", אפשר לשלוח עליו סיכום מכאן.<div style="margin-top:12px"><a class="btn pri" href="#sessions">לרשימת הסשנים</a></div></div>`}
     </div>
-    <div class="card"><h3>🕊 נשלחו לאחרונה</h3>${log.length?`<div class="list">${log.map(m=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc(m.subject)}</b></div><div class="s">${mailTypeBadge(m.type)} ${m.studentIds.map(id=>esc(student(id)?.name||'')).join(', ')} · ${fdate(m.date.slice(0,10))}</div></div><button class="btn sm ghost" title="ביטול הסימון" onclick="unlogMail('${m.id}')">✕</button></div>`).join('')}</div>`:'<div class="muted small">עוד לא נשלחו דיוורים</div>'}</div>
+    ${pend.length?`<div class="card"><h3>⏳ מחכים לסיכום</h3><div class="list">${pend.slice(0,6).map(({s,miss})=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc(miss.map(id=>student(id)?.name).join(', '))}</b></div><div class="s">${fdate(s.date)}</div></div><button class="btn sm" onclick="openMail({sessionId:'${s.id}'})">בחירה</button></div>`).join('')}</div></div>`:''}
+    <div class="card"><h3>🕊 נשלחו לאחרונה</h3>${log.length?`<div class="list">${log.map(m=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc(m.studentIds.map(id=>student(id)?.name||'').filter(Boolean).join(', ')||m.subject)}</b></div><div class="s">${esc(m.subject)} · ${fdate(m.date.slice(0,10))}</div></div><button class="btn sm ghost" title="ביטול הסימון" onclick="unlogMail('${m.id}')">✕</button></div>`).join('')}</div>`:'<div class="muted small">עוד לא נשלחו סיכומים</div>'}</div>
   </div>
   <div class="preview"><div class="bar2"><i></i><i></i><i></i><span style="margin-inline-start:8px" id="m_to"></span></div><div id="m_preview"></div></div></div>`;
 }
@@ -676,102 +545,72 @@ function mailMount(){ mailPreview(); }
 function mailToggle(id,on){ mail.studentIds = on?[...new Set([...mail.studentIds,id])]:mail.studentIds.filter(x=>x!==id); mail.subjectEdited||(mail.subject=''); rerender(); }
 function mailRecipients(){ return mail.studentIds.map(student).filter(Boolean); }
 function mailPreview(){
+  const box=$('#m_preview'); if(!box) return;
   const r = buildMail(); if(!mail.subjectEdited){ mail.subject=r.subject; const i=$('#m_subject'); if(i) i.value=r.subject; }
-  $('#m_preview').innerHTML = r.html;
+  box.innerHTML = r.html;
   const rec = mailRecipients();
   $('#m_to').textContent = rec.length? 'אל: '+rec.map(s=>s.email||s.name+' (אין מייל)').join(', ') : 'לא נבחרו נמענים';
 }
 
-/* email building blocks: tables + inline styles so it survives pasting into Gmail */
+/* email building blocks: tables + inline styles, in the design of the session-summary page */
+const C = {orange:'#FF6B0F', orangeSoft:'#FFF1E7', orangeLine:'#FFD3B5', ink:'#141414', ink2:'#3B3B3B', muted:'#6E6E6E', line:'#ECE7E2', bg:'#FBF9F7', ok:'#1F9D63', okSoft:'#E8F7EF'};
 const E = {
-  font:"font-family:Arial,'Segoe UI',Helvetica,sans-serif;",
-  wrap(inner){ return `<div dir="rtl" style="background:#FBF5F0;padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #F1E5DB;direction:rtl;text-align:right"><tr><td style="padding:18px 32px 14px;border-top:5px solid #F26A12;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="40" height="37" style="display:block;width:40px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:16px;font-weight:bold;color:#1E1B1A">${esc(db.settings.business||'')}${db.settings.program?`<div style="font-size:12.5px;font-weight:normal;color:#E8620C;margin-top:2px">${esc(db.settings.program)}</div>`:''}</td></tr></table></td></tr><tr><td style="padding:0">${inner}</td></tr></table></div>`; },
-  logo(){ return new URL('logo.png', location.href).href; },
-  hero(kicker,title,sub,bg='#FFE8D6',fg='#A2440A'){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};padding:32px 32px 28px;text-align:right">
-     <div style="font-size:13px;color:${fg};opacity:.8;font-weight:bold;letter-spacing:.3px">${kicker}</div>
-     <div style="font-size:26px;line-height:1.3;color:#1E1B1A;font-weight:bold;margin-top:6px">${title}</div>
-     ${sub?`<div style="font-size:14px;color:#6B605A;margin-top:8px">${sub}</div>`:''}</td></tr></table>`; },
-  facts(items){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:16px 32px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FBF5F0;border-radius:14px"><tr>${items.map(([l,v])=>`<td style="padding:12px 14px;text-align:right;vertical-align:top"><div style="font-size:12px;color:#857C75">${l}</div><div style="font-size:14.5px;font-weight:bold;color:#1E1B1A;margin-top:2px">${v}</div></td>`).join('')}</tr></table></td></tr></table>`; },
-  p(t){ return `<div style="padding:0 32px;font-size:15px;line-height:1.75;color:#3A322D;margin:22px 0 0">${t}</div>`; },
-  box(icon,title,body,bg,border){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};border-right:4px solid ${border};border-radius:14px;padding:18px 20px;text-align:right">
-     <div style="font-size:15px;font-weight:bold;color:#1E1B1A;margin-bottom:8px">${icon}&nbsp; ${title}</div><div style="font-size:14.5px;line-height:1.75;color:#3A322D">${body}</div></td></tr></table></td></tr></table>`; },
-  ul(items){ return items.map(i=>`<div style="padding:3px 0">•&nbsp; ${esc(i)}</div>`).join(''); },
-  codes(items){ return items.map(c=>`<span style="display:inline-block;direction:ltr;font-family:Consolas,'Courier New',monospace;background:#ffffff;border:1px solid #CFE2F5;color:#235B8A;border-radius:8px;padding:3px 10px;margin:3px 0 3px 6px;font-size:13.5px">${esc(c)}</span>`).join(''); },
-  sign(){ const S=db.settings; return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px"><tr><td style="padding:22px 32px 28px;border-top:1px solid #F3EAE2;text-align:right">
-     ${S.signature?`<div style="font-size:15px;color:#3A322D;margin-bottom:10px">${esc(S.signature)}</div>`:''}
-     <div style="font-size:15px;font-weight:bold;color:#1E1B1A">${esc(S.instructor||'')}</div>
-     <div style="font-size:13px;color:#857C75">${esc(S.business||'')}</div>
-     <div style="font-size:13px;color:#857C75;margin-top:4px;direction:rtl">${[S.phone,S.email,S.site].filter(Boolean).map(esc).join(' &nbsp;·&nbsp; ')}</div></td></tr></table>`; },
+  font:"font-family:Heebo,Arial,'Segoe UI',Helvetica,sans-serif;",
+  logo(){ return new URL('/logo.png', location.href).href; },
+  wrap(inner){ return `<div dir="rtl" style="background:${C.bg};padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid ${C.line};direction:rtl;text-align:right">
+    <tr><td style="padding:20px 30px 16px;border-bottom:2px solid ${C.ink}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="vertical-align:middle;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="36" style="display:block;width:36px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:18px;font-weight:800;color:${C.ink}">ספיד <span style="color:${C.orange}">אוטומציות</span></td></tr></table></td>
+      <td style="vertical-align:middle;text-align:left;font-size:13px;font-weight:700;color:${C.muted}">סיכום סשן</td></tr></table></td></tr>
+    <tr><td style="padding:0 30px 26px;text-align:right">${inner}</td></tr></table></div>`; },
+  h2(t){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0 12px"><tr><td style="width:6px;background:${C.orange};border-radius:3px">&nbsp;</td><td style="padding-right:10px;font-size:19px;font-weight:800;color:${C.ink}">${t}</td></tr></table>`; },
+  meta(items){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${items.map(([l,v],i)=>`<td style="width:${Math.floor(100/items.length)}%;padding-left:${i<items.length-1?8:0}px;vertical-align:top"><div style="background:#ffffff;border:1px solid ${C.line};border-radius:14px;padding:11px 14px;text-align:right"><div style="font-size:12px;color:${C.muted};font-weight:700">${l}</div><div style="font-size:16px;font-weight:700;color:${C.ink};margin-top:2px">${v}</div></div></td>`).join('')}</tr></table>`; },
+  steps(items){ return items.map((x,i)=>`<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px"><tr>
+      <td style="width:46px;vertical-align:top"><div style="width:34px;height:34px;line-height:34px;border-radius:50%;background:${C.orange};color:#ffffff;font-weight:800;font-size:15px;text-align:center">${i+1}</div></td>
+      <td style="background:#ffffff;border:1px solid ${C.line};border-radius:14px;padding:11px 15px;text-align:right">
+        <div style="font-size:16px;font-weight:700;color:${C.ink}">${esc(x.t)}</div>
+        ${x.d?`<div style="font-size:14px;line-height:1.65;color:${C.ink2};margin-top:2px">${esc(x.d)}</div>`:''}
+        ${x.links?.length?`<div style="margin-top:6px">${x.links.map(l=>`<span style="display:inline-block;direction:ltr;font-size:12.5px;background:${C.orangeSoft};border:1px solid ${C.orangeLine};color:#B4520A;border-radius:99px;padding:1px 10px;margin-left:4px">${esc(l)}</span>`).join('')}</div>`:''}
+      </td></tr></table>`).join(''); },
+  lists(have,next){
+    const col=(title,items,mark,color)=>`<div style="background:#ffffff;border:1px solid ${C.line};border-radius:14px;padding:13px 16px;text-align:right"><div style="font-size:15px;font-weight:700;color:${C.ink};margin-bottom:6px">${title}</div>${items.map(t=>`<div style="font-size:14px;line-height:1.6;color:${C.ink2};padding:2px 0"><span style="color:${color};font-weight:800">${mark}</span>&nbsp; ${esc(t)}</div>`).join('')}</div>`;
+    const cols=[have.length?col('מה יש לך עכשיו',have,'✓',C.ok):'', next.length?col('הצעדים הבאים',next,'☐',C.orange):''].filter(Boolean);
+    if(!cols.length) return '';
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px"><tr>${cols.map((c,i)=>`<td style="width:${100/cols.length}%;vertical-align:top;padding-left:${i<cols.length-1?10:0}px">${c}</td>`).join('')}</tr></table>`; },
+  prompt(t){ return `<div style="background:#ffffff;border:1px solid ${C.line};border-right:5px solid ${C.orange};border-radius:12px;padding:12px 18px;font-size:14.5px;line-height:1.8;color:${C.ink}">${esc(t).replace(/\n/g,'<br>').replace(/\[([^\]]+)\]/g,`<span style="background:${C.orangeSoft};color:#B4520A;border-radius:5px;padding:0 5px;font-weight:700">$1</span>`)}</div>`; },
+  tip(t){ return `<div style="background:${C.okSoft};border:1px solid #BFE8D2;border-radius:12px;padding:10px 16px;font-size:14.5px;line-height:1.65;color:${C.ink};margin-top:12px"><b>טיפ:</b> ${esc(t)}</div>`; },
+  note(t){ return `<div style="background:${C.orangeSoft};border:1px solid ${C.orangeLine};border-radius:12px;padding:12px 16px;font-size:15px;line-height:1.7;color:${C.ink};margin-top:16px">💬 ${esc(t).replace(/\n/g,'<br>')}</div>`; },
+  button(href,label){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px"><tr><td style="background:${C.orange};border-radius:12px"><a href="${esc(href)}" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px">${label}</a></td></tr></table>`; },
+  sign(){ const S=db.settings; return `<div style="margin-top:26px;padding-top:16px;border-top:1px solid ${C.line};font-size:14.5px;color:${C.ink2};line-height:1.7">
+     ${S.signature?`<div>${esc(S.signature)}</div>`:''}
+     <div style="font-weight:700;color:${C.ink};margin-top:6px">${S.instructor?esc(S.instructor)+' | ':''}ספיד אוטומציות</div>
+     <div style="font-size:13px;color:${C.muted}">שאלות? אפשר פשוט לענות למייל הזה.</div></div>`; },
 };
 function greet(rec){ return rec.length===1 ? `היי ${esc(firstName(rec[0].name))},` : rec.length ? 'היי לכולם,' : 'היי,'; }
 function buildMail(recOverride){
-  const rec = recOverride || mailRecipients(), S = db.settings;
-  if(mail.type==='summary'){
-    const s = sessionById(mail.sessionId);
-    if(!s) return {subject:'',html:'<div class="empty">בחרי סשן כדי לראות תצוגה מקדימה</div>'};
-    const m = moduleById(s.moduleId) || {points:[],commands:[],tips:[],homework:'',goal:''};
-    const high = s.highlights?.length ? s.highlights : m.points;
-    const hw = s.homework || m.homework;
-    const mods = sortedModules(); const nextMod = m.num ? mods.find(x=>x.num>m.num) : null;
-    const nextSess = db.sessions.filter(x=>x.status==='planned' && x.date>=s.date && x.studentIds.some(id=>mail.studentIds.includes(id))).sort((a,b)=>a.date.localeCompare(b.date))[0];
-    const subject = `סיכום הסשן: ${sessTitle(s)} ✨`;
-    let html = E.hero(`סיכום סשן${m.num?' '+m.num:''} · ${fdate(s.date)}`, esc(sessTitle(s)), m.goal?esc(m.goal):'')
-      + E.facts([['👤 לקוח',esc(rec.map(x=>x.name).join(', ')||'')],['📅 תאריך',fdate(s.date)],['🕒 שעות',s.time?`<span dir="ltr">${timeRange(s)}</span>`:'—'],['⏱ משך',hrs(s.duration)]])
-      + E.p(`${greet(rec)}<br>תודה על הסשן! ריכזתי כאן את כל מה שעשינו, כדי שיהיה קל לחזור לזה ולהמשיך לתרגל.`)
-      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
-      + (high.length?E.box('✦','מה עשינו היום',E.ul(high),'#FFF1E6','#FFB27A'):'')
-      + (m.commands?.length?E.box('⌨','פקודות שכדאי לזכור',E.codes(m.commands),'#EDF6FE','#9CCBF2'):'')
-      + (m.tips?.length?E.box('💡','טיפים',E.ul(m.tips),'#EAF8F1','#94DDBA'):'')
-      + (hw?E.box('🎯','משימה לתרגול',esc(hw),'#FFF2EA','#FFC3A3'):'')
-      + ((nextSess||nextMod)?E.box('📅','מה בסשן הבא', nextSess?`<b>${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}</b><br>${esc(sessTitle(nextSess))}`:`נמשיך ל<b>${esc(nextMod.title)}</b>. נתאם מועד בקרוב.`,'#FFF8DE','#F2D46B'):'')
-      + (/^https?:\/\//.test(S.guide||'')?E.box('📘','המדריך המלא',`כל השלבים עם צילומי מסך, במקום אחד:<br><a href="${esc(S.guide)}" style="display:inline-block;margin-top:10px;background:#F26A12;color:#ffffff;text-decoration:none;font-weight:bold;border-radius:10px;padding:10px 18px">לפתיחת המדריך ←</a>`,'#FFF4EC','#F26A12'):'')
-      + E.p('יש שאלות? אפשר פשוט לענות למייל הזה.')
-      + E.sign();
-    return {subject, html:E.wrap(html)};
-  }
-  if(mail.type==='statement'){
-    const st = rec[0];
-    if(!st) return {subject:'',html:'<div class="empty">בחרי משתתף כדי לראות את סיכום החשבון</div>'};
-    const ss = db.sessions.filter(s=>s.status==='done'&&s.studentIds.includes(st.id)).sort((a,b)=>a.date.localeCompare(b.date));
-    const charged = ss.reduce((a,s)=>a+(+s.price||0),0), paid = ss.filter(s=>s.paid?.[st.id]).reduce((a,s)=>a+(+s.price||0),0), bal=charged-paid;
-    const rows = ss.map(s=>`<tr><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:14px;color:#3A322D">${fdate(s.date)}</td><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:13px;color:#3A322D;white-space:nowrap"><span dir="ltr">${timeRange(s)||''}</span>${s.time?'<br>':''}<span style="color:#857C75">${hrs(s.duration)}</span></td><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:14px;color:#1E1B1A">${esc(sessTitle(s))}</td><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:14px;color:#1E1B1A;white-space:nowrap">${money(s.price)}</td><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:13px;white-space:nowrap">${s.paid?.[st.id]?'<span style="background:#D3F2E4;color:#1D6B4B;border-radius:99px;padding:2px 10px">שולם</span>':'<span style="background:#FFE3D4;color:#9A4A26;border-radius:99px;padding:2px 10px">לתשלום</span>'}</td></tr>`).join('');
-    const tot = (l,v,c='#1E1B1A',b=false)=>`<tr><td style="padding:6px 0;font-size:14px;color:#6B605A">${l}</td><td style="padding:6px 0;font-size:${b?'20':'15'}px;color:${c};font-weight:bold;text-align:left">${v}</td></tr>`;
-    const subject = bal>0 ? `סיכום חשבון: ${money(bal)} לתשלום` : 'סיכום חשבון: הכל שולם, תודה! 💚';
-    let html = E.hero('סיכום חשבון', esc(st.name), `נכון ל${fdateLong(todayISO())}`,'#E3F6EC','#1D6B4B')
-      + E.facts([['👤 לקוח',esc(st.name)],['📅 תקופה',ss.length?`${fdate(ss[0].date)} – ${fdate(ss[ss.length-1].date)}`:'—'],['⏱ סה״כ שעות',hrs(ss.reduce((a,s)=>a+(+s.duration||0),0))]])
-      + E.p(`${greet([st])}<br>${bal>0?'מצרפת סיכום של הסשנים שלנו ושל מה שנשאר לתשלום.':'מצרפת סיכום של הסשנים שלנו. הכל מסודר ושולם, תודה רבה!'}`)
-      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
-      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F1E5DB;border-radius:14px;overflow:hidden;border-collapse:separate"><tr style="background:#FBF5F0"><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">תאריך</th><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">שעות</th><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">נושא</th><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">סכום</th><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">סטטוס</th></tr>${rows||'<tr><td colspan="5" style="padding:14px;color:#857C75">אין סשנים</td></tr>'}</table></td></tr></table>`
-      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFBF8;border-radius:14px;padding:12px 18px"><tr><td style="padding:10px 18px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${tot('סה״כ סשנים',ss.length)}${tot('סה״כ שעות',hrs(ss.reduce((a,s)=>a+(+s.duration||0),0)))}${tot('סה״כ חויב',money(charged))}${tot('שולם',money(paid),'#1D6B4B')}${tot('יתרה לתשלום',money(bal),bal>0?'#C7653A':'#1D6B4B',true)}</table></td></tr></table></td></tr></table>`
-      + (bal>0&&S.payment?E.box('💳','פרטי תשלום',esc(S.payment).replace(/\n/g,'<br>'),'#EAF8F1','#94DDBA'):'')
-      + E.p('תודה על השיתוף פעולה! בכל שאלה אפשר לענות למייל הזה.')
-      + E.sign();
-    return {subject, html:E.wrap(html)};
-  }
-  if(mail.type==='reminder'){
-    const s = sessionById(mail.sessionId);
-    if(!s) return {subject:'',html:'<div class="empty">בחרי סשן מתוכנן</div>'};
-    const m = moduleById(s.moduleId);
-    const subject = `תזכורת: נפגשים ב${fdateLong(s.date)}${s.time?' ב-'+s.time:''} 📅`;
-    let html = E.hero('תזכורת לסשן', esc(sessTitle(s)), `${fdateLong(s.date)}${s.time?' · '+esc(s.time):''}${s.duration?' · '+s.duration+' דקות':''}`,'#E3F0FD','#235B8A')
-      + E.p(`${greet(rec)}<br>רק מזכירה שאנחנו נפגשים בקרוב! הנה מה שמחכה לנו:`)
-      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
-      + (m?.points?.length?E.box('✦','על מה נעבוד',E.ul(m.points),'#FFF1E6','#FFB27A'):'')
-      + E.box('🎒','להכנה לפני הסשן',E.ul(['מחשב טעון עם חיבור לאינטרנט','Claude Code מותקן ופתוח','שאלות או דברים שנתקעתם בהם מאז הפעם הקודמת']),'#FFF8DE','#F2D46B')
-      + E.p('אם צריך לשנות מועד, אפשר פשוט לענות למייל הזה.')
-      + E.sign();
-    return {subject, html:E.wrap(html)};
-  }
-  // welcome
-  const subject = `ברוכים הבאים ל${S.program||S.business||'סדנת Claude Code'}! 🌷`;
-  let html = E.hero('ברוכים הבאים', esc(S.program||'מתחילים ללמוד Claude Code ✨'), 'שמחה מאוד שהצטרפת. הנה כל מה שצריך לדעת לפני שמתחילים.','#FDE6DF','#B0412C')
-    + E.p(`${greet(rec)}<br>בתוכנית נבנה יחד את המעטפת הדיגיטלית של העסק: אתר תדמית, ניהול ועדכון שלו, ומערכת ניהול חכמה שמחברת בין האתר למייל. את הכל נעשה עם Claude Code.`)
-    + E.p(`Claude Code הוא עוזר שכותב קוד יחד איתך. מתארים לו במילים מה רוצים לבנות, והוא בונה, מסביר ומתקן. במפגשים נלמד צעד אחר צעד, בלי צורך בניסיון קודם בתכנות.`)
-    + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
-    + E.box('🗺','מה נלמד בתוכנית',sortedModules().map(m=>`<div style="padding:3px 0"><b style="color:#E8620C">${m.num}.</b>&nbsp; ${esc(m.title)}</div>`).join(''),'#FFF1E6','#FFB27A')
-    + E.box('🎒','לפני הסשן הראשון',E.ul(['לפתוח חשבון ב-claude.ai (מנוי Pro ומעלה כולל את Claude Code)','להוריד את אפליקציית Claude לדסקטופ','לחשוב על רעיון קטן שהייתם רוצים לבנות']),'#FFF8DE','#F2D46B')
-    + E.p('מחכה לראות אותך! בכל שאלה אפשר לענות למייל הזה.')
-    + E.sign();
+  const rec = recOverride || mailRecipients();
+  const s = sessionById(mail.sessionId);
+  if(!s) return {subject:'',html:'<div class="empty">בחרי סשן כדי לראות תצוגה מקדימה</div>'};
+  // topics saved in the browser may predate the richer fields, so fill them from the built-in list
+  const m = {...(defaultModules().find(x=>x.id===s.moduleId)||{}), ...(moduleById(s.moduleId)||{})};
+  const steps = s.highlights?.length ? s.highlights.map(t=>({t})) : (m.steps?.length ? m.steps : (m.points||[]).map(t=>({t})));
+  const next = s.homework ? [s.homework] : (m.next?.length ? m.next : (m.homework?[m.homework]:[]));
+  const subject = `סיכום הסשן שלנו: ${sessTitle(s)} ✨`;
+  const nextSess = db.sessions.filter(x=>x.status==='planned' && x.date>=s.date && x.studentIds.some(id=>rec.some(r=>r.id===id))).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const headline = m.headline
+    ? esc(m.headline).replace('Claude Code',`<span style="color:${C.orange}">Claude Code</span>`)
+    : `סיכום הסשן: <span style="color:${C.orange}">${esc(sessTitle(s))}</span>`;
+  const html = `<div style="font-size:28px;line-height:1.25;font-weight:800;color:${C.ink};margin:24px 0 8px">${headline}</div>
+    <div style="font-size:16px;line-height:1.7;color:${C.ink2};margin-bottom:18px">${greet(rec)}<br>${esc(m.lead||'תודה על הסשן! ריכזתי כאן את כל מה שעשינו, כדי שיהיה קל לחזור לזה ולהמשיך.')}</div>
+    ${E.meta([['תאריך',fdate(s.date)],['משך הסשן',hrs(s.duration)],['נושא',esc(m.short||sessTitle(s))]])}
+    ${mail.note?E.note(mail.note):''}
+    ${steps.length?E.h2('מה עשינו בסשן')+E.steps(steps):''}
+    ${E.lists(m.have||[], next)}
+    ${m.prompt?E.h2('להמשך העבודה: מבנה של פרומפט טוב')+E.prompt(m.prompt):''}
+    ${m.tip?E.tip(m.tip):(m.tips?.length?E.tip(m.tips[0]):'')}
+    ${nextSess?`<div style="background:#FFF8DE;border:1px solid #F2D46B;border-radius:12px;padding:12px 16px;font-size:15px;color:${C.ink};margin-top:14px">📅 <b>הסשן הבא:</b> ${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}</div>`:''}
+    ${E.button(location.origin+'/guide/summary.html','לצפייה בסיכום באתר ←')}
+    <div style="font-size:13px;color:${C.muted};margin-top:8px">📎 הסיכום מצורף גם כקובץ PDF</div>
+    ${E.sign()}`;
   return {subject, html:E.wrap(html)};
 }
 function mailCheck(){
@@ -781,58 +620,26 @@ function mailCheck(){
   const noMail = rec.filter(s=>!s.email); if(noMail.length) toast(`שימי לב: אין מייל ל${noMail.map(s=>firstName(s.name)).join(', ')}`);
   return r;
 }
-async function copyRich(html){
-  const text = (()=>{ const d=document.createElement('div'); d.innerHTML=html; d.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(d); const t=d.innerText; d.remove(); return t; })();
-  try{ await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})]); return true; }
-  catch(e){ const d=document.createElement('div'); d.contentEditable='true'; d.innerHTML=html; d.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(d); const r=document.createRange(); r.selectNodeContents(d); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); const ok=document.execCommand('copy'); sel.removeAllRanges(); d.remove(); return ok; }
-}
-async function copyMail(){ const r=buildMail(); if(await copyRich(r.html)) toast('המייל המעוצב הועתק. אפשר להדביק עם Ctrl+V'); else toast('ההעתקה לא הצליחה'); }
-function addrs(r){ const emails=r.rec.map(s=>s.email).filter(Boolean); const useBcc = emails.length>1 && mail.bcc; return {to: useBcc?(db.settings.email||''):emails.join(','), bcc: useBcc?emails.join(','):''}; }
-async function sendGmail(){
-  const r = mailCheck(); if(!r) return;
-  const ok = await copyRich(r.html);
-  const a = addrs(r);
-  const url = 'https://mail.google.com/mail/?view=cm&fs=1' + (a.to?'&to='+encodeURIComponent(a.to):'') + (a.bcc?'&bcc='+encodeURIComponent(a.bcc):'') + '&su='+encodeURIComponent(r.subject);
-  window.open(url,'_blank');
-  logMail(r);
-  toast(ok?'Gmail נפתח. בגוף המייל לוחצים Ctrl+V ושולחים 💌':'Gmail נפתח, אבל ההעתקה לא הצליחה. אפשר ללחוץ על "העתקת המייל המעוצב"');
-}
-function sendMailto(){
-  const r = mailCheck(); if(!r) return;
-  const d=document.createElement('div'); d.innerHTML=r.html; d.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(d); let body=d.innerText.replace(/\n{3,}/g,'\n\n'); d.remove();
-  if(body.length>1800) body=body.slice(0,1800)+'\n...';
-  const a = addrs(r);
-  location.href = `mailto:${encodeURIComponent(a.to)}?${a.bcc?'bcc='+encodeURIComponent(a.bcc)+'&':''}subject=${encodeURIComponent(r.subject)}&body=${encodeURIComponent(body)}`;
-  logMail(r);
-}
-const PASS_KEY='cc-studio-pass';
-function getPass(){ try{ return localStorage.getItem(PASS_KEY)||''; }catch(e){ return ''; } }
 async function api(body){
-  const r = await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json','x-admin-password':getPass()},body:JSON.stringify(body)});
+  const r = await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d = await r.json().catch(()=>({error:r.status===404?'השליחה עובדת רק באתר שעלה ל-Vercel':'שגיאה '+r.status}));
   if(!r.ok) throw new Error(d.error||('שגיאה '+r.status));
   return d;
 }
-async function testPass(){
-  const st=$('#passStatus'); if(st) st.textContent='בבדיקה...';
-  try{ const d=await api({test:true}); if(st) st.innerHTML=`<span style="color:var(--mint-d)">✓ מחובר. השולח: ${esc(d.from)}</span>`; }
-  catch(e){ if(st) st.innerHTML=`<span style="color:#C2415B">${esc(e.message)}</span>`; }
-}
 function htmlText(html){ const d=document.createElement('div'); d.innerHTML=html; d.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(d); const t=d.innerText.replace(/\n{3,}/g,'\n\n'); d.remove(); return t; }
 async function sendResend(){
   const r = mailCheck(); if(!r) return;
-  if(!getPass()){ toast('קודם צריך להגדיר סיסמת שליחה בהגדרות'); location.hash='settings'; return; }
   const withMail = r.rec.filter(s=>s.email);
   if(!withMail.length) return toast('לנמענים שנבחרו אין כתובת מייל');
   if(!confirm(`לשלוח ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} עכשיו?\n\n${withMail.map(s=>s.name+' <'+s.email+'>').join('\n')}`)) return;
-  const emails = withMail.map(s=>{ const b=buildMail([s]); const subject = mail.subjectEdited? mail.subject : b.subject; return {to:[s.email],subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, ...(mail.type==='summary'&&db.settings.attachPdf!==false?{attachments:[{filename:'סיכום-סשן-Claude-Code.pdf',path:location.origin+'/guide/session-summary.pdf'}]}:{})}; });
+  const emails = withMail.map(s=>{ const b=buildMail([s]); const subject = mail.subjectEdited? mail.subject : b.subject; return {to:[s.email],subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, attachments:[{filename:'סיכום-סשן.pdf',path:location.origin+'/guide/session-summary.pdf'}]}; });
   const btn=$('#resendBtn'); if(btn){ btn.disabled=true; btn.textContent='בשליחה...'; }
   try{ await api({emails}); logMail({...r,rec:withMail}); toast(`נשלח ✓ ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} יצאו לדרך 💌`); }
   catch(e){ toast('השליחה נכשלה: '+e.message); if(btn){ btn.disabled=false; btn.textContent='🚀 שליחה עכשיו'; } }
 }
 function markSent(){ const r=mailCheck(); if(!r) return; logMail(r); toast('סומן כנשלח ✓'); }
 function logMail(r){
-  db.mails.push({id:uid(),date:new Date().toISOString(),type:mail.type,sessionId:mail.sessionId||'',studentIds:r.rec.map(s=>s.id),subject:r.subject});
+  db.mails.push({id:uid(),date:new Date().toISOString(),type:'summary',sessionId:mail.sessionId||'',studentIds:r.rec.map(s=>s.id),subject:r.subject});
   save(); setTimeout(rerender,300);
 }
 function unlogMail(id){ db.mails=db.mails.filter(m=>m.id!==id); save(); rerender(); toast('הסימון בוטל'); }
@@ -844,15 +651,9 @@ const ACTIONS = {
   newSession:id=>sessionForm({},id),
   editSession:id=>sessionForm(JSON.parse(JSON.stringify(sessionById(id)))),
   mailSession:(id,el)=>openMail({type:'summary',sessionId:id,...(el.dataset.sid?{studentIds:[el.dataset.sid]}:{})}),
-  mailStatement:id=>openMail({type:'statement',studentIds:[id]}),
-  payAll:id=>{ if(!confirm('לסמן את כל הסשנים של המשתתף כשולמו?')) return; db.sessions.forEach(s=>{ if(s.status==='done'&&s.studentIds.includes(id)&&(billMonth==='all'||s.date.startsWith(billMonth))){ s.paid=s.paid||{}; s.paid[id]=true; } }); save(); rerender(); toast('סומן כשולם ✓'); },
-  editModule:id=>moduleForm(id?moduleById(id):null),
-  resetModules:()=>{ if(!confirm('לשחזר את תוכנית הלימוד המקורית? שינויים שעשית בנושאים יימחקו.')) return; db.modules=defaultModules(); save(); rerender(); },
-  savePass:()=>{ try{ localStorage.setItem(PASS_KEY,val('s_pass')); }catch(e){} testPass(); },
-  saveSettings:()=>{ ['instructor','business','program','email','phone','site','guide','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; db.settings.attachPdf=!!$('#s_attach')?.checked; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
   exportData:()=>{ const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`claude-studio-backup-${todayISO()}.json`; a.click(); },
   demo:()=>{ if((db.students.length||db.sessions.length) && !confirm('זה יחליף את הנתונים הקיימים בנתוני דוגמה. להמשיך?')) return; loadDemo(); },
-  wipe:()=>{ if(!confirm('למחוק את כל הנתונים? כדאי להוריד גיבוי קודם.')) return; if(!confirm('בטוח? אי אפשר לבטל את זה.')) return; db=defaults(); save(); location.hash='dashboard'; rerender(); },
+  wipe:()=>{ if(!confirm('למחוק את כל הנתונים? כדאי להוריד גיבוי קודם.')) return; if(!confirm('בטוח? אי אפשר לבטל את זה.')) return; db=defaults(); save(); location.hash='sessions'; rerender(); },
 };
 document.addEventListener('click', e=>{ const a=e.target.closest('[data-act]'); if(!a) return; e.preventDefault(); ACTIONS[a.dataset.act]?.(a.dataset.id, a, e); });
 function importData(file){ if(!file) return; const fr=new FileReader(); fr.onload=()=>{ try{ const d=JSON.parse(fr.result); if(!d.students||!d.sessions) throw 0; if(!confirm('לשחזר מהגיבוי? הנתונים הנוכחיים יוחלפו.')) return; db={...defaults(),...d}; save(); rerender(); toast('השחזור הצליח ✓'); }catch(e){ toast('הקובץ לא תקין'); } }; fr.readAsText(file); }
@@ -885,7 +686,7 @@ function loadDemo(){
   ];
   db.sessions.forEach(s=>{ if(s.id==='x1'||s.id==='x2') s.date=dayOffset(s.id==='x1'?-70:-63); if(s.id==='x3') s.date=dayOffset(-56); if(s.id==='x4') s.date=dayOffset(-45); });
   db.mails = ['x1','x2','x3','x4','x5','x6','x9','x10'].map(sid=>{const s=db.sessions.find(x=>x.id===sid); return {id:uid(),date:s.date+'T20:00:00.000Z',type:'summary',sessionId:sid,studentIds:[...s.studentIds],subject:'סיכום הסשן: '+sessTitle(s)+' ✨'};});
-  save(); location.hash='dashboard'; rerender(); toast('נתוני הדוגמה נטענו 🌷');
+  save(); location.hash='sessions'; rerender(); toast('נתוני הדוגמה נטענו 🌷');
 }
 
 route();

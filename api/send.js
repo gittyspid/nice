@@ -2,25 +2,17 @@
 // Required environment variables (Vercel → Project → Settings → Environment Variables):
 //   RESEND_API_KEY  – API key from resend.com
 //   RESEND_FROM     – verified sender, e.g. "ספיד אוטומציות <hello@your-domain.co.il>"
-//   ADMIN_PASSWORD  – password the admin page must send; protects the endpoint from strangers
-const crypto = require('crypto');
-
-function safeEqual(a, b) {
-  const x = Buffer.from(String(a || ''));
-  const y = Buffer.from(String(b || ''));
-  return x.length === y.length && crypto.timingSafeEqual(x, y);
-}
+//   REPLY_TO        – optional: where client replies go (e.g. your Gmail)
+// The endpoint is protected by middleware.js (sign-in with ADMIN_USER / ADMIN_PASSWORD).
 const isEmail = s => typeof s === 'string' && /^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/.test(s.trim());
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method not allowed' });
 
-  const { RESEND_API_KEY, RESEND_FROM, ADMIN_PASSWORD } = process.env;
-  if (!RESEND_API_KEY || !RESEND_FROM || !ADMIN_PASSWORD) {
-    return res.status(500).json({ error: 'חסרים משתני סביבה ב-Vercel: RESEND_API_KEY, RESEND_FROM, ADMIN_PASSWORD' });
-  }
-  if (!safeEqual(req.headers['x-admin-password'], ADMIN_PASSWORD)) {
-    return res.status(401).json({ error: 'סיסמת השליחה שגויה' });
+  // Access is checked by middleware.js: only a signed-in session reaches this function.
+  const { RESEND_API_KEY, RESEND_FROM, REPLY_TO } = process.env;
+  if (!RESEND_API_KEY || !RESEND_FROM) {
+    return res.status(500).json({ error: 'חסרים משתני סביבה ב-Vercel: RESEND_API_KEY, RESEND_FROM' });
   }
 
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
@@ -36,6 +28,7 @@ module.exports = async (req, res) => {
     const item = { from: RESEND_FROM, to, subject: String(m.subject).slice(0, 300), html: String(m.html) };
     if (m.text) item.text = String(m.text);
     if (isEmail(m.replyTo)) item.reply_to = m.replyTo.trim();
+    else if (isEmail(REPLY_TO)) item.reply_to = REPLY_TO.trim();
     // Attachments: only PDFs from this site's own public /guide folder (Resend downloads them by URL).
     if (Array.isArray(m.attachments) && m.attachments.length) {
       const host = req.headers['x-forwarded-host'] || req.headers.host;
