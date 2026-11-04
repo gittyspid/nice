@@ -713,11 +713,18 @@ const E = {
 };
 // full email document: loads Heebo where the mail app allows web fonts (Apple Mail, iPhone); Gmail and Outlook fall back to the reader's modern system font (Segoe UI, San Francisco, Roboto)
 function emailDoc(inner){ return `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&display=swap" rel="stylesheet"><style>body,table,td,div,a,span{font-family:Heebo,'Segoe UI Variable Text','Segoe UI',-apple-system,BlinkMacSystemFont,'SF Hebrew',Roboto,'Noto Sans Hebrew','Helvetica Neue',Arial,sans-serif}</style></head><body style="margin:0;padding:0;background:#FBF9F7">${inner}</body></html>`; }
-function greet(rec){ return rec.length===1 ? `היי ${esc(firstName(rec[0].name))},` : rec.length ? 'היי לכולם,' : 'היי,'; }
+function greet(rec){
+  const n = rec.map(r=>esc(firstName(r.name))).filter(Boolean);
+  if(!n.length) return 'היי,';
+  if(n.length>4) return 'היי לכולם,';
+  return 'היי ' + (n.length===1 ? n[0] : n.slice(0,-1).join(', ') + ' ו' + n[n.length-1]) + ',';
+}
 function buildMail(recOverride){
-  const rec = recOverride || mailRecipients();
+  let rec = recOverride || mailRecipients();
   const s = sessionById(mail.sessionId);
   if(!s) return {subject:'',html:'<div class="empty">בחרי סשן כדי לראות תצוגה מקדימה</div>'};
+  // sending only to extra addresses (e.g. a test to yourself): greet the session's client by name
+  if(!rec.length) rec = s.studentIds.map(student).filter(Boolean);
   // topics saved in the browser may predate the richer fields, so fill them from the built-in list
   const m = {...(defaultModules().find(x=>x.id===s.moduleId)||{}), ...(moduleById(s.moduleId)||{})};
   const steps = s.highlights?.length ? s.highlights.map(t=>({t})) : (m.steps?.length ? m.steps : (m.points||[]).map(t=>({t})));
