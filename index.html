@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ספיד אוטומציות · ניהול סשנים</title>
+<title>ספיד Automation · ניהול סשנים</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -168,7 +168,7 @@ code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#FCEDE2;col
 <body>
 <div class="app">
   <aside class="side">
-    <div class="brand"><div class="logo"><img src="logo.png" alt="ספיד אוטומציות"></div><div><b id="brandName">ספיד אוטומציות</b><small>ניהול סשנים ודיוורים</small></div></div>
+    <div class="brand"><div class="logo"><img src="logo.png" alt="ספיד Automation"></div><div><b id="brandName">ספיד Automation</b><small>ניהול סשנים ודיוורים</small></div></div>
     <nav class="nav" id="nav"></nav>
     <div class="foot">💾 הנתונים נשמרים בדפדפן הזה בלבד. כדאי לגבות מדי פעם.
       <div class="row" style="gap:6px;margin-top:8px"><button class="btn sm" data-act="exportData">⬇ גיבוי</button><label class="btn sm">⬆ שחזור<input type="file" accept=".json" hidden onchange="importData(this.files[0])"></label></div></div>
@@ -244,7 +244,7 @@ function defaultModules(){
   ];
 }
 function defaults(){
-  return {settings:{instructor:'',business:'ספיד אוטומציות',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:'',guide:'',attachPdf:true,program:'דיגיטל בספיד: אתר תדמית ומערכת ניהול חכמה'},
+  return {settings:{instructor:'',business:'ספיד Automation',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:'',guide:'',attachPdf:true,program:'דיגיטל בספיד: אתר תדמית ומערכת ניהול חכמה'},
     students:[],sessions:[],modules:defaultModules(),mails:[]};
 }
 function load(){
@@ -314,7 +314,7 @@ const NAV = [
 function renderNav(route){
   const pend = pendingSummaries().reduce((a,x)=>a+x.miss.length,0);
   $('#nav').innerHTML = NAV.map(([k,l,ic,bg])=>`<a href="#${k}" class="${route===k||(route==='student'&&k==='students')?'on':''}"><span class="ic" style="background:${bg}">${ic}</span>${l}${k==='mail'&&pend?`<span class="count">${pend}</span>`:''}</a>`).join('');
-  $('#brandName').textContent = db.settings.business || 'ספיד אוטומציות';
+  $('#brandName').textContent = db.settings.business || 'ספיד Automation';
 }
 function route(){
   const [r,arg] = (location.hash.slice(1)||'sessions').split('/');
@@ -566,7 +566,7 @@ const E = {
   logo(){ return new URL('/logo.png', location.href).href; },
   wrap(inner){ return `<div dir="rtl" style="background:${C.bg};padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid ${C.line};direction:rtl;text-align:right">
     <tr><td style="padding:20px 30px 16px;border-bottom:2px solid ${C.ink}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="vertical-align:middle;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="36" style="display:block;width:36px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:18px;font-weight:800;color:${C.ink}">ספיד <span style="color:${C.orange}">אוטומציות</span></td></tr></table></td>
+      <td style="vertical-align:middle;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="36" style="display:block;width:36px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:18px;font-weight:800;color:${C.ink}">ספיד <span style="color:${C.orange}">Automation</span></td></tr></table></td>
       <td style="vertical-align:middle;text-align:left;font-size:13px;font-weight:700;color:${C.muted}">סיכום סשן</td></tr></table></td></tr>
     <tr><td style="padding:0 30px 26px;text-align:right">${inner}</td></tr></table></div>`; },
   h2(t){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0 12px"><tr><td style="width:6px;background:${C.orange};border-radius:3px">&nbsp;</td><td style="padding-right:10px;font-size:19px;font-weight:800;color:${C.ink}">${t}</td></tr></table>`; },
@@ -589,7 +589,7 @@ const E = {
   button(href,label){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px"><tr><td style="background:${C.orange};border-radius:12px"><a href="${esc(href)}" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px">${label}</a></td></tr></table>`; },
   sign(){ const S=db.settings; return `<div style="margin-top:26px;padding-top:16px;border-top:1px solid ${C.line};font-size:14.5px;color:${C.ink2};line-height:1.7">
      ${S.signature?`<div>${esc(S.signature)}</div>`:''}
-     <div style="font-weight:700;color:${C.ink};margin-top:6px">${S.instructor?esc(S.instructor)+' | ':''}ספיד אוטומציות</div>
+     <div style="font-weight:700;color:${C.ink};margin-top:6px">${S.instructor?esc(S.instructor)+' | ':''}ספיד Automation</div>
      <div style="font-size:13px;color:${C.muted}">שאלות? אפשר פשוט לענות למייל הזה.</div></div>`; },
 };
 function greet(rec){ return rec.length===1 ? `היי ${esc(firstName(rec[0].name))},` : rec.length ? 'היי לכולם,' : 'היי,'; }

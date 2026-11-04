@@ -70,7 +70,7 @@ function loginPage({ error = '', user = '', next = '/', status = 200, closed = f
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>כניסה · ספיד אוטומציות</title>
+<title>כניסה · ספיד Automation</title>
 <link rel="icon" type="image/png" href="${LOGO}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,8 +112,8 @@ input.pw{padding-left:46px}
 <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
 <main class="card">
   <div class="brand">
-    <div class="logo"><img src="${LOGO}" alt="ספיד אוטומציות" width="52" height="48"></div>
-    <h1>ספיד אוטומציות</h1>
+    <div class="logo"><img src="${LOGO}" alt="ספיד Automation" width="52" height="48"></div>
+    <h1>ספיד Automation</h1>
     <p class="sub">ניהול סשנים ודיוורים</p>
   </div>
   ${closed ? `<div class="err">האתר נעול: צריך להגדיר ב-Vercel את ADMIN_USER ואת ADMIN_PASSWORD.</div>` : `
