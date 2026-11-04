@@ -230,7 +230,7 @@ function defaultModules(){
   ];
 }
 function defaults(){
-  return {settings:{instructor:'',business:'ספיד אוטומציות',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:'',guide:'',program:'דיגיטל בספיד: אתר תדמית ומערכת ניהול חכמה'},
+  return {settings:{instructor:'',business:'ספיד אוטומציות',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:'',guide:'',attachPdf:true,program:'דיגיטל בספיד: אתר תדמית ומערכת ניהול חכמה'},
     students:[],sessions:[],modules:defaultModules(),mails:[]};
 }
 function load(){
@@ -517,7 +517,8 @@ function vSettings(){
     <div class="field"><label>טלפון</label><input class="in" id="s_phone" value="${esc(S.phone)}" dir="ltr"></div>
     <div class="field"><label>מחיר ברירת מחדל לסשן (₪)</label><input class="in" id="s_price" type="number" value="${esc(S.price)}"></div>
     <div class="field"><label>אתר / קישור</label><input class="in" id="s_site" value="${esc(S.site)}" dir="ltr" placeholder="https://"></div>
-    <div class="field" style="grid-column:1/-1"><label>קישור למדריך המלא (יופיע בכל מייל סיכום)</label><input class="in" id="s_guide" value="${esc(S.guide)}" dir="ltr" placeholder="https://"></div></div>
+    <div class="field" style="grid-column:1/-1"><label>קישור למדריך המלא (יופיע בכל מייל סיכום)</label><input class="in" id="s_guide" value="${esc(S.guide)}" dir="ltr" placeholder="https://"></div>
+    <div class="field" style="grid-column:1/-1"><label class="chk"><input type="checkbox" id="s_attach" ${S.attachPdf!==false?"checked":""}>📎 לצרף לכל מייל "סיכום סשן" את סיכום הסשן כקובץ PDF</label></div></div>
     <div class="field"><label>פרטי תשלום (יופיעו בסיכום החשבון)</label><textarea class="in" id="s_payment" placeholder="למשל: ביט / פייבוקס למספר 050-0000000, או העברה בנקאית">${esc(S.payment)}</textarea></div>
     <div class="field"><label>משפט סיום לחתימה</label><input class="in" id="s_signature" value="${esc(S.signature)}"></div>
     <button class="btn pri" data-act="saveSettings">שמירה</button>
@@ -824,7 +825,7 @@ async function sendResend(){
   const withMail = r.rec.filter(s=>s.email);
   if(!withMail.length) return toast('לנמענים שנבחרו אין כתובת מייל');
   if(!confirm(`לשלוח ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} עכשיו?\n\n${withMail.map(s=>s.name+' <'+s.email+'>').join('\n')}`)) return;
-  const emails = withMail.map(s=>{ const b=buildMail([s]); const subject = mail.subjectEdited? mail.subject : b.subject; return {to:[s.email],subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email}; });
+  const emails = withMail.map(s=>{ const b=buildMail([s]); const subject = mail.subjectEdited? mail.subject : b.subject; return {to:[s.email],subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, ...(mail.type==='summary'&&db.settings.attachPdf!==false?{attachments:[{filename:'סיכום-סשן-Claude-Code.pdf',path:location.origin+'/guide/session-summary.pdf'}]}:{})}; });
   const btn=$('#resendBtn'); if(btn){ btn.disabled=true; btn.textContent='בשליחה...'; }
   try{ await api({emails}); logMail({...r,rec:withMail}); toast(`נשלח ✓ ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} יצאו לדרך 💌`); }
   catch(e){ toast('השליחה נכשלה: '+e.message); if(btn){ btn.disabled=false; btn.textContent='🚀 שליחה עכשיו'; } }
@@ -848,7 +849,7 @@ const ACTIONS = {
   editModule:id=>moduleForm(id?moduleById(id):null),
   resetModules:()=>{ if(!confirm('לשחזר את תוכנית הלימוד המקורית? שינויים שעשית בנושאים יימחקו.')) return; db.modules=defaultModules(); save(); rerender(); },
   savePass:()=>{ try{ localStorage.setItem(PASS_KEY,val('s_pass')); }catch(e){} testPass(); },
-  saveSettings:()=>{ ['instructor','business','program','email','phone','site','guide','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
+  saveSettings:()=>{ ['instructor','business','program','email','phone','site','guide','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; db.settings.attachPdf=!!$('#s_attach')?.checked; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
   exportData:()=>{ const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`claude-studio-backup-${todayISO()}.json`; a.click(); },
   demo:()=>{ if((db.students.length||db.sessions.length) && !confirm('זה יחליף את הנתונים הקיימים בנתוני דוגמה. להמשיך?')) return; loadDemo(); },
   wipe:()=>{ if(!confirm('למחוק את כל הנתונים? כדאי להוריד גיבוי קודם.')) return; if(!confirm('בטוח? אי אפשר לבטל את זה.')) return; db=defaults(); save(); location.hash='dashboard'; rerender(); },
