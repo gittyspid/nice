@@ -3,7 +3,8 @@
 //   ADMIN_USER      – the username for signing in
 //   ADMIN_PASSWORD  – the password (the same one the send function checks)
 // If either is missing, the site stays closed.
-// Routes handled here: GET/POST /login, GET /logout. /logo.png stays public for the login page.
+// Routes handled here: GET/POST /login, GET /logout.
+// Public without signing in: /logo.png and everything under /guide (the client guide and session summary).
 
 export const config = { matcher: '/:path*' };
 
@@ -156,8 +157,8 @@ export default async function middleware(request) {
   const path = url.pathname;
   const { ADMIN_USER, ADMIN_PASSWORD } = process.env;
 
-  // The logo is public so the login page can show it.
-  if (path === '/logo.png') return pass();
+  // Public: the logo (for the login page) and the client guide and summary under /guide.
+  if (path === '/logo.png' || path === '/guide' || path.startsWith('/guide/')) return pass();
 
   if (!ADMIN_USER || !ADMIN_PASSWORD) {
     if (path.startsWith('/api/')) return Response.json({ error: 'locked' }, { status: 503, headers: noStore });

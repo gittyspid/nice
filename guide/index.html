@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדריך התחלה ל-Claude Code | ספיד אוטומציות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#FF6B0F;
+    --orange-soft:#FFF1E7;
+    --orange-line:#FFD3B5;
+    --ink:#141414;
+    --ink-2:#3B3B3B;
+    --muted:#6E6E6E;
+    --line:#ECE7E2;
+    --bg:#FBF9F7;
+    --card:#FFFFFF;
+    --ok:#1F9D63;
+    --ok-soft:#E8F7EF;
+    --warn:#B4520A;
+    --warn-soft:#FFF4E5;
+    --radius:18px;
+    --shadow:0 1px 2px rgba(20,20,20,.04),0 8px 28px rgba(20,20,20,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Heebo",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:17px}
+  a{color:var(--orange);font-weight:500}
+  code,.mono{font-family:Consolas,"Courier New",monospace;direction:ltr;unicode-bidi:embed}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+
+  /* ---------- Header ---------- */
+  header.top{position:sticky;top:0;z-index:20;background:rgba(251,249,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;text-decoration:none;color:var(--ink)}
+  .brand img{width:34px;height:34px;object-fit:contain}
+  .brand span b{color:var(--orange)}
+  nav.toc-mini a{color:var(--ink-2);text-decoration:none;font-size:14px;margin-inline-start:18px;font-weight:500}
+  nav.toc-mini a:hover{color:var(--orange)}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:72px 0 48px;position:relative;overflow:hidden}
+  .hero:before{content:"";position:absolute;inset:auto -120px -160px auto;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,var(--orange-soft) 0%,transparent 70%)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--orange-soft);color:var(--warn);font-weight:700;font-size:13px;padding:6px 14px;border-radius:999px;border:1px solid var(--orange-line)}
+  .hero h1{font-size:46px;line-height:1.2;margin:18px 0 14px;font-weight:800;letter-spacing:-.5px}
+  .hero h1 em{font-style:normal;color:var(--orange)}
+  .hero p.lead{font-size:20px;color:var(--ink-2);max-width:720px;margin:0}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;color:var(--ink-2);box-shadow:var(--shadow)}
+  .chip b{color:var(--ink)}
+  .dl{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 18px;box-shadow:0 8px 20px rgba(255,107,15,.25)}
+  .dl:hover{background:#E85E05}
+  .dl.ghost{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow)}
+  .dl.ghost:hover{border-color:var(--orange);color:var(--orange)}
+  @media print{.dl{display:none}}
+
+  /* ---------- Sections ---------- */
+  section{padding:40px 0}
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .sec-num{flex:none;width:46px;height:46px;border-radius:14px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;font-size:19px}
+  .sec-num.o{background:var(--orange)}
+  h2{font-size:30px;margin:0;line-height:1.25;font-weight:800}
+  h3{font-size:20px;margin:28px 0 8px;font-weight:700}
+  .sub{color:var(--muted);margin:-8px 0 18px 0;font-size:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px 28px;box-shadow:var(--shadow)}
+  .card + .card{margin-top:16px}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  ol.steps>li{counter-increment:s;position:relative;padding:4px 44px 14px 0}
+  ol.steps>li:before{content:counter(s);position:absolute;right:0;top:4px;width:28px;height:28px;border-radius:50%;background:var(--orange-soft);color:var(--orange);border:1px solid var(--orange-line);font-weight:800;font-size:14px;display:grid;place-items:center}
+  ul.clean{padding-inline-start:20px;margin:6px 0}
+  ul.clean li{margin:4px 0}
+  .kbd{display:inline-block;background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:7px;padding:0 8px;font-size:14px;font-weight:700;color:var(--ink)}
+
+  /* ---------- Checklist ---------- */
+  .need-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .need{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);position:relative}
+  .need .tag{position:absolute;top:16px;left:16px;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px}
+  .tag.must{background:var(--orange-soft);color:var(--warn)}
+  .tag.free{background:var(--ok-soft);color:var(--ok)}
+  .tag.opt{background:#F1F1F1;color:var(--muted)}
+  .need h4{margin:0 0 4px;font-size:17px;padding-left:70px}
+  .need p{margin:0;color:var(--ink-2);font-size:15px}
+  .need .ico{font-size:26px;line-height:1;margin-bottom:8px}
+
+  /* ---------- Flow ---------- */
+  .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .flow .node{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-weight:700;font-size:15px;box-shadow:var(--shadow);text-align:center;min-width:120px}
+  .flow .node small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+  .flow .node.hl{border-color:var(--orange);background:var(--orange-soft)}
+  .flow .arr{color:var(--orange);font-weight:800;font-size:20px}
+
+  /* ---------- Screenshots ---------- */
+  figure.shot{margin:20px 0 6px}
+  .browser{border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 40px rgba(20,20,20,.10);background:#fff}
+  .browser .bar{direction:ltr;display:flex;align-items:center;gap:8px;background:#F3F0ED;padding:10px 14px;border-bottom:1px solid var(--line)}
+  .browser .dots i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;background:#E1DCD7}
+  .browser .dots i:first-child{background:#FF6B0F}
+  .browser .url{flex:1;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 12px;font-size:13px;color:var(--ink-2);font-family:Consolas,monospace}
+  .browser img{display:block;width:100%;height:auto}
+  figcaption{font-size:14px;color:var(--muted);margin-top:10px;display:flex;gap:8px;align-items:flex-start}
+  figcaption:before{content:"";flex:none;width:8px;height:8px;margin-top:8px;border-radius:50%;background:var(--orange)}
+  .shot-wrap{position:relative}
+  .pin{position:absolute;width:34px;height:34px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 6px rgba(255,107,15,.25);font-size:15px}
+  .ring{position:absolute;border:3px solid var(--orange);border-radius:12px;box-shadow:0 0 0 6px rgba(255,107,15,.18)}
+  .illus-tag{direction:rtl;font-family:"Heebo",Arial;font-size:12px;font-weight:700;color:var(--warn);background:var(--orange-soft);border-radius:999px;padding:2px 10px}
+
+  /* ---------- Mockups ---------- */
+  .mock{padding:26px;background:#fff;direction:ltr;text-align:left;font-family:-apple-system,"Segoe UI",Arial,sans-serif;color:#1f2328;font-size:14px}
+  .mock h5{font-size:22px;margin:0 0 4px;font-weight:600}
+  .mock .hint{color:#59636e;font-size:13px;margin-bottom:18px}
+  .mock label{display:block;font-weight:600;margin:14px 0 6px}
+  .mock .in{border:1px solid #d1d9e0;border-radius:6px;padding:7px 10px;background:#f6f8fa;display:inline-block;min-width:240px}
+  .mock .in.focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,15,.2);background:#fff}
+  .mock .radio{display:flex;gap:10px;align-items:center;margin:6px 0}
+  .mock .radio i{width:14px;height:14px;border-radius:50%;border:1px solid #8c959f;display:inline-block}
+  .mock .radio i.on{border:4px solid #0969da}
+  .mock .chk{display:flex;gap:10px;align-items:center;margin:6px 0;color:#1f2328}
+  .mock .chk i{width:14px;height:14px;border-radius:3px;border:1px solid #8c959f;display:inline-block;background:#fff}
+  .mock .btn-g{display:inline-block;background:#1f883d;color:#fff;border-radius:6px;padding:7px 16px;font-weight:600;margin-top:18px}
+  .mock .x{color:#cf222e;font-weight:700;margin-left:8px;font-family:"Heebo";direction:rtl}
+  .app{display:grid;grid-template-columns:200px 1fr;min-height:330px;direction:ltr;font-family:-apple-system,"Segoe UI",Arial,sans-serif;font-size:13.5px}
+  .app .side{background:#F5F2EE;border-right:1px solid var(--line);padding:14px}
+  .app .tabs{display:flex;gap:4px;background:#ebe6e0;border-radius:10px;padding:3px;margin-bottom:14px}
+  .app .tabs span{flex:1;text-align:center;padding:5px 0;border-radius:8px;color:#6e6e6e;font-weight:600}
+  .app .tabs span.on{background:#fff;color:#141414;box-shadow:0 1px 2px rgba(0,0,0,.08);outline:2px solid var(--orange)}
+  .app .sess{padding:7px 9px;border-radius:8px;color:#3b3b3b;margin:3px 0}
+  .app .sess.on{background:#fff}
+  .app .main{display:flex;flex-direction:column;justify-content:flex-end;padding:22px;background:#FBF9F7}
+  .app .msg{align-self:flex-end;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 14px;max-width:80%;direction:rtl;text-align:right;font-family:"Heebo";margin-bottom:10px}
+  .app .msg.ai{align-self:flex-start;background:transparent;border:none;padding:0 4px;color:#3b3b3b}
+  .app .composer{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+  .app .composer .ph{color:#9a9a9a;direction:rtl;text-align:right;font-family:"Heebo"}
+  .app .composer .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .app .folder{display:inline-flex;gap:6px;align-items:center;background:var(--orange-soft);border:1px solid var(--orange-line);color:var(--warn);border-radius:8px;padding:3px 10px;font-weight:600}
+  .app .send{width:28px;height:28px;border-radius:8px;background:var(--orange);display:inline-block}
+
+  /* ---------- Callouts ---------- */
+  .note{border-radius:14px;padding:14px 18px;margin:16px 0;display:flex;gap:12px;align-items:flex-start;font-size:15.5px}
+  .note .i{flex:none;font-size:20px;line-height:1.4}
+  .note.tip{background:var(--ok-soft);border:1px solid #BFE8D2}
+  .note.warn{background:var(--warn-soft);border:1px solid var(--orange-line)}
+  .note.info{background:#F3F1EF;border:1px solid var(--line)}
+  .note b{color:var(--ink)}
+
+  /* ---------- Code / prompt boxes ---------- */
+  .cmd{direction:ltr;text-align:left;background:var(--ink);color:#F4F4F4;border-radius:12px;padding:14px 18px;font-family:Consolas,monospace;font-size:14.5px;margin:10px 0;position:relative;overflow-x:auto;white-space:pre}
+  .cmd .c{color:#8A8A8A}
+  .cmd .o{color:#FFB07A}
+  .prompt{background:#fff;border:1px solid var(--line);border-right:5px solid var(--orange);border-radius:12px;padding:18px 22px;margin:12px 0;white-space:pre-wrap;font-size:15.5px;line-height:1.85;position:relative}
+  .prompt .ph{background:var(--orange-soft);color:var(--warn);border-radius:6px;padding:0 6px;font-weight:700}
+  .prompt-label{font-size:13px;font-weight:700;color:var(--orange);letter-spacing:.3px;margin-top:20px}
+  .copy{position:absolute;top:10px;left:10px;font-family:"Heebo";font-size:12px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);border-radius:8px;padding:3px 10px;cursor:pointer}
+  .cmd .copy{background:#2a2a2a;color:#ddd;border-color:#3a3a3a;left:auto;right:10px}
+  .cmd{padding-right:90px}
+  .copy:hover{border-color:var(--orange);color:var(--orange)}
+
+  /* ---------- Table ---------- */
+  table{width:100%;border-collapse:separate;border-spacing:0;font-size:15.5px}
+  th,td{text-align:right;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:13px;color:var(--muted);font-weight:700;background:#FAF7F4}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .dos h4{margin:0 0 6px}
+  .dos.good h4{color:var(--ok)}
+  .dos.bad h4{color:#C4361B}
+
+  /* ---------- TOC ---------- */
+  .toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;counter-reset:t}
+  .toc a{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;text-decoration:none;color:var(--ink);font-weight:500;font-size:15px;transition:.15s}
+  .toc a:hover{border-color:var(--orange);transform:translateY(-1px)}
+  .toc a b{color:var(--orange);font-weight:800;min-width:20px}
+
+  /* ---------- Footer ---------- */
+  footer{margin-top:40px;background:var(--ink);color:#d9d9d9;padding:40px 0}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  footer .brand{color:#fff}
+  footer .brand img{background:#fff;border-radius:10px;padding:3px;width:40px;height:40px}
+  footer small{color:#9a9a9a}
+
+  @media (max-width:760px){
+    .hero h1{font-size:32px}
+    h2{font-size:24px}
+    nav.toc-mini{display:none}
+    .two{grid-template-columns:1fr}
+    .app{grid-template-columns:1fr}
+    .app .side{display:none}
+    .card{padding:20px}
+  }
+  @page{size:A4;margin:12mm 0}
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    header.top{position:static;backdrop-filter:none}
+    nav.toc-mini,.copy{display:none}
+    body{background:#fff;font-size:15px}
+    .hero{padding:24px 0 24px}
+    .hero h1{font-size:38px}
+    section{padding:18px 0}
+    .sec-head{break-after:avoid}
+    figure.shot,.need,.note,.prompt,tr,.flow,.dos,ol.steps>li{break-inside:avoid}
+    .card{box-shadow:none}
+    .browser{box-shadow:none}
+    section#plan,section#install,section#git,section#github,section#code,section#connect,section#vercel,section#prompt,section#glossary,section#trouble{break-before:page}
+    footer{margin-top:20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/logo.png" alt="ספיד אוטומציות"><span>ספיד <b>אוטומציות</b></span></a>
+    <nav class="toc-mini">
+      <a href="#need">מה צריך</a>
+      <a href="#install">התקנה</a>
+      <a href="#git">גיט</a>
+      <a href="#vercel">פרסום</a>
+      <a href="#prompt">פרומפט ראשון</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow">● סיכום סשן · מדריך למתחילים</span>
+    <h1>מתחילים לעבוד עם <em>Claude Code</em><br>מהתקנה ועד אתר באוויר</h1>
+    <p class="lead">כל מה שעשינו בסשן, צעד אחרי צעד: אילו אתרים פתחנו, מה התקנו, איך חיברנו את Claude ל-GitHub, איך מעלים אתר לאוויר, ואיך כותבים פרומפט ראשון לאתר לעסק שלכם.</p>
+    <div class="hero-meta">
+      <span class="chip">⏱ זמן הקמה: <b>כ-30–45 דקות</b></span>
+      <span class="chip">💻 מערכת: <b>Windows</b> (ב-Mac התהליך כמעט זהה)</span>
+      <span class="chip">🧰 ידע קודם: <b>לא צריך</b></span>
+    </div>
+    <div class="hero-meta">
+      <a class="dl" href="claude-code-guide.pdf" download>⬇ הורדת המדריך כ-PDF</a>
+      <a class="dl ghost" href="session-summary.pdf" download>⬇ סיכום הסשן (עמוד אחד)</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- TOC -->
+  <div class="toc">
+    <a href="#need"><b>1</b>מה צריך לפני שמתחילים</a>
+    <a href="#map"><b>2</b>מפת התהליך</a>
+    <a href="#plan"><b>3</b>מנוי ל-Claude</a>
+    <a href="#install"><b>4</b>התקנת אפליקציית Claude</a>
+    <a href="#git"><b>5</b>התקנת Git</a>
+    <a href="#github"><b>6</b>חשבון GitHub וריפו</a>
+    <a href="#code"><b>7</b>פתיחת Claude Code</a>
+    <a href="#connect"><b>8</b>חיבור התיקייה לגיט</a>
+    <a href="#vercel"><b>9</b>פרסום האתר ב-Vercel</a>
+    <a href="#prompt"><b>10</b>פרומפט ראשון לאתר לעסק</a>
+    <a href="#glossary"><b>11</b>מילון מונחים</a>
+    <a href="#trouble"><b>12</b>תקלות נפוצות</a>
+  </div>
+
+  <!-- ================= 1. NEED ================= -->
+  <section id="need">
+    <div class="sec-head"><div class="sec-num o">1</div><h2>מה צריך לפני שמתחילים</h2></div>
+    <p class="sub">זו כל הרשימה. כדאי לסמן כל שורה לפני שממשיכים.</p>
+    <div class="need-grid">
+      <div class="need"><span class="tag must">חובה</span><div class="ico">💻</div><h4>מחשב Windows או Mac</h4><p>עם חיבור אינטרנט והרשאה להתקין תוכנות. Claude Code עובד על המחשב עצמו, ולכן אי אפשר להשתמש בו מהטלפון בלבד.</p></div>
+      <div class="need"><span class="tag must">חובה · בתשלום</span><div class="ico">✳️</div><h4>מנוי Claude בתשלום</h4><p>Claude Code לא כלול בתוכנית החינמית. צריך מנוי <b>Pro</b> לפחות. מנוי Max נותן יותר שימוש.</p></div>
+      <div class="need"><span class="tag must">חובה · חינם</span><div class="ico">⬇️</div><h4>אפליקציית Claude למחשב</h4><p>מורידים אותה מהאתר הרשמי. Claude Code נמצא בה בלשונית <b>Code</b>.</p></div>
+      <div class="need"><span class="tag must">חובה · חינם</span><div class="ico">🔀</div><h4>Git</h4><p>התוכנה ששומרת גרסאות של הקבצים ומעלה אותם ל-GitHub.</p></div>
+      <div class="need"><span class="tag free">חינם</span><div class="ico">🐙</div><h4>חשבון GitHub</h4><p>המקום באינטרנט שבו נשמר הקוד של האתר, וממנו הוא עולה לאוויר.</p></div>
+      <div class="need"><span class="tag free">חינם</span><div class="ico">▲</div><h4>חשבון Vercel</h4><p>השירות שמפרסם את האתר בכתובת אמיתית. נרשמים אליו עם חשבון ה-GitHub.</p></div>
+      <div class="need"><span class="tag opt">רשות</span><div class="ico">🌐</div><h4>דומיין משלכם</h4><p>למשל <span class="mono">my-business.co.il</span>. בלי דומיין האתר יקבל כתובת חינמית של Vercel.</p></div>
+      <div class="need"><span class="tag opt">רשות</span><div class="ico">📝</div><h4>חומרים על העסק</h4><p>לוגו, תמונות, טקסטים ופרטי התקשרות. ככל שיש יותר חומר, האתר הראשון יוצא קרוב יותר למה שאתם רוצים.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= 2. MAP ================= -->
+  <section id="map">
+    <div class="sec-head"><div class="sec-num">2</div><h2>מפת התהליך</h2></div>
+    <p class="sub">כך החלקים מתחברים. Claude כותב את האתר על המחשב, GitHub שומר אותו, ו-Vercel מציג אותו לעולם.</p>
+    <div class="card">
+      <div class="flow">
+        <div class="node">מנוי Claude<small>claude.com/pricing</small></div><span class="arr">←</span>
+        <div class="node">אפליקציית Claude<small>claude.com/download</small></div><span class="arr">←</span>
+        <div class="node">Git<small>git-scm.com</small></div><span class="arr">←</span>
+        <div class="node">ריפו ב-GitHub<small>github.com/new</small></div><span class="arr">←</span>
+        <div class="node hl">Claude Code בונה<small>לשונית Code</small></div><span class="arr">←</span>
+        <div class="node">Vercel<small>vercel.com/new</small></div><span class="arr">←</span>
+        <div class="node hl">🎉 אתר באוויר</div>
+      </div>
+      <div class="note info" style="margin-bottom:0"><span class="i">💡</span><div><b>הרעיון המרכזי:</b> אחרי שהכול מחובר, כל שינוי שמבקשים מ-Claude ומעלים ל-GitHub מתעדכן באתר החי לבד, תוך דקה-שתיים.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 3. PLAN ================= -->
+  <section id="plan">
+    <div class="sec-head"><div class="sec-num o">3</div><h2>שלב 1: מנוי ל-Claude</h2></div>
+    <p class="sub">דף שפותחים: <a href="https://claude.com/pricing" target="_blank">claude.com/pricing</a></p>
+    <div class="card">
+      <ol class="steps">
+        <li>נכנסים לדף התמחור ובוחרים תוכנית <b>Pro</b>. היא הכי משתלמת להתחלה.</li>
+        <li>נרשמים עם כתובת מייל או עם חשבון Google. את המייל הזה נשתמש בו גם להתחברות לאפליקציה.</li>
+        <li>מזינים פרטי תשלום ומאשרים. אפשר לשלם חודשי או שנתי, ובשנתי המחיר לחודש נמוך יותר.</li>
+      </ol>
+      <figure class="shot">
+        <div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">claude.com/pricing</span></div>
+          <div class="shot-wrap"><img src="img/02-claude-pricing.png" alt="דף התמחור של Claude"><span class="ring" style="left:27.5%;top:56%;width:22%;height:43%"></span><span class="pin" style="left:46%;top:58%">1</span></div>
+        </div>
+        <figcaption>דף התמחור. התוכנית המסומנת, Pro, היא המינימום שנדרש ל-Claude Code. המחירים בצילום נכונים ליום כתיבת המדריך.</figcaption>
+      </figure>
+      <div class="note warn"><span class="i">⚠️</span><div><b>חשוב:</b> בתוכנית החינמית (Free) לשונית Code לא תעבוד. אם ההתחברות לא נותנת גישה ל-Code, בדקו שהמנוי פעיל.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 4. INSTALL ================= -->
+  <section id="install">
+    <div class="sec-head"><div class="sec-num o">4</div><h2>שלב 2: התקנת אפליקציית Claude</h2></div>
+    <p class="sub">דף שפותחים: <a href="https://claude.com/download" target="_blank">claude.com/download</a></p>
+    <div class="card">
+      <ol class="steps">
+        <li>לוחצים על <b>Download for Windows</b>. ב-Mac הכפתור יופיע כ-Download for macOS.</li>
+        <li>פותחים את הקובץ שירד ומאשרים את ההתקנה.</li>
+        <li>פותחים את Claude ולוחצים <b>Log in</b>. מתחברים עם אותו מייל של המנוי.</li>
+        <li>אחרי ההתחברות רואים למעלה שלוש לשוניות: <b>Chat</b>, <b>Cowork</b> ו-<b>Code</b>. אנחנו עובדים בלשונית Code.</li>
+      </ol>
+      <figure class="shot">
+        <div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">claude.com/download</span></div>
+          <div class="shot-wrap"><img src="img/01-claude-download.png" alt="דף ההורדה של Claude"><span class="ring" style="left:26.2%;top:44.8%;width:19.4%;height:6.8%"></span><span class="pin" style="left:23%;top:45%">1</span></div>
+        </div>
+        <figcaption>דף ההורדה. לוחצים על הכפתור השחור Download for Windows. רוב המחשבים צריכים את הגרסה הרגילה ולא את arm64.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================= 5. GIT ================= -->
+  <section id="git">
+    <div class="sec-head"><div class="sec-num o">5</div><h2>שלב 3: התקנת Git</h2></div>
+    <p class="sub">דף שפותחים: <a href="https://git-scm.com/downloads/win" target="_blank">git-scm.com/downloads/win</a></p>
+    <div class="card">
+      <ol class="steps">
+        <li>לוחצים על <b>Click here to download</b>. ההורדה מתחילה מיד.</li>
+        <li>פותחים את הקובץ ולוחצים <b>Next</b> בכל המסכים בלי לשנות כלום. ברירות המחדל מתאימות.</li>
+        <li>בסוף לוחצים <b>Finish</b>. ההתקנה כוללת את <b>Git Credential Manager</b>, שיזכור את ההתחברות שלכם ל-GitHub, כך שלא תצטרכו להתחבר שוב בכל פעם.</li>
+        <li>כדי לבדוק שההתקנה הצליחה, אפשר פשוט לכתוב ל-Claude Code: <b>"תבדוק אם Git מותקן אצלי"</b>.</li>
+      </ol>
+      <figure class="shot">
+        <div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">git-scm.com/downloads/win</span></div>
+          <div class="shot-wrap"><img src="img/03-git-download.png" alt="דף ההורדה של Git"><span class="ring" style="left:35.5%;top:28.6%;width:13%;height:4.4%"></span><span class="pin" style="left:49.5%;top:28%">1</span></div>
+        </div>
+        <figcaption>דף ההורדה של Git ל-Windows. הקישור המסומן מוריד את הגרסה העדכנית.</figcaption>
+      </figure>
+      <h3>הגדרת שם ומייל (פעם אחת בלבד)</h3>
+      <p>Git רושם את השם שלכם על כל שמירה. אפשר לבקש מ-Claude לעשות את זה, או להריץ בעצמכם בטרמינל:</p>
+      <div class="cmd"><button class="copy">העתקה</button>git config --global user.name "<span class="o">השם שלכם</span>"
+git config --global user.email "<span class="o">your@email.com</span>"</div>
+      <div class="note tip"><span class="i">✅</span><div><b>טיפ:</b> כדאי להשתמש באותו מייל שאיתו נרשמים ל-GitHub.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 6. GITHUB ================= -->
+  <section id="github">
+    <div class="sec-head"><div class="sec-num o">6</div><h2>שלב 4: חשבון GitHub ויצירת ריפו</h2></div>
+    <p class="sub">דפים שפותחים: <a href="https://github.com" target="_blank">github.com</a> ואז <a href="https://github.com/new" target="_blank">github.com/new</a></p>
+    <div class="card">
+      <h3 style="margin-top:0">א. פתיחת חשבון</h3>
+      <ol class="steps">
+        <li>נכנסים ל-github.com ולוחצים <b>Create an account</b>, או מתחברים עם Google.</li>
+        <li>בוחרים שם משתמש באנגלית. הוא יופיע בכתובת של כל הפרויקטים, למשל <span class="mono">github.com/your-name</span>.</li>
+        <li>מאשרים את המייל שנשלח מ-GitHub.</li>
+      </ol>
+      <figure class="shot">
+        <div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">github.com/login</span></div>
+          <div class="shot-wrap"><img src="img/04-github-login.png" alt="דף ההתחברות של GitHub"><span class="ring" style="left:49%;top:64.6%;width:9.6%;height:4.6%"></span><span class="pin" style="left:60%;top:64.2%">1</span></div>
+        </div>
+        <figcaption>מסך ההתחברות של GitHub. מי שעדיין אין לו חשבון לוחץ על Create an account.</figcaption>
+      </figure>
+
+      <h3>ב. יצירת ריפו (Repository) חדש</h3>
+      <p>ריפו הוא "תיקייה בענן" לפרויקט אחד. לכל אתר פותחים ריפו משלו.</p>
+      <ol class="steps">
+        <li>נכנסים ל-<b>github.com/new</b>, או לוחצים על <b>+</b> בפינה העליונה ואז <b>New repository</b>.</li>
+        <li>ב-<b>Repository name</b> כותבים שם קצר באנגלית בלי רווחים, למשל <span class="mono">my-business-site</span>.</li>
+        <li>בוחרים <b>Private</b> אם לא רוצים שאחרים יראו את הקוד. גם ריפו פרטי אפשר לחבר ל-Vercel.</li>
+        <li><b>לא מסמנים</b> את Add a README, את .gitignore ואת license. הריפו צריך להיות ריק לגמרי.</li>
+        <li>לוחצים <b>Create repository</b> ומעתיקים את הכתובת שמופיעה, למשל <span class="mono">https://github.com/your-name/my-business-site.git</span>.</li>
+      </ol>
+      <figure class="shot">
+        <div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">github.com/new</span><span class="illus-tag">המחשה</span></div>
+          <div class="mock">
+            <h5>Create a new repository</h5>
+            <div class="hint">A repository contains all project files, including the revision history.</div>
+            <label>Repository name *</label>
+            <span class="in focus">my-business-site</span>
+            <label>Visibility</label>
+            <div class="radio"><i></i> Public</div>
+            <div class="radio"><i class="on"></i> <b>Private</b></div>
+            <label>Initialize this repository with:</label>
+            <div class="chk"><i></i> Add a README file <span class="x">✗ לא לסמן</span></div>
+            <div class="chk"><i></i> Add .gitignore <span class="x">✗ לא לסמן</span></div>
+            <div class="chk"><i></i> Choose a license <span class="x">✗ לא לסמן</span></div>
+            <span class="btn-g">Create repository</span>
+          </div>
+        </div>
+        <figcaption>המחשה של מסך יצירת ריפו, כי הדף האמיתי נפתח רק למשתמש מחובר. המסך אצלכם עשוי להיראות קצת אחרת, אבל השדות זהים.</figcaption>
+      </figure>
+      <div class="note warn"><span class="i">⚠️</span><div><b>למה ריפו ריק?</b> אם GitHub יוצר קובץ README משלו, נוצרת התנגשות כשמעלים את הקבצים מהמחשב. ריפו ריק חוסך את התקלה הזו.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 7. CODE ================= -->
+  <section id="code">
+    <div class="sec-head"><div class="sec-num o">7</div><h2>שלב 5: פתיחת Claude Code</h2></div>
+    <p class="sub">בתוך אפליקציית Claude, בלשונית Code.</p>
+    <div class="card">
+      <ol class="steps">
+        <li>יוצרים במחשב תיקייה ריקה לפרויקט, למשל <span class="mono">C:\Users\השם\my-business-site</span>.</li>
+        <li>באפליקציית Claude עוברים ללשונית <b>Code</b>.</li>
+        <li>בוחרים את התיקייה. Claude יעבוד רק על הקבצים שבתוכה.</li>
+        <li>כותבים בתיבה מה רוצים, כמו בצ'אט רגיל, ושולחים.</li>
+        <li>בפעם הראשונה ש-Claude רוצה להריץ פקודה או לערוך קובץ הוא יבקש אישור. קוראים מה הוא מבקש ומאשרים.</li>
+      </ol>
+      <figure class="shot">
+        <div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">Claude · Code</span><span class="illus-tag">המחשה</span></div>
+          <div class="app">
+            <div class="side">
+              <div class="tabs"><span>Chat</span><span>Cowork</span><span class="on">Code</span></div>
+              <div class="sess on">+ New session</div>
+              <div class="sess">my-business-site</div>
+            </div>
+            <div class="main">
+              <div class="msg">תבדוק אם Git מותקן אצלי ותגיד לי מה מצב התיקייה</div>
+              <div class="msg ai">Git מותקן (גרסה 2.56). התיקייה עדיין ריקה ולא מחוברת לריפו. רוצה שאחבר אותה ל-GitHub?</div>
+              <div class="composer">
+                <div class="ph">מה נבנה היום?</div>
+                <div class="row"><span class="send"></span><span class="folder">📁 my-business-site</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>המחשה של מסך Claude Code. הלשונית Code מסומנת, ובתחתית רואים את התיקייה שנבחרה.</figcaption>
+      </figure>
+      <div class="note tip"><span class="i">✅</span><div><b>איך מדברים עם Claude Code?</b> בעברית רגילה, כמו עם מפתח אנושי. לא צריך לדעת פקודות. אם משהו לא ברור, אפשר פשוט לשאול "מה עשית עכשיו?".</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 8. CONNECT ================= -->
+  <section id="connect">
+    <div class="sec-head"><div class="sec-num o">8</div><h2>שלב 6: חיבור התיקייה ל-GitHub</h2></div>
+    <p class="sub">את החיבור עושים דרך Claude עצמו, עם הכתובת שהעתקתם בשלב 4.</p>
+    <div class="card">
+      <ol class="steps">
+        <li>כותבים ל-Claude את ההודעה הבאה, עם הכתובת של הריפו שלכם:</li>
+      </ol>
+      <div class="prompt"><button class="copy">העתקה</button>תחבר את התיקייה הזו לריפו <span class="ph">https://github.com/your-name/my-business-site.git</span>
+ותעלה אליו את הקבצים.</div>
+      <ol class="steps" start="2" style="counter-reset:s 1">
+        <li>Claude מאתחל את Git בתיקייה, מחבר אותה לריפו, שומר את הקבצים (commit) ומעלה אותם (push).</li>
+        <li>בהעלאה הראשונה <b>ייפתח חלון של GitHub</b> בדפדפן. מתחברים ומאשרים. מכאן החיבור נשמר במחשב ולא תצטרכו להתחבר שוב.</li>
+        <li>נכנסים לריפו ב-GitHub ומרעננים את הדף. הקבצים אמורים להופיע שם.</li>
+      </ol>
+      <h3>מהיום והלאה, משפטים שימושיים</h3>
+      <table>
+        <tr><th style="width:42%">מה כותבים ל-Claude</th><th>מה קורה</th></tr>
+        <tr><td><b>"תעלה את השינויים לגיט"</b></td><td>שומר את כל מה שהשתנה ומעלה ל-GitHub. אם האתר מחובר ל-Vercel, הוא מתעדכן לבד.</td></tr>
+        <tr><td><b>"אל תעלה כלום לגיט עד שאגיד"</b></td><td>Claude יעבוד רק על המחשב. מומלץ לכתוב את זה בתחילת עבודה על משהו שעוד לא מוכן.</td></tr>
+        <tr><td><b>"מה השתנה מאז ההעלאה האחרונה?"</b></td><td>מקבלים סיכום של השינויים שעוד לא עלו.</td></tr>
+        <tr><td><b>"תחזיר את האתר למצב של אתמול"</b></td><td>Git שומר היסטוריה, ולכן אפשר לחזור לגרסה קודמת.</td></tr>
+      </table>
+      <div class="note warn"><span class="i">⚠️</span><div><b>שימו לב:</b> Claude Code עובד מהר. אם לא רוצים שמשהו יעלה, אומרים את זה <b>לפני</b> שמבקשים את המשימה. הודעה שנשלחת באמצע עבודה עלולה להגיע אחרי שהפעולה כבר בוצעה.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 9. VERCEL ================= -->
+  <section id="vercel">
+    <div class="sec-head"><div class="sec-num o">9</div><h2>שלב 7: פרסום האתר ב-Vercel</h2></div>
+    <p class="sub">דף שפותחים: <a href="https://vercel.com/new" target="_blank">vercel.com/new</a></p>
+    <div class="card">
+      <ol class="steps">
+        <li>נכנסים ל-vercel.com/new ולוחצים <b>Continue with GitHub</b>. כך נפתח חשבון Vercel שמחובר ל-GitHub.</li>
+        <li>מאשרים ל-Vercel גישה לריפו. אפשר לבחור רק את הריפו של האתר.</li>
+        <li>ב-<b>Import Git Repository</b> בוחרים את הריפו ולוחצים <b>Import</b>.</li>
+        <li>לא משנים הגדרות ולוחצים <b>Deploy</b>. אחרי כדקה מקבלים כתובת, למשל <span class="mono">my-business-site.vercel.app</span>.</li>
+        <li>לחיבור דומיין משלכם: בפרויקט ב-Vercel נכנסים ל-<b>Settings</b>, ואז ל-<b>Domains</b>, מוסיפים את הדומיין ומעדכנים את רשומות ה-DNS אצל חברת הדומיין לפי ההוראות שמופיעות שם.</li>
+      </ol>
+      <figure class="shot">
+        <div class="browser"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">vercel.com/new</span></div>
+          <div class="shot-wrap"><img src="img/05-vercel.png" alt="מסך פרויקט חדש ב-Vercel"><span class="ring" style="left:12.5%;top:63%;width:24.4%;height:5.4%"></span><span class="pin" style="left:38.5%;top:62.8%">1</span></div>
+        </div>
+        <figcaption>מסך פרויקט חדש ב-Vercel. לוחצים Continue with GitHub, ואחרי ההתחברות יופיעו כאן הריפואים שלכם לבחירה.</figcaption>
+      </figure>
+      <div class="note info"><span class="i">ℹ️</span><div><b>עלות:</b> התוכנית החינמית של Vercel (Hobby) מתאימה לפרויקטים אישיים, ואפשר לחבר אליה הרבה פרויקטים. לאתר מסחרי של עסק, Vercel מבקשים לעבור לתוכנית Pro בתשלום. התנאים המעודכנים מופיעים ב-<a href="https://vercel.com/pricing" target="_blank">vercel.com/pricing</a>.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 10. PROMPT ================= -->
+  <section id="prompt">
+    <div class="sec-head"><div class="sec-num o">10</div><h2>איך כותבים פרומפט ראשון לאתר לעסק</h2></div>
+    <p class="sub">הפרומפט הראשון קובע את הכיוון של כל האתר. כמה דקות של הכנה חוסכות הרבה תיקונים אחר כך.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">מה להכין לפני שכותבים</h3>
+      <table>
+        <tr><th style="width:28%">נושא</th><th>מה לכתוב</th><th style="width:30%">דוגמה</th></tr>
+        <tr><td><b>מי העסק</b></td><td>שם, תחום, מה מוכרים או נותנים</td><td>"סטודיו לפילאטיס בחיפה"</td></tr>
+        <tr><td><b>למי האתר מיועד</b></td><td>קהל היעד ומה חשוב לו</td><td>"נשים 30–55, מחפשות שיעורים קטנים"</td></tr>
+        <tr><td><b>מטרת האתר</b></td><td>מה הגולש צריך לעשות בסוף</td><td>"להשאיר פרטים לשיעור ניסיון"</td></tr>
+        <tr><td><b>דפים ואזורים</b></td><td>רשימת החלקים באתר</td><td>ראשי, אודות, שירותים, המלצות, צור קשר</td></tr>
+        <tr><td><b>שפה עיצובית</b></td><td>צבעים, תחושה, לוגו, אתרים שאהבתם</td><td>"פסטל רך, נקי, הרבה אוויר"</td></tr>
+        <tr><td><b>טון כתיבה</b></td><td>איך מדברים אל הגולש</td><td>"חם ואישי, לא רשמי"</td></tr>
+        <tr><td><b>תוכן אמיתי</b></td><td>טקסטים, מחירים, טלפון, כתובת, שעות</td><td>"טלפון 050-0000000, וואטסאפ זמין"</td></tr>
+        <tr><td><b>פיצ'רים</b></td><td>טופס, כפתור וואטסאפ, גלריה, מפה</td><td>"כפתור וואטסאפ צף בצד"</td></tr>
+        <tr><td><b>דרישות טכניות</b></td><td>עברית, מימין לשמאל, מותאם לנייד</td><td>"קודם כול נראה טוב בטלפון"</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">תבנית מוכנה למילוי</h3>
+      <p>מעתיקים, מחליפים את החלקים הכתומים, ושולחים ל-Claude Code בתיקייה של הפרויקט.</p>
+      <div class="prompt"><button class="copy">העתקה</button>אני רוצה לבנות אתר לעסק שלי.
+
+על העסק: <span class="ph">שם העסק</span>, <span class="ph">מה העסק עושה ואיפה</span>.
+קהל היעד: <span class="ph">מי הלקוחות ומה חשוב להם</span>.
+המטרה של האתר: <span class="ph">מה הגולש צריך לעשות בסוף, למשל להשאיר פרטים</span>.
+
+מבנה האתר (דף אחד עם אזורים / כמה דפים):
+1. <span class="ph">אזור פתיחה עם כותרת ומשפט מרכזי</span>
+2. <span class="ph">אודות</span>
+3. <span class="ph">שירותים / מוצרים</span>
+4. <span class="ph">המלצות</span>
+5. <span class="ph">צור קשר עם טופס</span>
+
+עיצוב: <span class="ph">צבעים, תחושה, אתר לדוגמה שאני אוהבת</span>. הלוגו נמצא בקובץ <span class="ph">logo.png</span> בתיקייה.
+טון: <span class="ph">חם / מקצועי / צעיר</span>.
+פרטים: <span class="ph">טלפון, וואטסאפ, מייל, כתובת, שעות פעילות</span>.
+
+דרישות:
+- עברית, מימין לשמאל
+- מותאם קודם כול לנייד
+- כפתור וואטסאפ צף
+- טקסטים אמיתיים במקום "לורם איפסום". איפה שחסר לי מידע, תכתוב טקסט מוצע ותסמן אותו
+
+לפני שאתה מתחיל, תציג לי תוכנית קצרה של המבנה והעיצוב, ותשאל אותי מה חסר.
+אל תעלה כלום לגיט עד שאאשר.</div>
+
+      <p class="prompt-label">דוגמה ממולאת</p>
+      <div class="prompt"><button class="copy">העתקה</button>אני רוצה לבנות אתר לעסק שלי.
+
+על העסק: "נשימה", סטודיו לפילאטיס מכשירים בחיפה, קבוצות של עד 6 משתתפות.
+קהל היעד: נשים בגילאי 30–55 שרוצות לחזק את הגב ומעדיפות יחס אישי.
+המטרה של האתר: שהגולשת תשאיר פרטים לשיעור ניסיון חינם.
+
+מבנה האתר, דף אחד עם אזורים:
+1. פתיחה עם תמונה, כותרת "תנועה שמרגישה טוב" וכפתור "לשיעור ניסיון"
+2. אודות המדריכה
+3. סוגי השיעורים והמחירים
+4. שלוש המלצות
+5. מערכת שעות
+6. טופס השארת פרטים ומפה
+
+עיצוב: פסטל רך (מנטה ואפרסק), נקי, הרבה רווחים, פינות מעוגלות. הלוגו בקובץ logo.png.
+טון: חם, אישי, בגובה העיניים.
+פרטים: טלפון 050-0000000, וואטסאפ באותו מספר, רחוב הנמל 10 חיפה, א'–ה' 7:00–21:00.
+
+דרישות:
+- עברית, מימין לשמאל
+- מותאם קודם כול לנייד
+- כפתור וואטסאפ צף
+- טקסטים אמיתיים. איפה שחסר מידע, תכתוב טקסט מוצע ותסמן אותו
+
+לפני שאתה מתחיל, תציג לי תוכנית קצרה ותשאל מה חסר.
+אל תעלה כלום לגיט עד שאאשר.</div>
+    </div>
+
+    <div class="two" style="margin-top:16px">
+      <div class="card dos good"><h4>✓ כדאי</h4>
+        <ul class="clean">
+          <li>לבקש תוכנית לפני שהוא בונה</li>
+          <li>לתת תוכן אמיתי של העסק</li>
+          <li>לצרף לוגו ותמונות לתיקייה</li>
+          <li>לבקש לראות את האתר בדפדפן אחרי כל שלב</li>
+          <li>לתקן דבר אחד בכל הודעה: "תגדיל את הכותרת", "תחליף את הצבע של הכפתור"</li>
+        </ul>
+      </div>
+      <div class="card dos bad"><h4>✗ פחות כדאי</h4>
+        <ul class="clean">
+          <li>"תעשה לי אתר יפה" בלי שום פרט נוסף</li>
+          <li>לבקש עשרה שינויים בהודעה אחת</li>
+          <li>להעלות לגיט לפני שבדקתם בנייד</li>
+          <li>להשאיר טקסטים לדוגמה באתר שעולה לאוויר</li>
+          <li>לשתף סיסמאות או פרטי אשראי בצ'אט</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h3 style="margin-top:0">אחרי הפרומפט הראשון: סבב העבודה</h3>
+      <div class="flow">
+        <div class="node">1. מבקשים</div><span class="arr">←</span>
+        <div class="node">2. Claude בונה</div><span class="arr">←</span>
+        <div class="node">3. בודקים בדפדפן ובנייד</div><span class="arr">←</span>
+        <div class="node">4. מבקשים תיקון</div><span class="arr">←</span>
+        <div class="node hl">5. "תעלה לגיט" ← האתר מתעדכן</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 11. GLOSSARY ================= -->
+  <section id="glossary">
+    <div class="sec-head"><div class="sec-num">11</div><h2>מילון מונחים</h2></div>
+    <div class="card">
+      <table>
+        <tr><th style="width:24%">מונח</th><th>מה זה אומר בפשטות</th></tr>
+        <tr><td><b>Claude Code</b></td><td>Claude שעובד ישירות על הקבצים במחשב: כותב קוד, מריץ פקודות ובודק את התוצאה.</td></tr>
+        <tr><td><b>Git</b></td><td>תוכנה ששומרת היסטוריה של כל שינוי בקבצים, כמו "שמירה בשם" חכמה.</td></tr>
+        <tr><td><b>GitHub</b></td><td>אתר שבו נשמרים פרויקטים של Git בענן.</td></tr>
+        <tr><td><b>ריפו (Repository)</b></td><td>תיקיית פרויקט אחת ב-GitHub.</td></tr>
+        <tr><td><b>Commit</b></td><td>נקודת שמירה עם תיאור קצר של מה השתנה.</td></tr>
+        <tr><td><b>Push</b></td><td>העלאה של השמירות מהמחשב ל-GitHub.</td></tr>
+        <tr><td><b>Branch / main</b></td><td>ענף של הפרויקט. <span class="mono">main</span> הוא הענף הראשי, וממנו האתר עולה לאוויר.</td></tr>
+        <tr><td><b>Vercel</b></td><td>שירות שלוקח את הריפו מ-GitHub ומציג אותו כאתר בכתובת אמיתית.</td></tr>
+        <tr><td><b>Deploy</b></td><td>פרסום גרסה של האתר לאוויר.</td></tr>
+        <tr><td><b>דומיין / DNS</b></td><td>כתובת האתר (למשל my-business.co.il), וההגדרות שמפנות אותה ל-Vercel.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= 12. TROUBLE ================= -->
+  <section id="trouble">
+    <div class="sec-head"><div class="sec-num">12</div><h2>תקלות נפוצות ופתרונות</h2></div>
+    <div class="card">
+      <table>
+        <tr><th style="width:38%">מה קורה</th><th>מה עושים</th></tr>
+        <tr><td><b>לשונית Code לא נפתחת או מבקשת שדרוג</b></td><td>המנוי הוא Free. צריך לשדרג ל-Pro ב-claude.com/pricing ולהתחבר מחדש.</td></tr>
+        <tr><td><b>Claude אומר ש-Git לא מותקן</b></td><td>מתקינים מ-git-scm.com, סוגרים את אפליקציית Claude לגמרי ופותחים אותה מחדש.</td></tr>
+        <tr><td><b>ההעלאה נכשלת עם שגיאת הרשאה</b></td><td>מבקשים מ-Claude לנסות שוב. כשייפתח חלון GitHub, מתחברים לחשבון הנכון.</td></tr>
+        <tr><td><b>שגיאה על קבצים שכבר קיימים בריפו</b></td><td>כנראה סימנתם README ביצירת הריפו. מבקשים מ-Claude: "תסנכרן עם הריפו ותעלה שוב".</td></tr>
+        <tr><td><b>האתר ב-Vercel לא התעדכן</b></td><td>בודקים ב-GitHub שהשינוי עלה, ואז נכנסים ללשונית Deployments ב-Vercel לראות אם יש שגיאה.</td></tr>
+        <tr><td><b>משהו עלה בטעות</b></td><td>כותבים ל-Claude: "תבטל את ההעלאה האחרונה". Git שומר את הגרסה הקודמת.</td></tr>
+        <tr><td><b>אתר חסום בסינון (למשל נטפרי)</b></td><td>מבקשים מספק הסינון לפתוח את הכתובות claude.com, github.com, git-scm.com ו-vercel.com.</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:16px;background:var(--ink);color:#eee;border:none">
+      <h3 style="margin-top:0;color:#fff">✔ צ'ק-ליסט סיום</h3>
+      <ul class="clean" style="list-style:none;padding:0">
+        <li>☐ מנוי Claude Pro פעיל</li>
+        <li>☐ אפליקציית Claude מותקנת, ויש גישה ללשונית Code</li>
+        <li>☐ Git מותקן, עם שם ומייל מוגדרים</li>
+        <li>☐ חשבון GitHub פעיל וריפו ריק נוצר</li>
+        <li>☐ התיקייה מחוברת לריפו, וההעלאה הראשונה הצליחה</li>
+        <li>☐ הריפו מחובר ל-Vercel, והאתר עובד בכתובת vercel.app</li>
+        <li>☐ פרומפט ראשון מוכן עם פרטי העסק</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/logo.png" alt="ספיד אוטומציות"><span>ספיד <b style="color:var(--orange)">אוטומציות</b></span></a>
+    <div><div>נוצר ע"י ספיד אוטומציות · מדריך התחלה ל-Claude Code</div><small>צילומי המסך צולמו בנובמבר 2026. ממשקי האתרים עשויים להשתנות עם הזמן.</small></div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click',function(){
+      var box=b.parentElement.cloneNode(true);
+      box.querySelector('.copy').remove();
+      navigator.clipboard.writeText(box.innerText.trim()).then(function(){
+        var t=b.textContent;b.textContent='הועתק ✓';setTimeout(function(){b.textContent=t},1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>

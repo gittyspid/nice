@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סיכום סשן: התחלה עם Claude Code | ספיד אוטומציות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#FF6B0F;--orange-soft:#FFF1E7;--orange-line:#FFD3B5;--ink:#141414;--ink-2:#3B3B3B;--muted:#6E6E6E;--line:#ECE7E2;--bg:#FBF9F7;--ok:#1F9D63;--ok-soft:#E8F7EF}
+  *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{margin:0;font-family:"Heebo",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:15.5px}
+  .page{max-width:820px;margin:0 auto;padding:36px 32px 28px}
+  a{color:var(--orange);font-weight:500;text-decoration:none}
+  .mono{font-family:Consolas,monospace;direction:ltr;unicode-bidi:embed}
+
+  header{display:flex;justify-content:space-between;align-items:center;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+  .brand img{width:36px;height:36px;object-fit:contain}
+  .brand b{color:var(--orange)}
+  .doc-type{font-size:13px;font-weight:700;color:var(--muted)}
+
+  h1{font-size:34px;line-height:1.2;margin:26px 0 8px;font-weight:800}
+  h1 em{font-style:normal;color:var(--orange)}
+  .lead{color:var(--ink-2);margin:0 0 20px;font-size:16.5px}
+
+  .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:26px}
+  .meta div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+  .meta small{display:block;color:var(--muted);font-size:12.5px;font-weight:700}
+  .meta b{font-size:17px}
+
+  h2{font-size:20px;margin:26px 0 12px;display:flex;align-items:center;gap:10px;font-weight:800}
+  h2:before{content:"";width:6px;height:22px;border-radius:3px;background:var(--orange)}
+
+  /* timeline */
+  .tl{position:relative;margin:0;padding:0;list-style:none}
+  .tl:before{content:"";position:absolute;right:17px;top:10px;bottom:10px;width:2px;background:var(--orange-line)}
+  .tl li{position:relative;padding:0 52px 14px 0}
+  .tl .n{position:absolute;right:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;display:grid;place-items:center;font-size:15px;box-shadow:0 0 0 4px var(--bg)}
+  .tl .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+  .tl h3{margin:0 0 2px;font-size:16.5px}
+  .tl p{margin:0;color:var(--ink-2);font-size:14.5px}
+  .tl .link{display:inline-block;margin-top:6px;font-size:13px;background:var(--orange-soft);border:1px solid var(--orange-line);color:#B4520A;border-radius:999px;padding:1px 10px;direction:ltr}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+  .card h4{margin:0 0 6px;font-size:15.5px}
+  ul{margin:0;padding-inline-start:18px}
+  li{margin:3px 0}
+  .check{list-style:none;padding:0}
+  .check li:before{content:"✓";color:var(--ok);font-weight:800;margin-left:8px}
+  .todo{list-style:none;padding:0}
+  .todo li:before{content:"☐";color:var(--orange);font-weight:800;margin-left:8px}
+
+  .prompt{background:#fff;border:1px solid var(--line);border-right:5px solid var(--orange);border-radius:12px;padding:12px 18px;font-size:14.5px;white-space:pre-wrap;line-height:1.75}
+  .prompt .ph{background:var(--orange-soft);color:#B4520A;border-radius:5px;padding:0 5px;font-weight:700}
+
+  .tip{background:var(--ok-soft);border:1px solid #BFE8D2;border-radius:12px;padding:10px 16px;font-size:14.5px;margin-top:12px}
+
+  footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+  footer .brand{font-size:14px;color:var(--ink)}
+  footer .brand img{width:22px;height:22px}
+
+  @page{size:A4;margin:10mm 0}
+  @media print{body{background:#fff;zoom:.68}.page{padding:8px 44px 0;max-width:none}.tl li,.card,.prompt{break-inside:avoid}h2{break-after:avoid}.meta div,.tl .box,.card{background:#fff}}
+  @media (max-width:640px){.meta,.two{grid-template-columns:1fr}h1{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brand"><img src="img/logo.png" alt="ספיד אוטומציות"><span>ספיד <b>אוטומציות</b></span></div>
+    <div class="doc-type">סיכום סשן</div>
+  </header>
+
+  <h1>התחלנו לעבוד עם <em>Claude Code</em></h1>
+  <p class="lead">בסשן התקנו את Claude, חיברנו אותו ל-Git, ראינו אתר דמו לדוגמה, נרשמנו ל-Claude Code ובנינו יחד אתר תדמית ראשוני.</p>
+
+  <div class="meta">
+    <div><small>משך הסשן</small><b>שעתיים</b></div>
+    <div><small>נושא</small><b>הקמה ואתר ראשון</b></div>
+    <div><small>תוצר</small><b>אתר תדמית ראשוני</b></div>
+  </div>
+
+  <h2>מה עשינו בסשן</h2>
+  <ol class="tl">
+    <li><span class="n">1</span><div class="box">
+      <h3>התקנו את אפליקציית Claude</h3>
+      <p>הורדנו מהאתר הרשמי, התקנו במחשב והתחברנו לחשבון.</p>
+      <span class="link">claude.com/download</span>
+    </div></li>
+    <li><span class="n">2</span><div class="box">
+      <h3>התחברנו ל-Git ול-GitHub</h3>
+      <p>התקנו את Git, התחברנו לחשבון GitHub ויצרנו ריפו ריק לפרויקט. ככה כל עבודה שנעשה נשמרת בענן עם היסטוריה מלאה.</p>
+      <span class="link">git-scm.com</span> <span class="link">github.com/new</span>
+    </div></li>
+    <li><span class="n">3</span><div class="box">
+      <h3>ראינו דוגמה לאתר דמו</h3>
+      <p>הסתכלנו על אתר שנבנה כולו עם Claude Code, כדי לראות מה אפשר להשיג ואיך נראה התהליך מבפנים.</p>
+    </div></li>
+    <li><span class="n">4</span><div class="box">
+      <h3>נרשמנו ל-Claude Code</h3>
+      <p>הפעלנו מנוי בתשלום (Pro ומעלה), כי בלעדיו אין גישה ללשונית Code. אחר כך פתחנו את הלשונית ובחרנו תיקייה לפרויקט.</p>
+      <span class="link">claude.com/pricing</span>
+    </div></li>
+    <li><span class="n">5</span><div class="box">
+      <h3>יצרנו אתר תדמית ראשוני</h3>
+      <p>כתבנו פרומפט עם פרטי העסק, ו-Claude בנה את הגרסה הראשונה של האתר. אחר כך ביקשנו תיקונים וראינו את התוצאה בדפדפן.</p>
+    </div></li>
+  </ol>
+
+  <div class="two">
+    <div class="card">
+      <h4>מה יש לך עכשיו</h4>
+      <ul class="check">
+        <li>אפליקציית Claude מותקנת ומחוברת</li>
+        <li>Git מותקן וחשבון GitHub פעיל</li>
+        <li>מנוי פעיל ל-Claude Code</li>
+        <li>תיקיית פרויקט עם אתר תדמית ראשוני</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>הצעדים הבאים</h4>
+      <ul class="todo">
+        <li>להשלים טקסטים, תמונות ולוגו באתר</li>
+        <li>לבדוק את האתר גם בטלפון</li>
+        <li>לבקש מ-Claude: "תעלה את השינויים לגיט"</li>
+        <li>לחבר את הריפו ל-Vercel ולפרסם (<span class="mono">vercel.com/new</span>)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>להמשך העבודה: מבנה של פרומפט טוב</h2>
+  <div class="prompt">אני רוצה <span class="ph">מה לשנות או להוסיף</span> באתר.
+המטרה: <span class="ph">למה זה חשוב, מה הגולש צריך להרגיש או לעשות</span>.
+סגנון: <span class="ph">צבעים / תחושה / דוגמה שאהבתי</span>.
+לפני שאתה מתחיל, תציג לי תוכנית קצרה. אל תעלה לגיט עד שאאשר.</div>
+  <div class="tip"><b>טיפ:</b> כדאי לבקש שינוי אחד בכל הודעה ולבדוק אותו בדפדפן לפני שממשיכים. ככה קל לראות מה עבד ולתקן מהר.</div>
+
+  <footer>
+    <div class="brand"><img src="img/logo.png" alt=""><span>ספיד <b>אוטומציות</b></span></div>
+    <div>שאלות אחרי הסשן? אפשר לפנות אליי בכל זמן</div>
+  </footer>
+
+</div>
+</body>
+</html>
