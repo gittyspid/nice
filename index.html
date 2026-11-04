@@ -502,10 +502,10 @@ function saveSession(id, thenMail){
 function delSession(id){ if(!confirm('למחוק את הסשן?')) return; db.sessions=db.sessions.filter(s=>s.id!==id); db.mails=db.mails.filter(m=>m.sessionId!==id); save(); closeModal(); rerender(); }
 function togglePaid(sessId, sid, on){ const s=sessionById(sessId); s.paid=s.paid||{}; if(on) s.paid[sid]=true; else delete s.paid[sid]; save(); rerender(); toast(on?'סומן כשולם ✓':'הסימון בוטל'); }
 
-let mail = {sessionId:'', studentIds:[], note:'', subject:'', subjectEdited:false};
+let mail = {sessionId:'', studentIds:[], note:'', subject:'', subjectEdited:false, extra:''};
 function mailTypeBadge(){ return '<span class="badge b-pink">💌 סיכום סשן</span>'; }
 function openMail(opts){
-  mail = {sessionId:'',studentIds:[],note:'',subject:'',subjectEdited:false,...opts};
+  mail = {sessionId:'',studentIds:[],note:'',subject:'',subjectEdited:false,extra:'',...opts};
   if(mail.sessionId && !opts.studentIds){ const s=sessionById(mail.sessionId); const miss=s.studentIds.filter(id=>!summarySent(s,id)); mail.studentIds = miss.length?miss:[...s.studentIds]; }
   if(location.hash==='#mail') route(); else location.hash='mail';
 }
@@ -532,6 +532,8 @@ function vMail(){
         <select class="in" onchange="mail.sessionId=this.value;mail.subjectEdited=false;const s=sessionById(this.value);mail.studentIds=s?[...s.studentIds]:[];rerender()">${done.map(s=>`<option value="${s.id}" ${s.id===mail.sessionId?'selected':''}>${fdate(s.date)} · ${esc(names(s)||sessTitle(s))}${s.studentIds.some(id=>!summarySent(s,id))?'':' ✓'}</option>`).join('')}</select></div>
       <div class="field"><label>נשלח אל</label><div class="checks">${candidates.length?candidates.map(st=>`<label class="chk" title="${esc(st.email||'אין מייל')}"><input type="checkbox" value="${st.id}" ${mail.studentIds.includes(st.id)?'checked':''} onchange="mailToggle('${st.id}',this.checked)">${esc(st.name)}${!st.email?' ⚠ אין מייל':''}${sess&&summarySent(sess,st.id)?' ✓':''}</label>`).join(''):'<span class="muted small">אין לקוחות בסשן הזה</span>'}</div>
         ${sess&&sess.studentIds.some(id=>summarySent(sess,id))?'<div class="muted small" style="margin-top:6px">✓ = כבר קיבלו את הסיכום</div>':''}</div>
+      <div class="field"><label>✉ שליחה למייל נוסף (לא חובה)</label><input class="in" id="m_extra" type="text" inputmode="email" dir="ltr" placeholder="name@example.com" value="${esc(mail.extra)}" oninput="mail.extra=this.value;mailPreview()">
+        <div class="muted small" style="margin-top:6px">אפשר כמה כתובות עם פסיק ביניהן. למשל לעצמך, לבדיקה.</div></div>
       <div class="field"><label>נושא המייל</label><input class="in" id="m_subject" value="${esc(mail.subject)}" oninput="mail.subject=this.value;mail.subjectEdited=true"></div>
       <div class="field"><label>מילה אישית (לא חובה)</label><textarea class="in" id="m_note" placeholder="היה כיף לעבוד איתך היום..." oninput="mail.note=this.value;mailPreview()">${esc(mail.note)}</textarea></div>
       <div class="attach">📎 מצורף: <b>סיכום-סשן.pdf</b></div>
@@ -541,7 +543,7 @@ function vMail(){
       </div>`:`<div class="empty small"><div class="big">📭</div>עוד אין סשנים שהועברו.<br>אחרי שמסמנים סשן כ"הועבר", אפשר לשלוח עליו סיכום מכאן.<div style="margin-top:12px"><a class="btn pri" href="#sessions">לרשימת הסשנים</a></div></div>`}
     </div>
     ${pend.length?`<div class="card"><h3>⏳ מחכים לסיכום</h3><div class="list">${pend.slice(0,6).map(({s,miss})=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc(miss.map(id=>student(id)?.name).join(', '))}</b></div><div class="s">${fdate(s.date)}</div></div><button class="btn sm" onclick="openMail({sessionId:'${s.id}'})">בחירה</button></div>`).join('')}</div></div>`:''}
-    <div class="card"><h3>🕊 נשלחו לאחרונה</h3>${log.length?`<div class="list">${log.map(m=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc(m.studentIds.map(id=>student(id)?.name||'').filter(Boolean).join(', ')||m.subject)}</b></div><div class="s">${esc(m.subject)} · ${fdate(m.date.slice(0,10))}</div></div><button class="btn sm ghost" title="ביטול הסימון" onclick="unlogMail('${m.id}')">✕</button></div>`).join('')}</div>`:'<div class="muted small">עוד לא נשלחו סיכומים</div>'}</div>
+    <div class="card"><h3>🕊 נשלחו לאחרונה</h3>${log.length?`<div class="list">${log.map(m=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc([...m.studentIds.map(id=>student(id)?.name||''), ...(m.extra||[])].filter(Boolean).join(', ')||m.subject)}</b></div><div class="s">${esc(m.subject)} · ${fdate(m.date.slice(0,10))}</div></div><button class="btn sm ghost" title="ביטול הסימון" onclick="unlogMail('${m.id}')">✕</button></div>`).join('')}</div>`:'<div class="muted small">עוד לא נשלחו סיכומים</div>'}</div>
   </div>
   <div class="preview"><div class="bar2"><i></i><i></i><i></i><span style="margin-inline-start:8px" id="m_to"></span></div><div id="m_preview"></div></div></div>`;
 }
@@ -553,7 +555,8 @@ function mailPreview(){
   const r = buildMail(); if(!mail.subjectEdited){ mail.subject=r.subject; const i=$('#m_subject'); if(i) i.value=r.subject; }
   box.innerHTML = r.html;
   const rec = mailRecipients();
-  $('#m_to').textContent = rec.length? 'אל: '+rec.map(s=>s.email||s.name+' (אין מייל)').join(', ') : 'לא נבחרו נמענים';
+  const to = [...rec.map(s=>s.email||s.name+' (אין מייל)'), ...mailExtras()];
+  $('#m_to').textContent = to.length? 'אל: '+to.join(', ') : 'לא נבחרו נמענים';
 }
 
 /* email building blocks: tables + inline styles, in the design of the session-summary page */
@@ -617,10 +620,14 @@ function buildMail(recOverride){
     ${E.sign()}`;
   return {subject, html:E.wrap(html)};
 }
+const EMAIL_RE = /^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/;
+function mailExtras(){ return [...new Set(String(mail.extra||'').split(/[\s,;]+/).map(x=>x.trim()).filter(Boolean))]; }
 function mailCheck(){
   const rec = mailRecipients();
-  if(!rec.length){ toast('צריך לבחור לפחות נמען אחד'); return null; }
-  const r = buildMail(); r.subject = mail.subject || r.subject; r.rec = rec;
+  const extras = mailExtras(), bad = extras.filter(x=>!EMAIL_RE.test(x));
+  if(bad.length){ toast('כתובת מייל לא תקינה: '+bad.join(', ')); return null; }
+  if(!rec.length && !extras.length){ toast('צריך לבחור לקוח או לכתוב כתובת מייל'); return null; }
+  const r = buildMail(); r.subject = mail.subject || r.subject; r.rec = rec; r.extras = extras;
   const noMail = rec.filter(s=>!s.email); if(noMail.length) toast(`שימי לב: אין מייל ל${noMail.map(s=>firstName(s.name)).join(', ')}`);
   return r;
 }
@@ -634,16 +641,20 @@ function htmlText(html){ const d=document.createElement('div'); d.innerHTML=html
 async function sendResend(){
   const r = mailCheck(); if(!r) return;
   const withMail = r.rec.filter(s=>s.email);
-  if(!withMail.length) return toast('לנמענים שנבחרו אין כתובת מייל');
-  if(!confirm(`לשלוח ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} עכשיו?\n\n${withMail.map(s=>s.name+' <'+s.email+'>').join('\n')}`)) return;
-  const emails = withMail.map(s=>{ const b=buildMail([s]); const subject = mail.subjectEdited? mail.subject : b.subject; return {to:[s.email],subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, attachments:[{filename:'סיכום-סשן.pdf',path:location.origin+'/guide/session-summary.pdf'}]}; });
+  const extras = r.extras.filter(x=>!withMail.some(s=>s.email.toLowerCase()===x.toLowerCase()));
+  const n = withMail.length + extras.length;
+  if(!n) return toast('לנמענים שנבחרו אין כתובת מייל');
+  if(!confirm(`לשלוח ${n===1?'מייל אחד':n+' מיילים'} עכשיו?\n\n${[...withMail.map(s=>s.name+' <'+s.email+'>'), ...extras].join('\n')}`)) return;
+  const pack = (to, b) => ({to:[to],subject:mail.subjectEdited? mail.subject : b.subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, attachments:[{filename:'סיכום-סשן.pdf',path:location.origin+'/guide/session-summary.pdf'}]});
+  const general = buildMail([]);
+  const emails = [...withMail.map(s=>pack(s.email, buildMail([s]))), ...extras.map(x=>pack(x, general))];
   const btn=$('#resendBtn'); if(btn){ btn.disabled=true; btn.textContent='בשליחה...'; }
-  try{ await api({emails}); logMail({...r,rec:withMail}); toast(`נשלח ✓ ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} יצאו לדרך 💌`); }
-  catch(e){ toast('השליחה נכשלה: '+e.message); if(btn){ btn.disabled=false; btn.textContent='🚀 שליחה עכשיו'; } }
+  try{ await api({emails}); logMail({...r,rec:withMail,extras}); mail.extra=''; toast(`נשלח ✓ ${n===1?'מייל אחד':n+' מיילים'} יצאו לדרך 💌`); }
+  catch(e){ toast('השליחה נכשלה: '+e.message); if(btn){ btn.disabled=false; btn.textContent='💌 שליחת הסיכום'; } }
 }
 function markSent(){ const r=mailCheck(); if(!r) return; logMail(r); toast('סומן כנשלח ✓'); }
 function logMail(r){
-  db.mails.push({id:uid(),date:new Date().toISOString(),type:'summary',sessionId:mail.sessionId||'',studentIds:r.rec.map(s=>s.id),subject:r.subject});
+  db.mails.push({id:uid(),date:new Date().toISOString(),type:'summary',sessionId:mail.sessionId||'',studentIds:r.rec.map(s=>s.id),extra:r.extras||[],subject:r.subject});
   save(); setTimeout(rerender,300);
 }
 function unlogMail(id){ db.mails=db.mails.filter(m=>m.id!==id); save(); rerender(); toast('הסימון בוטל'); }
