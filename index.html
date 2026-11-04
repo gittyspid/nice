@@ -630,12 +630,28 @@ const E = {
   prompt(t){ return `<div style="background:#ffffff;border:1px solid ${C.line};border-right:5px solid ${C.orange};border-radius:12px;padding:12px 18px;font-size:14.5px;line-height:1.8;color:${C.ink}">${esc(t).replace(/\n/g,'<br>').replace(/\[([^\]]+)\]/g,`<span style="background:${C.orangeSoft};color:#B4520A;border-radius:5px;padding:0 5px;font-weight:700">$1</span>`)}</div>`; },
   tip(t){ return `<div style="background:${C.okSoft};border:1px solid #BFE8D2;border-radius:12px;padding:10px 16px;font-size:14.5px;line-height:1.65;color:${C.ink};margin-top:12px"><b>טיפ:</b> ${esc(t)}</div>`; },
   note(t){ return `<div style="background:${C.orangeSoft};border:1px solid ${C.orangeLine};border-radius:12px;padding:12px 16px;font-size:15px;line-height:1.7;color:${C.ink};margin-top:16px">💬 ${esc(t).replace(/\n/g,'<br>')}</div>`; },
+  // "next session": the planned date if there is one, and what the next topic in the program covers
+  nextBox(nextSess, m){
+    const all = defaultModules();
+    const nm = (nextSess && all.find(x=>x.id===nextSess.moduleId)) || (m.num ? all.find(x=>x.num===m.num+1) : null);
+    if(!nextSess && !nm) return '';
+    const when = nextSess ? `${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}` : 'נתאם מועד בקרוב';
+    const title = nextSess ? sessTitle(nextSess) : nm.title;
+    const items = nm ? (nm.steps||[]).slice(0,4).map(x=>x.t) : [];
+    return `<div style="background:#FFF8DE;border:1px solid #F2D46B;border-radius:14px;padding:14px 18px;margin-top:16px;text-align:right">
+      <div style="font-size:13px;font-weight:700;color:#9A7410">📅 הסשן הבא · ${when}</div>
+      <div style="font-size:17px;font-weight:800;color:${C.ink};margin-top:4px">${nm?`סשן ${nm.num}: `:''}${esc(title)}</div>
+      ${nm?.goal?`<div style="font-size:14px;line-height:1.6;color:${C.ink2};margin-top:2px">${esc(nm.goal)}</div>`:''}
+      ${items.length?`<div style="font-size:14px;color:${C.ink};margin-top:8px;font-weight:700">מה נעשה:</div>${items.map(t=>`<div style="font-size:14px;line-height:1.6;color:${C.ink2};padding:1px 0"><span style="color:${C.orange};font-weight:800">←</span>&nbsp; ${esc(t)}</div>`).join('')}`:''}
+    </div>`; },
   button(href,label){ return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px"><tr><td style="background:${C.orange};border-radius:12px"><a href="${esc(href)}" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px">${label}</a></td></tr></table>`; },
   sign(){ const S=db.settings; return `<div style="margin-top:26px;padding-top:16px;border-top:1px solid ${C.line};font-size:14.5px;color:${C.ink2};line-height:1.7">
      ${S.signature?`<div>${esc(S.signature)}</div>`:''}
      <div style="font-weight:700;color:${C.ink};margin-top:6px">${S.instructor?esc(S.instructor)+' | ':''}ספיד Automation</div>
      <div style="font-size:13px;color:${C.muted}">שאלות? אפשר פשוט לענות למייל הזה.</div></div>`; },
 };
+// full email document: loads Heebo where the mail app allows web fonts (Apple Mail, iPhone); Gmail and Outlook fall back to Arial
+function emailDoc(inner){ return `<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&display=swap" rel="stylesheet"><style>body,table,td,div,a,span{font-family:Heebo,Arial,Helvetica,sans-serif}</style></head><body style="margin:0;padding:0;background:#FBF9F7">${inner}</body></html>`; }
 function greet(rec){ return rec.length===1 ? `היי ${esc(firstName(rec[0].name))},` : rec.length ? 'היי לכולם,' : 'היי,'; }
 function buildMail(recOverride){
   const rec = recOverride || mailRecipients();
@@ -658,7 +674,7 @@ function buildMail(recOverride){
     ${E.lists(m.have||[], next)}
     ${m.prompt?E.h2('להמשך העבודה: מבנה של פרומפט טוב')+E.prompt(m.prompt):''}
     ${m.tip?E.tip(m.tip):(m.tips?.length?E.tip(m.tips[0]):'')}
-    ${nextSess?`<div style="background:#FFF8DE;border:1px solid #F2D46B;border-radius:12px;padding:12px 16px;font-size:15px;color:${C.ink};margin-top:14px">📅 <b>הסשן הבא:</b> ${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}</div>`:''}
+    ${E.nextBox(nextSess, m)}
     ${summaryFiles(s)?E.button(summaryFiles(s).page,'לצפייה בסיכום באתר ←')+`<div style="font-size:13px;color:${C.muted};margin-top:8px">📎 הסיכום מצורף גם כקובץ PDF</div>`:''}
     ${E.sign()}`;
   return {subject, html:E.wrap(html)};
@@ -688,7 +704,7 @@ async function sendResend(){
   const n = withMail.length + extras.length;
   if(!n) return toast('לנמענים שנבחרו אין כתובת מייל');
   if(!confirm(`לשלוח ${n===1?'מייל אחד':n+' מיילים'} עכשיו?\n\n${[...withMail.map(s=>s.name+' <'+s.email+'>'), ...extras].join('\n')}`)) return;
-  const pack = (to, b) => ({to:[to],subject:mail.subjectEdited? mail.subject : b.subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email, ...(files?{attachments:[{filename:files.name,path:files.pdf}]}:{})});
+  const pack = (to, b) => ({to:[to],subject:mail.subjectEdited? mail.subject : b.subject,html:emailDoc(b.html),text:htmlText(b.html),replyTo:db.settings.email, ...(files?{attachments:[{filename:files.name,path:files.pdf}]}:{})});
   const files = summaryFiles(sessionById(mail.sessionId));
   const general = buildMail([]);
   const emails = [...withMail.map(s=>pack(s.email, buildMail([s]))), ...extras.map(x=>pack(x, general))];
