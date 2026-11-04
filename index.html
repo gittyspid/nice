@@ -360,7 +360,7 @@ function vStudents(){
    </div>` +
   (list.length ? `<div class="grid g3">${list.map(s=>{const st=studentStats(s.id); return `
     <div class="card scard" onclick="location.hash='student/${s.id}'">
-      <div class="hd">${avatar(s)}<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:16px">${esc(s.name)}</div><div class="muted small" style="overflow:hidden;text-overflow:ellipsis">${esc(s.email||'אין מייל')}</div></div>${statusBadge(s.status)}</div>
+      <div class="hd">${avatar(s)}<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:16px">${esc(s.name)}</div><div class="muted small" style="overflow:hidden;text-overflow:ellipsis">${esc(s.business||s.email||'אין מייל')}</div></div>${statusBadge(s.status)}<button class="btn sm ghost" onclick="event.stopPropagation();studentForm(student('${s.id}'))" title="עריכת פרופיל" aria-label="עריכת פרופיל">✎</button></div>
       <div><div class="row small" style="justify-content:space-between;margin-bottom:6px"><span class="muted">התקדמות בתוכנית</span><b>${st.mods.size}/${total}</b></div><div class="prog"><i style="width:${st.mods.size/total*100}%"></i></div></div>
       <div class="row small" style="justify-content:space-between">
         <span class="muted">${st.next?`הבא: ${fdate(st.next.date)}`:st.last?`אחרון: ${fdate(st.last.date)}`:'עוד לא נקבע סשן'}</span>
@@ -376,8 +376,8 @@ function vStudent(id){
   const [bg,fg] = colorOf(s.id);
   return `<div class="top"><div class="row" style="gap:16px"><a href="#students" class="btn ghost">→</a>
       <span class="av" style="width:62px;height:62px;font-size:22px;background:${bg};color:${fg}">${esc(initials(s.name))}</span>
-      <div><h1>${esc(s.name)}</h1><p>${[s.email,s.phone].filter(Boolean).map(esc).join(' · ')||'אין פרטי קשר'} ${statusBadge(s.status)}</p></div></div>
-    <div class="row"><button class="btn" data-act="editStudent" data-id="${s.id}">✎ עריכה</button><button class="btn pri" data-act="newSession" data-id="${s.id}">+ סשן</button></div></div>
+      <div><h1>${esc(s.name)}</h1><p>${[s.business,s.email,s.phone].filter(Boolean).map(esc).join(' · ')||'אין פרטי קשר'}${/^https?:\/\//.test(s.site||'')?` · <a href="${esc(s.site)}" target="_blank" rel="noopener" style="color:var(--lav-d)">לאתר ↗</a>`:''} ${statusBadge(s.status)}</p></div></div>
+    <div class="row"><button class="btn" data-act="editStudent" data-id="${s.id}">✎ עריכת פרופיל</button><button class="btn pri" data-act="newSession" data-id="${s.id}">+ סשן</button></div></div>
   <div class="grid g4" style="margin-bottom:18px">
     <div class="kpi k1"><div class="lbl">סשנים שהועברו</div><div class="val">${st.done.length}</div></div>
     <div class="kpi k2"><div class="lbl">נושאים שנלמדו</div><div class="val">${st.mods.size}<span style="font-size:16px;opacity:.6">/${db.modules.length}</span></div></div>
@@ -436,18 +436,22 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 const val = id => document.getElementById(id)?.value?.trim() ?? '';
 
 function studentForm(s={}){
-  modal(`<h2>${s.id?'עריכת לקוח':'לקוח חדש'}</h2>
+  modal(`<h2>${s.id?'עריכת פרופיל לקוח':'לקוח חדש'}</h2>
    <div class="field"><label>שם מלא *</label><input class="in" id="f_name" value="${esc(s.name)}"></div>
-   <div class="f2"><div class="field"><label>מייל</label><input class="in" id="f_email" dir="ltr" value="${esc(s.email)}"></div>
-   <div class="field"><label>טלפון</label><input class="in" id="f_phone" dir="ltr" value="${esc(s.phone)}"></div></div>
+   <div class="f2"><div class="field"><label>מייל (לשם יישלח הסיכום)</label><input class="in" id="f_email" type="email" dir="ltr" value="${esc(s.email)}" placeholder="name@example.com"></div>
+   <div class="field"><label>טלפון</label><input class="in" id="f_phone" type="tel" dir="ltr" value="${esc(s.phone)}"></div></div>
+   <div class="f2"><div class="field"><label>שם העסק</label><input class="in" id="f_business" value="${esc(s.business)}" placeholder="למשל: סטודיו נשימה"></div>
+   <div class="field"><label>אתר העסק</label><input class="in" id="f_site" dir="ltr" value="${esc(s.site)}" placeholder="https://"></div></div>
    <div class="field"><label>סטטוס</label><select class="in" id="f_status">${[['active','פעיל'],['lead','מתעניין'],['done','סיים']].map(([k,l])=>`<option value="${k}" ${(s.status||'active')===k?'selected':''}>${l}</option>`).join('')}</select></div>
-   <div class="field"><label>הערות</label><textarea class="in" id="f_notes" placeholder="רקע, מטרות, מה חשוב לו/לה ללמוד...">${esc(s.notes)}</textarea></div>
+   <div class="field"><label>הערות</label><textarea class="in" id="f_notes" placeholder="רקע, מטרות, מה חשוב ללקוח ללמוד...">${esc(s.notes)}</textarea></div>
    <div class="acts"><button class="btn pri" onclick="saveStudent('${s.id||''}')">שמירה</button><button class="btn ghost" onclick="closeModal()">ביטול</button>
    ${s.id?`<button class="btn ghost danger" style="margin-inline-start:auto" onclick="delStudent('${s.id}')">מחיקה</button>`:''}</div>`);
 }
 function saveStudent(id){
   const name=val('f_name'); if(!name) return toast('צריך למלא שם');
-  const data={name,email:val('f_email'),phone:val('f_phone'),status:val('f_status'),notes:val('f_notes')};
+  const email=val('f_email');
+  if(email && !/^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/.test(email)) return toast('כתובת המייל לא נראית תקינה');
+  const data={name,email,phone:val('f_phone'),business:val('f_business'),site:val('f_site'),status:val('f_status'),notes:val('f_notes')};
   if(id) Object.assign(student(id),data); else db.students.push({id:uid(),created:todayISO(),...data});
   save(); closeModal(); rerender(); toast('נשמר ✓');
 }
