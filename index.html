@@ -149,7 +149,7 @@ code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#FCEDE2;col
 @media (max-width:820px){
   .app{grid-template-columns:1fr}
   .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;z-index:40;padding:8px;border-left:0;border-top:1px solid var(--line);background:#fff}
-  .brand,.side .foot{display:none}
+  .brand,.side .foot,.side>.btn{display:none}
   .nav{display:flex;width:100%;justify-content:space-around}
   .nav a{flex-direction:column;gap:2px;font-size:10px;padding:6px 4px}
   .nav .count{display:none}
@@ -170,6 +170,7 @@ code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#FCEDE2;col
     <div class="brand"><div class="logo"><img src="logo.png" alt="ספיד אוטומציות"></div><div><b id="brandName">ספיד אוטומציות</b><small>ניהול סשנים ודיוורים</small></div></div>
     <nav class="nav" id="nav"></nav>
     <div class="foot">💾 הנתונים נשמרים בדפדפן הזה בלבד. מומלץ לגבות מדי פעם במסך ההגדרות.</div>
+    <a class="btn ghost sm" href="/logout" style="justify-content:center">⎋ יציאה</a>
   </aside>
   <main id="main"></main>
 </div>
