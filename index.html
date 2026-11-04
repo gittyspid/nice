@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>סטודיו Claude Code · ניהול סשנים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5FC; --card:#FFFFFF; --ink:#2D2A45; --muted:#7C7896; --line:#ECE8F6; --soft:#F3F0FB;
+  --lav:#E4DBFD; --lav-d:#6E55D3; --mint:#D3F2E4; --mint-d:#25875F; --peach:#FFE3D4; --peach-d:#C7653A;
+  --pink:#FCDCE8; --pink-d:#B8467A; --sky:#D8ECFC; --sky-d:#2F76B3; --butter:#FFF3CC; --butter-d:#9A7410;
+  --r:18px; --shadow:0 1px 2px rgba(45,42,69,.04),0 8px 24px rgba(110,85,211,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Rubik','Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+/* sidebar */
+.side{background:linear-gradient(180deg,#FBFAFF 0%,#F4F0FE 100%);border-left:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#CDBEF7,#FAD0E0 60%,#FFE3D4);display:grid;place-items:center;font-weight:700;color:#5B45B8;font-size:18px}
+.brand b{display:block;font-size:15px}
+.brand small{color:var(--muted);font-size:12px}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;text-decoration:none;color:#4A4668;font-weight:500;transition:.15s}
+.nav a:hover{background:#EFEAFD}
+.nav a.on{background:#fff;color:var(--lav-d);box-shadow:var(--shadow)}
+.nav .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px}
+.nav .count{margin-inline-start:auto;background:var(--pink);color:var(--pink-d);font-size:11px;font-weight:600;border-radius:99px;padding:1px 8px}
+.side .foot{margin-top:auto;font-size:12px;color:var(--muted);padding:10px;border-radius:12px;background:#fff8;border:1px dashed var(--line)}
+/* main */
+main{padding:28px 34px 60px;max-width:1280px;width:100%}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.top h1{margin:0;font-size:26px;letter-spacing:-.3px}
+.top p{margin:4px 0 0;color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:9px 16px;font-weight:500;cursor:pointer;background:#fff;box-shadow:inset 0 0 0 1px var(--line);transition:.15s;display:inline-flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap}
+.btn:hover{box-shadow:inset 0 0 0 1px #D9D1F3;background:#FCFBFF}
+.btn.pri{background:var(--lav-d);color:#fff;box-shadow:0 6px 16px rgba(110,85,211,.25)}
+.btn.pri:hover{background:#5E46C2}
+.btn.mint{background:var(--mint);color:var(--mint-d);box-shadow:none}
+.btn.pink{background:var(--pink);color:var(--pink-d);box-shadow:none}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:10px}
+.btn.ghost{background:transparent;box-shadow:none;color:var(--muted)}
+.btn.ghost:hover{background:var(--soft);color:var(--ink)}
+.btn.danger{color:#C2415B}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;border:1px solid #F0ECFA}
+.card h3{margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;gap:18px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:1.4fr 1fr}
+.kpi{padding:18px 20px;border-radius:var(--r);position:relative;overflow:hidden}
+.kpi .lbl{font-size:13px;font-weight:500;opacity:.85}
+.kpi .val{font-size:30px;font-weight:700;margin-top:6px;letter-spacing:-.5px}
+.kpi .sub{font-size:12px;opacity:.75;margin-top:2px}
+.kpi .emo{position:absolute;left:16px;top:14px;font-size:24px;opacity:.9}
+.k1{background:var(--lav);color:#4B3A9E}.k2{background:var(--mint);color:#1D6B4B}.k3{background:var(--sky);color:#235B8A}.k4{background:var(--peach);color:#9A4A26}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;background:var(--soft);border:1px solid transparent;transition:.15s}
+.item:hover{border-color:#E2DBF8;background:#F7F4FE}
+.item .grow{flex:1;min-width:0}
+.item .t{font-weight:600}
+.item .s{font-size:13px;color:var(--muted)}
+.datechip{width:52px;min-width:52px;text-align:center;border-radius:12px;background:#fff;padding:6px 0;box-shadow:var(--shadow)}
+.datechip b{display:block;font-size:19px;line-height:1.1}
+.datechip small{font-size:11px;color:var(--muted)}
+.av{width:34px;height:34px;min-width:34px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:13px;border:2px solid #fff}
+.avs{display:flex}.avs .av{margin-inline-start:-8px;width:28px;height:28px;min-width:28px;font-size:11px}.avs .av:first-child{margin:0}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.b-lav{background:var(--lav);color:var(--lav-d)}.b-mint{background:var(--mint);color:var(--mint-d)}.b-peach{background:var(--peach);color:var(--peach-d)}.b-pink{background:var(--pink);color:var(--pink-d)}.b-sky{background:var(--sky);color:var(--sky-d)}.b-butter{background:var(--butter);color:var(--butter-d)}.b-gray{background:#EFEDF5;color:#6C6886}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty .big{font-size:44px;margin-bottom:8px}
+/* table */
+table.tb{width:100%;border-collapse:separate;border-spacing:0}
+.tb th{font-size:12px;color:var(--muted);font-weight:500;text-align:right;padding:8px 12px;border-bottom:1px solid var(--line)}
+.tb td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tb tr:last-child td{border-bottom:0}
+.tb tr:hover td{background:#FBFAFF}
+.num{font-variant-numeric:tabular-nums}
+/* students */
+.scard{display:flex;flex-direction:column;gap:12px;cursor:pointer;transition:.15s}
+.scard:hover{transform:translateY(-2px)}
+.scard .hd{display:flex;gap:12px;align-items:center}
+.scard .av{width:46px;height:46px;font-size:16px}
+.prog{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#B9A6F5,#F4B3CE)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+/* inputs */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:13px;font-weight:500;color:#4A4668}
+.in{width:100%;border:1px solid var(--line);background:#FCFBFF;border-radius:12px;padding:10px 12px;outline:none;transition:.15s}
+.in:focus{border-color:#BCADF2;background:#fff;box-shadow:0 0 0 4px #EEE9FD}
+textarea.in{min-height:84px;resize:vertical}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 14px}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.chk{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:99px;background:var(--soft);cursor:pointer;font-size:14px;border:1px solid transparent;user-select:none}
+.chk input{accent-color:var(--lav-d)}
+.chk:has(input:checked){background:var(--lav);border-color:#CFC2F8;color:#4B3A9E}
+.search{max-width:280px}
+.tabs{display:inline-flex;background:#fff;border-radius:12px;padding:4px;box-shadow:inset 0 0 0 1px var(--line);gap:2px;flex-wrap:wrap}
+.tabs button{border:0;background:transparent;padding:7px 14px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:500}
+.tabs button.on{background:var(--lav);color:var(--lav-d)}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(45,42,69,.28);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto;animation:fade .15s}
+.modal{background:#fff;border-radius:22px;width:100%;max-width:640px;padding:26px;box-shadow:0 30px 80px rgba(45,42,69,.25);animation:pop .18s}
+.modal h2{margin:0 0 18px;font-size:20px}
+.modal .acts{display:flex;justify-content:flex-start;gap:10px;margin-top:8px;flex-direction:row}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{transform:translateY(10px) scale(.98);opacity:0}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:14px;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.2);animation:pop .2s;font-size:14px}
+/* chart */
+.bars{display:flex;align-items:flex-end;gap:14px;height:170px;padding-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar .stack{width:100%;max-width:42px;display:flex;flex-direction:column-reverse;border-radius:10px;overflow:hidden;background:var(--soft);height:100%;justify-content:flex-start}
+.bar .paid{background:#BFE9D5}.bar .open{background:#FFD0BA}
+.bar small{font-size:11px;color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
+/* matrix */
+.mx{overflow:auto}
+.mx table{border-collapse:separate;border-spacing:6px}
+.mx th{font-size:12px;color:var(--muted);font-weight:500;padding:4px;white-space:nowrap}
+.mx td.c{width:38px;height:38px;border-radius:10px;text-align:center;background:var(--soft);font-size:15px}
+.mx td.c.y{background:var(--mint);color:var(--mint-d);font-weight:700}
+.mx td.c.p{background:var(--butter);color:var(--butter-d)}
+.mx td.nm{white-space:nowrap;font-weight:500;padding-inline-end:10px}
+/* modules */
+.mod{border-radius:var(--r);padding:18px;background:#fff;box-shadow:var(--shadow);border:1px solid #F0ECFA;display:flex;flex-direction:column;gap:10px}
+.mod .n{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-weight:700}
+.mod ul{margin:0;padding-inline-start:18px;color:#4A4668;font-size:14px}
+code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#F1EEFB;color:#5B45B8;padding:2px 7px;border-radius:7px;font-size:13px;direction:ltr;display:inline-block}
+/* mail */
+.mailgrid{display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:start}
+.preview{background:#F2EFF9;border-radius:var(--r);padding:22px;max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:20px}
+.preview .bar2{display:flex;gap:6px;margin-bottom:12px;align-items:center;color:var(--muted);font-size:12px}
+.preview .bar2 i{width:10px;height:10px;border-radius:50%;background:#E3DDF3;display:inline-block}
+.hint{font-size:12.5px;color:var(--muted);background:var(--butter);border-radius:12px;padding:10px 12px;line-height:1.55}
+.hint b{color:var(--butter-d)}
+.sep{height:1px;background:var(--line);margin:16px 0}
+.pill-num{font-weight:700;font-size:20px}
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.mailgrid{grid-template-columns:1fr}.preview{position:static;max-height:none}}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;z-index:40;padding:8px;border-left:0;border-top:1px solid var(--line);background:#fff}
+  .brand,.side .foot{display:none}
+  .nav{display:flex;width:100%;justify-content:space-around}
+  .nav a{flex-direction:column;gap:2px;font-size:10px;padding:6px 4px}
+  .nav .count{display:none}
+  main{padding:20px 14px 100px;min-width:0;overflow-x:hidden}
+  .kpi{padding:14px}.kpi .val{font-size:22px}.kpi .emo{display:none}
+  .item{flex-wrap:wrap;gap:10px}.item .grow{flex-basis:60%}
+  .avs.hide-m{display:none}
+  .grid{min-width:0}.card{min-width:0;overflow-x:auto}
+  .g2,.g3,.f2,.f3{grid-template-columns:1fr}
+  .tb .hide-m{display:none}
+}
+@media print{.side,.top .row{display:none}.app{display:block}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">✦</div><div><b id="brandName">סטודיו Claude Code</b><small>ניהול סשנים ודיוורים</small></div></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot">💾 הנתונים נשמרים בדפדפן הזה בלבד. מומלץ לגבות מדי פעם במסך ההגדרות.</div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<script>
+/* ============ data ============ */
+const KEY = 'cc-studio-v1';
+const PASTELS = [['#E4DBFD','#5B45B8'],['#D3F2E4','#1D6B4B'],['#FFE3D4','#9A4A26'],['#FCDCE8','#9E3366'],['#D8ECFC','#235B8A'],['#FFF3CC','#7D5E0A']];
+
+function defaultModules(){
+  return [
+    {id:'m1',num:1,title:'היכרות והתקנה',goal:'להבין מה זה Claude Code ולהריץ אותו בפעם הראשונה',
+      points:['מה זה Claude Code ובמה הוא שונה מצ׳אט רגיל','התקנה על המחשב והתחברות לחשבון','היכרות עם הטרמינל ועם אפליקציית הדסקטופ','הבקשה הראשונה: לתת ל-Claude לבנות משהו קטן'],
+      commands:['claude','/help','/login'],
+      tips:['אפשר לכתוב ל-Claude בעברית רגילה, בדיוק כמו לאדם','לפתוח את Claude תמיד מתוך תיקיית הפרויקט'],
+      homework:'להתקין את Claude Code, לפתוח תיקייה חדשה ולבקש ממנו לבנות דף HTML פשוט עם הודעת "שלום".'},
+    {id:'m2',num:2,title:'עבודה עם קבצים ושיחה נכונה',goal:'לנהל שיחה יעילה ולתת ל-Claude לקרוא ולערוך קבצים',
+      points:['איך מנסחים בקשה טובה: הקשר, מטרה ודוגמה','הפניה לקבצים עם @','אישור עריכות וקריאת השינויים','עצירה באמצע עם Esc ותיקון כיוון'],
+      commands:['@שם-קובץ','/clear','Esc'],
+      tips:['בקשה אחת ברורה עדיפה על חמש בקשות מעורבבות','אחרי משימה גדולה כדאי לפתוח שיחה חדשה עם /clear'],
+      homework:'לבקש מ-Claude לשפר את הדף מהשיעור הקודם: להוסיף עיצוב, תמונה וכפתור.'},
+    {id:'m3',num:3,title:'הרשאות ומצבי עבודה',goal:'לשלוט במה ש-Claude רשאי לעשות לבד',
+      points:['מה Claude שואל לפני שהוא פועל ולמה','מעבר בין מצבי עבודה עם Shift+Tab','Plan mode: לתכנן לפני שכותבים קוד','הגדרת הרשאות קבועות לפקודות בטוחות'],
+      commands:['Shift+Tab','/permissions'],
+      tips:['במשימה גדולה מתחילים ב-Plan mode ומאשרים תוכנית','לא לאשר פקודות שלא מבינים, תמיד אפשר לשאול "מה זה עושה?"'],
+      homework:'לתכנן ב-Plan mode פרויקט קטן (למשל רשימת משימות) ולאשר את התוכנית לפני הביצוע.'},
+    {id:'m4',num:4,title:'CLAUDE.md וזיכרון',goal:'ללמד את Claude על הפרויקט כדי שלא נחזור על עצמנו',
+      points:['מה זה קובץ CLAUDE.md ולמה הוא חשוב','יצירה אוטומטית עם /init','מה כדאי לכתוב בו: סגנון, כללים, פקודות','זיכרון אישי מול זיכרון של פרויקט'],
+      commands:['/init','/memory'],
+      tips:['כל פעם שמתקנים את Claude על אותו דבר פעמיים, זה סימן להוסיף כלל ל-CLAUDE.md','לשמור את הקובץ קצר וממוקד'],
+      homework:'להריץ /init בפרויקט, לקרוא את הקובץ שנוצר ולהוסיף לו 3 כללים משלך.'},
+    {id:'m5',num:5,title:'Git ו-GitHub',goal:'לשמור גרסאות ולגבות את העבודה בענן',
+      points:['מה זה Git ולמה צריך אותו','commit: נקודת שמירה עם הסבר','חיבור לריפו ב-GitHub ודחיפה (push)','לבקש מ-Claude לעשות commit בשבילך'],
+      commands:['git status','git add .','git commit -m "..."','git push'],
+      tips:['commit קטן ותכוף עדיף על אחד ענק','אפשר פשוט לכתוב ל-Claude: "תעשה commit לשינויים"'],
+      homework:'ליצור ריפו ב-GitHub, לחבר אליו את הפרויקט ולדחוף את הגרסה הראשונה.'},
+    {id:'m6',num:6,title:'העלאה לאוויר עם Vercel',goal:'להפוך את הפרויקט לאתר חי עם כתובת',
+      points:['חיבור Vercel לחשבון GitHub','ייבוא הריפו ופריסה ראשונה','עדכון אוטומטי בכל push','חיבור דומיין משלך'],
+      commands:['git push'],
+      tips:['התוכנית החינמית של Vercel מספיקה לפרויקטים אישיים','כל push לענף main מעדכן את האתר תוך דקה'],
+      homework:'להעלות את הפרויקט ל-Vercel ולשלוח לי את הקישור לאתר החי.'},
+    {id:'m7',num:7,title:'MCP, Skills ופקודות',goal:'לחבר את Claude לכלים נוספים ולהרחיב את היכולות שלו',
+      points:['מה זה MCP ואיך מחברים שרת','Skills: הוראות מוכנות למשימות חוזרות','פקודות סלאש מותאמות אישית','בחירת מודל לפי המשימה'],
+      commands:['/mcp','claude mcp add','/model'],
+      tips:['להתחיל עם חיבור אחד שימושי ולא עשרה בבת אחת','Skill טוב חוסך כתיבת אותן הוראות בכל פעם מחדש'],
+      homework:'לחבר שרת MCP אחד (למשל לדפדפן או ל-GitHub) ולהשתמש בו במשימה אמיתית.'},
+    {id:'m8',num:8,title:'עבודה מתקדמת וטיפים',goal:'לעבוד מהר יותר ולנהל פרויקטים גדולים',
+      points:['המשך שיחה קודמת וחזרה אחורה','דחיסת שיחה ארוכה עם /compact','חלוקת משימה גדולה לשלבים','בדיקה עצמית: לבקש מ-Claude לבדוק את העבודה שלו'],
+      commands:['claude -c','/resume','/compact','Esc Esc'],
+      tips:['לבקש תמיד מ-Claude להריץ ולבדוק את מה שבנה','שיחה ממוקדת אחת לכל משימה'],
+      homework:'לבנות פרויקט קטן מההתחלה ועד אתר חי, לבד, ולהביא שאלות לסשן הבא.'}
+  ];
+}
+function defaults(){
+  return {settings:{instructor:'',business:'סטודיו Claude Code',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:''},
+    students:[],sessions:[],modules:defaultModules(),mails:[]};
+}
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY)); if(d){const b=defaults(); return {...b,...d,settings:{...b.settings,...(d.settings||{})}};}}catch(e){}
+  return defaults();
+}
+let db = load();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(db)); }catch(e){ toast('לא ניתן לשמור בדפדפן הזה'); } }
+
+/* ============ helpers ============ */
+const $ = s => document.querySelector(s);
+const uid = () => Math.random().toString(36).slice(2,9);
+const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '₪' + Math.round(n||0).toLocaleString('he-IL');
+const todayISO = () => new Date().toISOString().slice(0,10);
+const dayOffset = n => { const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const HM = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const HD = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+function pd(iso){ const [y,m,d]=(iso||todayISO()).split('-').map(Number); return new Date(y,m-1,d); }
+function fdate(iso){ if(!iso) return ''; const d=pd(iso); return `${d.getDate()} ב${HM[d.getMonth()]} ${d.getFullYear()}`; }
+function fdateLong(iso){ if(!iso) return ''; const d=pd(iso); return `יום ${HD[d.getDay()]}, ${d.getDate()} ב${HM[d.getMonth()]}`; }
+const initials = n => (n||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('');
+function colorOf(id){ let h=0; for(const c of String(id)) h=(h*31+c.charCodeAt(0))>>>0; return PASTELS[h%PASTELS.length]; }
+function avatar(s){ const [bg,fg]=colorOf(s.id); return `<span class="av" style="background:${bg};color:${fg}" title="${esc(s.name)}">${esc(initials(s.name))}</span>`; }
+const student = id => db.students.find(s=>s.id===id);
+const sessionById = id => db.sessions.find(s=>s.id===id);
+const moduleById = id => db.modules.find(m=>m.id===id);
+const sortedModules = () => [...db.modules].sort((a,b)=>a.num-b.num);
+const sessTitle = s => s.title || (moduleById(s.moduleId)?.title) || 'סשן';
+const firstName = n => (n||'').trim().split(/\s+/)[0] || '';
+
+function studentStats(sid){
+  const ss = db.sessions.filter(s=>s.studentIds.includes(sid));
+  const done = ss.filter(s=>s.status==='done');
+  const charged = done.reduce((a,s)=>a+(+s.price||0),0);
+  const paid = done.filter(s=>s.paid?.[sid]).reduce((a,s)=>a+(+s.price||0),0);
+  const mods = new Set(done.map(s=>s.moduleId).filter(Boolean));
+  const next = ss.filter(s=>s.status==='planned').sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const last = done.sort((a,b)=>b.date.localeCompare(a.date))[0];
+  return {all:ss, done, charged, paid, balance:charged-paid, mods, next, last};
+}
+function summarySent(sess, sid){ return db.mails.some(m=>m.type==='summary' && m.sessionId===sess.id && m.studentIds.includes(sid)); }
+function sessionPayState(s){
+  if(s.status!=='done' || !s.studentIds.length) return null;
+  const n = s.studentIds.filter(id=>s.paid?.[id]).length;
+  return n===s.studentIds.length ? 'paid' : n ? 'partial' : 'open';
+}
+function pendingSummaries(){
+  const out=[];
+  db.sessions.filter(s=>s.status==='done').forEach(s=>{
+    const miss = s.studentIds.filter(id=>student(id) && !summarySent(s,id));
+    if(miss.length) out.push({s,miss});
+  });
+  return out.sort((a,b)=>b.s.date.localeCompare(a.s.date));
+}
+function toast(msg){ document.querySelectorAll('.toast').forEach(t=>t.remove()); const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2600); }
+
+/* ============ nav / router ============ */
+const NAV = [
+  ['dashboard','לוח בקרה','✦','var(--lav)'],
+  ['students','משתתפים','☺','var(--pink)'],
+  ['sessions','סשנים','◷','var(--sky)'],
+  ['mail','דיוורים','✉','var(--peach)'],
+  ['billing','חשבונות','₪','var(--mint)'],
+  ['curriculum','תוכנית לימוד','❖','var(--butter)'],
+  ['settings','הגדרות','⚙','#EFEDF5'],
+];
+function renderNav(route){
+  const pend = pendingSummaries().reduce((a,x)=>a+x.miss.length,0);
+  $('#nav').innerHTML = NAV.map(([k,l,ic,bg])=>`<a href="#${k}" class="${route===k||(route==='student'&&k==='students')?'on':''}"><span class="ic" style="background:${bg}">${ic}</span>${l}${k==='mail'&&pend?`<span class="count">${pend}</span>`:''}</a>`).join('');
+  $('#brandName').textContent = db.settings.business || 'סטודיו Claude Code';
+}
+function route(){
+  const [r,arg] = (location.hash.slice(1)||'dashboard').split('/');
+  const views = {dashboard:vDashboard,students:vStudents,student:vStudent,sessions:vSessions,mail:vMail,billing:vBilling,curriculum:vCurriculum,settings:vSettings};
+  const v = views[r] || vDashboard;
+  renderNav(r);
+  $('#main').innerHTML = v(arg);
+  if(r==='mail') mailMount();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', route);
+function rerender(){ const y=window.scrollY; route(); window.scrollTo(0,y); }
+
+/* ============ views ============ */
+function header(title, sub, actions=''){ return `<div class="top"><div><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</div><div class="row">${actions}</div></div>`; }
+
+function vDashboard(){
+  const name = firstName(db.settings.instructor);
+  const hr = new Date().getHours();
+  const hello = hr<12?'בוקר טוב':hr<17?'צהריים טובים':hr<21?'ערב טוב':'לילה טוב';
+  if(!db.students.length && !db.sessions.length){
+    return header(`${hello}${name?', '+esc(name):''} 👋`, 'בואי נתחיל לבנות את מערכת הסשנים שלך') +
+    `<div class="card empty"><div class="big">🌷</div><h2 style="margin:0 0 6px;color:var(--ink)">עוד אין כאן נתונים</h2>
+     <p>אפשר להתחיל להוסיף משתתפים וסשנים, או לטעון נתוני דוגמה כדי לראות איך המערכת נראית.</p>
+     <div class="row" style="justify-content:center;margin-top:14px">
+       <button class="btn pri" data-act="newStudent">+ משתתף ראשון</button>
+       <button class="btn" data-act="demo">טעינת נתוני דוגמה</button>
+       <a class="btn ghost" href="#settings">הגדרת פרטי העסק</a></div></div>`;
+  }
+  const active = db.students.filter(s=>s.status==='active').length;
+  const done = db.sessions.filter(s=>s.status==='done');
+  let charged=0, paid=0;
+  db.students.forEach(s=>{const st=studentStats(s.id); charged+=st.charged; paid+=st.paid;});
+  const upcoming = db.sessions.filter(s=>s.status==='planned').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
+  const pend = pendingSummaries().slice(0,5);
+  const debtors = db.students.map(s=>({s,b:studentStats(s.id).balance})).filter(x=>x.b>0).sort((a,b)=>b.b-a.b).slice(0,5);
+  // revenue chart last 6 months
+  const months=[]; const now=new Date();
+  for(let i=5;i>=0;i--){ const d=new Date(now.getFullYear(), now.getMonth()-i, 1); months.push({k:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, l:HM[d.getMonth()], paid:0, open:0}); }
+  done.forEach(s=>{ const m=months.find(x=>x.k===s.date.slice(0,7)); if(!m) return; s.studentIds.forEach(id=>{ if(s.paid?.[id]) m.paid+=+s.price||0; else m.open+=+s.price||0; }); });
+  const max = Math.max(1,...months.map(m=>m.paid+m.open));
+  return header(`${hello}${name?', '+esc(name):''} 👋`, `${fdateLong(todayISO())} · הנה תמונת המצב שלך`,
+      `<button class="btn" data-act="newStudent">+ משתתף</button><button class="btn pri" data-act="newSession">+ סשן חדש</button>`) +
+  `<div class="grid g4" style="margin-bottom:18px">
+     <div class="kpi k1"><span class="emo">☺</span><div class="lbl">משתתפים פעילים</div><div class="val">${active}</div><div class="sub">מתוך ${db.students.length} רשומים</div></div>
+     <div class="kpi k2"><span class="emo">✓</span><div class="lbl">סשנים שהועברו</div><div class="val">${done.length}</div><div class="sub">${db.sessions.filter(s=>s.status==='planned').length} מתוכננים</div></div>
+     <div class="kpi k3"><span class="emo">₪</span><div class="lbl">נגבה עד היום</div><div class="val">${money(paid)}</div><div class="sub">מתוך ${money(charged)} שחויבו</div></div>
+     <div class="kpi k4"><span class="emo">⏳</span><div class="lbl">ממתין לתשלום</div><div class="val">${money(charged-paid)}</div><div class="sub">${debtors.length} משתתפים עם יתרה</div></div>
+   </div>
+   <div class="grid g2" style="margin-bottom:18px">
+     <div class="card"><h3>📅 הסשנים הקרובים</h3>
+       ${upcoming.length? `<div class="list">${upcoming.map(sessionItem).join('')}</div>` : `<div class="empty small">אין סשנים מתוכננים. <a href="#" data-act="newSession">לקבוע סשן</a></div>`}
+     </div>
+     <div class="card"><h3>✉ סיכומים שעוד לא נשלחו</h3>
+       ${pend.length? `<div class="list">${pend.map(({s,miss})=>`<div class="item"><div class="grow"><div class="t">${esc(sessTitle(s))}</div><div class="s">${fdate(s.date)} · ${miss.map(id=>esc(firstName(student(id).name))).join(', ')}</div></div><button class="btn sm pink" data-act="mailSession" data-id="${s.id}">שליחת סיכום</button></div>`).join('')}</div>` : `<div class="empty small"><div class="big">💌</div>כל הסיכומים נשלחו, כל הכבוד!</div>`}
+     </div>
+   </div>
+   <div class="grid g2">
+     <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h3 style="margin:0">📈 הכנסות לפי חודש</h3><div class="legend"><span><i style="background:#BFE9D5"></i>שולם</span><span><i style="background:#FFD0BA"></i>ממתין</span></div></div>
+       <div class="bars">${months.map(m=>`<div class="bar"><small class="num">${m.paid+m.open?money(m.paid+m.open):''}</small><div class="stack" title="שולם ${money(m.paid)} · ממתין ${money(m.open)}"><div class="paid" style="height:${m.paid/max*100}%"></div><div class="open" style="height:${m.open/max*100}%"></div></div><small>${m.l}</small></div>`).join('')}</div>
+     </div>
+     <div class="card"><h3>💳 יתרות פתוחות</h3>
+       ${debtors.length? `<div class="list">${debtors.map(({s,b})=>`<div class="item">${avatar(s)}<div class="grow"><div class="t">${esc(s.name)}</div><div class="s">${esc(s.email||'')}</div></div><b class="num" style="color:var(--peach-d)">${money(b)}</b><button class="btn sm" data-act="mailStatement" data-id="${s.id}">סיכום חשבון</button></div>`).join('')}</div>` : `<div class="empty small"><div class="big">🌿</div>אין יתרות פתוחות</div>`}
+     </div>
+   </div>`;
+}
+
+function sessionItem(s){
+  const d = pd(s.date);
+  const studs = s.studentIds.map(student).filter(Boolean);
+  const ps = sessionPayState(s);
+  const sentAll = s.status==='done' && studs.length && studs.every(st=>summarySent(s,st.id));
+  const m = moduleById(s.moduleId);
+  return `<div class="item">
+    <div class="datechip"><b>${d.getDate()}</b><small>${HM[d.getMonth()].slice(0,3)}׳</small></div>
+    <div class="grow"><div class="t">${m?`<span class="muted small">סשן ${m.num} · </span>`:''}${esc(sessTitle(s))}</div>
+      <div class="s">${s.time?esc(s.time)+' · ':''}${studs.map(x=>esc(x.name)).join(', ')||'ללא משתתפים'}</div></div>
+    <div class="avs hide-m">${studs.slice(0,4).map(avatar).join('')}</div>
+    ${s.status==='planned'?'<span class="badge b-sky">מתוכנן</span>':''}
+    ${ps==='paid'?'<span class="badge b-mint">שולם</span>':ps==='partial'?'<span class="badge b-butter">שולם חלקית</span>':ps==='open'?'<span class="badge b-peach">ממתין לתשלום</span>':''}
+    ${s.status==='done'?(sentAll?'<span class="badge b-lav">✓ סיכום נשלח</span>':'<span class="badge b-pink">סיכום לא נשלח</span>'):''}
+    <button class="btn sm ghost" data-act="editSession" data-id="${s.id}" title="עריכה">✎</button>
+  </div>`;
+}
+
+let stuFilter = {q:'', st:'all'};
+function vStudents(){
+  const list = db.students.filter(s=>(stuFilter.st==='all'||s.status===stuFilter.st) && (!stuFilter.q || (s.name+' '+(s.email||'')+' '+(s.phone||'')).toLowerCase().includes(stuFilter.q.toLowerCase())));
+  const total = db.modules.length || 1;
+  return header('משתתפים', `${db.students.length} משתתפים במערכת`, `<button class="btn pri" data-act="newStudent">+ משתתף חדש</button>`) +
+  `<div class="row" style="margin-bottom:18px">
+     <input class="in search" placeholder="🔍 חיפוש לפי שם, מייל או טלפון" value="${esc(stuFilter.q)}" oninput="stuFilter.q=this.value;rerender();this&&setTimeout(()=>{const i=document.querySelector('.search');i.focus();i.setSelectionRange(i.value.length,i.value.length)})">
+     <div class="tabs">${[['all','הכל'],['active','פעילים'],['lead','מתעניינים'],['done','סיימו']].map(([k,l])=>`<button class="${stuFilter.st===k?'on':''}" onclick="stuFilter.st='${k}';rerender()">${l}</button>`).join('')}</div>
+   </div>` +
+  (list.length ? `<div class="grid g3">${list.map(s=>{const st=studentStats(s.id); return `
+    <div class="card scard" onclick="location.hash='student/${s.id}'">
+      <div class="hd">${avatar(s)}<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:16px">${esc(s.name)}</div><div class="muted small" style="overflow:hidden;text-overflow:ellipsis">${esc(s.email||'אין מייל')}</div></div>${statusBadge(s.status)}</div>
+      <div><div class="row small" style="justify-content:space-between;margin-bottom:6px"><span class="muted">התקדמות בתוכנית</span><b>${st.mods.size}/${total}</b></div><div class="prog"><i style="width:${st.mods.size/total*100}%"></i></div></div>
+      <div class="row small" style="justify-content:space-between">
+        <span class="muted">${st.next?`הבא: ${fdate(st.next.date)}`:st.last?`אחרון: ${fdate(st.last.date)}`:'עוד לא נקבע סשן'}</span>
+        ${st.balance>0?`<span class="badge b-peach">יתרה ${money(st.balance)}</span>`:st.charged?'<span class="badge b-mint">הכל שולם</span>':''}
+      </div>
+    </div>`;}).join('')}</div>` : `<div class="card empty"><div class="big">🌸</div>${db.students.length?'לא נמצאו משתתפים':'עוד אין משתתפים'}<div style="margin-top:12px"><button class="btn pri" data-act="newStudent">+ משתתף חדש</button></div></div>`);
+}
+function statusBadge(st){ return st==='active'?'<span class="badge b-mint">פעיל</span>':st==='lead'?'<span class="badge b-sky">מתעניין</span>':'<span class="badge b-gray">סיים</span>'; }
+
+function vStudent(id){
+  const s = student(id); if(!s) return header('לא נמצא','')+`<a href="#students" class="btn">חזרה</a>`;
+  const st = studentStats(id);
+  const [bg,fg] = colorOf(s.id);
+  return `<div class="top"><div class="row" style="gap:16px"><a href="#students" class="btn ghost">→</a>
+      <span class="av" style="width:62px;height:62px;font-size:22px;background:${bg};color:${fg}">${esc(initials(s.name))}</span>
+      <div><h1>${esc(s.name)}</h1><p>${[s.email,s.phone].filter(Boolean).map(esc).join(' · ')||'אין פרטי קשר'} ${statusBadge(s.status)}</p></div></div>
+    <div class="row"><button class="btn" data-act="editStudent" data-id="${s.id}">✎ עריכה</button><button class="btn" data-act="mailStatement" data-id="${s.id}">₪ סיכום חשבון</button><button class="btn pri" data-act="newSession" data-id="${s.id}">+ סשן</button></div></div>
+  <div class="grid g4" style="margin-bottom:18px">
+    <div class="kpi k1"><div class="lbl">סשנים שהועברו</div><div class="val">${st.done.length}</div></div>
+    <div class="kpi k2"><div class="lbl">נושאים שנלמדו</div><div class="val">${st.mods.size}<span style="font-size:16px;opacity:.6">/${db.modules.length}</span></div></div>
+    <div class="kpi k3"><div class="lbl">שולם</div><div class="val">${money(st.paid)}</div></div>
+    <div class="kpi k4"><div class="lbl">יתרה לתשלום</div><div class="val">${money(st.balance)}</div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>◷ היסטוריית סשנים</h3>
+      ${st.all.length?`<table class="tb"><thead><tr><th>תאריך</th><th>נושא</th><th>סטטוס</th><th class="hide-m">סיכום</th><th>תשלום</th><th></th></tr></thead><tbody>
+      ${[...st.all].sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<tr>
+        <td class="num">${fdate(x.date)}</td><td><b>${esc(sessTitle(x))}</b></td>
+        <td>${x.status==='done'?'<span class="badge b-mint">הועבר</span>':'<span class="badge b-sky">מתוכנן</span>'}</td>
+        <td class="hide-m">${x.status==='done'?(summarySent(x,id)?'<span class="badge b-lav">✓ נשלח</span>':`<button class="btn sm pink" data-act="mailSession" data-id="${x.id}" data-sid="${id}">שליחה</button>`):'—'}</td>
+        <td>${x.status==='done'?`<label class="chk" style="padding:4px 10px;font-size:13px"><input type="checkbox" ${x.paid?.[id]?'checked':''} onchange="togglePaid('${x.id}','${id}',this.checked)">${money(x.price)}</label>`:`<span class="muted">${money(x.price)}</span>`}</td>
+        <td><button class="btn sm ghost" data-act="editSession" data-id="${x.id}">✎</button></td></tr>`).join('')}</tbody></table>`:`<div class="empty small">עוד אין סשנים</div>`}
+    </div>
+    <div class="grid" style="align-content:start">
+      <div class="card"><h3>❖ מה כבר נלמד</h3><div class="list">
+        ${sortedModules().map(m=>{const ok=st.mods.has(m.id); const pl=!ok&&st.all.some(x=>x.moduleId===m.id&&x.status==='planned'); return `<div class="row small" style="gap:10px"><span class="badge ${ok?'b-mint':pl?'b-butter':'b-gray'}" style="min-width:26px;justify-content:center">${ok?'✓':m.num}</span><span style="${ok?'':'color:var(--muted)'}">${esc(m.title)}</span>${pl?'<span class="muted">· מתוכנן</span>':''}</div>`}).join('')}
+      </div></div>
+      ${s.notes?`<div class="card"><h3>📝 הערות</h3><div class="small" style="white-space:pre-wrap">${esc(s.notes)}</div></div>`:''}
+      <div class="card"><h3>✉ דיוורים שנשלחו</h3>
+        ${(()=>{const ms=db.mails.filter(m=>m.studentIds.includes(id)).sort((a,b)=>b.date.localeCompare(a.date)); return ms.length?`<div class="list">${ms.slice(0,8).map(m=>`<div class="row small" style="justify-content:space-between"><span>${mailTypeBadge(m.type)} ${esc(m.subject)}</span><span class="muted num">${fdate(m.date.slice(0,10))}</span></div>`).join('')}</div>`:'<div class="muted small">עוד לא נשלחו דיוורים</div>';})()}
+      </div>
+    </div>
+  </div>`;
+}
+
+let sessFilter='all';
+function vSessions(){
+  let list = [...db.sessions];
+  if(sessFilter==='planned') list=list.filter(s=>s.status==='planned');
+  if(sessFilter==='done') list=list.filter(s=>s.status==='done');
+  if(sessFilter==='unsent') list=list.filter(s=>s.status==='done'&&s.studentIds.some(id=>!summarySent(s,id)));
+  if(sessFilter==='unpaid') list=list.filter(s=>['open','partial'].includes(sessionPayState(s)));
+  const planned = list.filter(s=>s.status==='planned').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const done = list.filter(s=>s.status==='done').sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  return header('סשנים', `${db.sessions.filter(s=>s.status==='done').length} הועברו · ${db.sessions.filter(s=>s.status==='planned').length} מתוכננים`, `<button class="btn pri" data-act="newSession">+ סשן חדש</button>`) +
+  `<div class="tabs" style="margin-bottom:18px">${[['all','הכל'],['planned','מתוכננים'],['done','הועברו'],['unsent','ללא סיכום'],['unpaid','ממתינים לתשלום']].map(([k,l])=>`<button class="${sessFilter===k?'on':''}" onclick="sessFilter='${k}';rerender()">${l}</button>`).join('')}</div>` +
+  (planned.length?`<div class="card" style="margin-bottom:18px"><h3>📅 מתוכננים</h3><div class="list">${planned.map(sessionItem).join('')}</div></div>`:'') +
+  (done.length?`<div class="card"><h3>✓ הועברו</h3><div class="list">${done.map(s=>sessionItem(s).replace('<button class="btn sm ghost" data-act="editSession"', `${s.studentIds.some(id=>!summarySent(s,id))?`<button class="btn sm pink" data-act="mailSession" data-id="${s.id}">שליחת סיכום</button>`:''}<button class="btn sm ghost" data-act="editSession"`)).join('')}</div></div>`:'') +
+  (!planned.length&&!done.length?`<div class="card empty"><div class="big">☕</div>אין סשנים להצגה<div style="margin-top:12px"><button class="btn pri" data-act="newSession">+ סשן חדש</button></div></div>`:'');
+}
+
+let billMonth = 'all';
+function vBilling(){
+  const months = [...new Set(db.sessions.filter(s=>s.status==='done').map(s=>s.date.slice(0,7)))].sort().reverse();
+  const inM = s => s.status==='done' && (billMonth==='all' || s.date.startsWith(billMonth));
+  const rows = db.students.map(st=>{
+    const ss = db.sessions.filter(s=>inM(s)&&s.studentIds.includes(st.id));
+    const charged = ss.reduce((a,s)=>a+(+s.price||0),0);
+    const paid = ss.filter(s=>s.paid?.[st.id]).reduce((a,s)=>a+(+s.price||0),0);
+    return {st, n:ss.length, charged, paid, bal:charged-paid};
+  }).filter(r=>r.n).sort((a,b)=>b.bal-a.bal);
+  const T = rows.reduce((a,r)=>({c:a.c+r.charged,p:a.p+r.paid,n:a.n+r.n}),{c:0,p:0,n:0});
+  const mLabel = k => { const [y,m]=k.split('-'); return `${HM[+m-1]} ${y}`; };
+  return header('חשבונות', 'מעקב חיובים, תשלומים ויתרות') +
+  `<div class="row" style="margin-bottom:18px"><span class="muted small">תקופה:</span>
+     <select class="in" style="width:auto" onchange="billMonth=this.value;rerender()"><option value="all">כל התקופות</option>${months.map(k=>`<option value="${k}" ${billMonth===k?'selected':''}>${mLabel(k)}</option>`).join('')}</select></div>
+   <div class="grid g4" style="margin-bottom:18px">
+     <div class="kpi k1"><div class="lbl">חיובים בסשנים</div><div class="val">${T.n}</div></div>
+     <div class="kpi k3"><div class="lbl">סה״כ חויב</div><div class="val">${money(T.c)}</div></div>
+     <div class="kpi k2"><div class="lbl">שולם</div><div class="val">${money(T.p)}</div><div class="sub">${T.c?Math.round(T.p/T.c*100):0}% גבייה</div></div>
+     <div class="kpi k4"><div class="lbl">יתרה פתוחה</div><div class="val">${money(T.c-T.p)}</div></div>
+   </div>
+   <div class="card">${rows.length?`<table class="tb"><thead><tr><th>משתתף</th><th class="num">סשנים</th><th class="num hide-m">חויב</th><th class="num">שולם</th><th class="num">יתרה</th><th></th></tr></thead><tbody>
+   ${rows.map(r=>`<tr><td><div class="row" style="gap:10px;flex-wrap:nowrap">${avatar(r.st)}<a href="#student/${r.st.id}" style="text-decoration:none;font-weight:600">${esc(r.st.name)}</a></div></td>
+     <td class="num">${r.n}</td><td class="num hide-m">${money(r.charged)}</td><td class="num" style="color:var(--mint-d)">${money(r.paid)}</td>
+     <td class="num"><b style="color:${r.bal>0?'var(--peach-d)':'var(--mint-d)'}">${money(r.bal)}</b></td>
+     <td><div class="row" style="justify-content:flex-end;flex-wrap:nowrap">${r.bal>0?`<button class="btn sm mint" data-act="payAll" data-id="${r.st.id}">✓ סימון כשולם</button>`:''}<button class="btn sm" data-act="mailStatement" data-id="${r.st.id}">✉ סיכום חשבון</button></div></td></tr>`).join('')}
+   </tbody></table>`:`<div class="empty"><div class="big">🧾</div>עוד אין סשנים שהועברו בתקופה הזו</div>`}</div>`;
+}
+
+function vCurriculum(){
+  const mods = sortedModules();
+  return header('תוכנית לימוד', 'הנושאים של הסשנים. התוכן כאן נכנס אוטומטית למיילי הסיכום', `<button class="btn" data-act="resetModules">שחזור ברירת מחדל</button><button class="btn pri" data-act="editModule">+ נושא חדש</button>`) +
+  (db.students.length?`<div class="card" style="margin-bottom:18px"><h3>🗺 מפת התקדמות: למי כבר העברתי מה</h3><div class="mx"><table><thead><tr><th></th>${mods.map(m=>`<th title="${esc(m.title)}">${m.num}</th>`).join('')}<th>סה״כ</th></tr></thead><tbody>
+    ${db.students.filter(s=>s.status!=='lead').map(s=>{const st=studentStats(s.id); return `<tr><td class="nm"><a href="#student/${s.id}" style="text-decoration:none">${esc(s.name)}</a></td>${mods.map(m=>{const ok=st.mods.has(m.id); const pl=!ok&&st.all.some(x=>x.moduleId===m.id&&x.status==='planned'); return `<td class="c ${ok?'y':pl?'p':''}" title="${esc(m.title)}${ok?' · הועבר':pl?' · מתוכנן':''}">${ok?'✓':pl?'◷':''}</td>`}).join('')}<td class="nm muted small">${st.mods.size}/${mods.length}</td></tr>`}).join('')}
+    </tbody></table></div><div class="legend" style="margin-top:8px"><span><i style="background:var(--mint)"></i>הועבר</span><span><i style="background:var(--butter)"></i>מתוכנן</span><span><i style="background:var(--soft)"></i>עוד לא</span></div></div>`:'') +
+  `<div class="grid g3">${mods.map((m,i)=>{const [bg,fg]=PASTELS[i%PASTELS.length]; return `<div class="mod">
+     <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><div class="row" style="flex-wrap:nowrap"><span class="n" style="background:${bg};color:${fg}">${m.num}</span><b>${esc(m.title)}</b></div><button class="btn sm ghost" data-act="editModule" data-id="${m.id}">✎</button></div>
+     <div class="muted small">${esc(m.goal)}</div>
+     <ul>${m.points.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+     <div class="row" style="gap:6px">${m.commands.map(c=>`<code>${esc(c)}</code>`).join('')}</div>
+   </div>`}).join('')}</div>`;
+}
+
+function vSettings(){
+  const S = db.settings;
+  return header('הגדרות', 'הפרטים האלה מופיעים בחתימה של כל מייל') +
+  `<div class="grid g2"><div class="card"><h3>👩‍🏫 פרטי העסק</h3>
+    <div class="f2"><div class="field"><label>שם המנחה</label><input class="in" id="s_instructor" value="${esc(S.instructor)}" placeholder="השם שלך"></div>
+    <div class="field"><label>שם העסק / הסדנה</label><input class="in" id="s_business" value="${esc(S.business)}"></div>
+    <div class="field"><label>המייל שלך</label><input class="in" id="s_email" value="${esc(S.email)}" dir="ltr" placeholder="you@gmail.com"></div>
+    <div class="field"><label>טלפון</label><input class="in" id="s_phone" value="${esc(S.phone)}" dir="ltr"></div>
+    <div class="field"><label>מחיר ברירת מחדל לסשן (₪)</label><input class="in" id="s_price" type="number" value="${esc(S.price)}"></div>
+    <div class="field"><label>אתר / קישור</label><input class="in" id="s_site" value="${esc(S.site)}" dir="ltr" placeholder="https://"></div></div>
+    <div class="field"><label>פרטי תשלום (יופיעו בסיכום החשבון)</label><textarea class="in" id="s_payment" placeholder="למשל: ביט / פייבוקס למספר 050-0000000, או העברה בנקאית">${esc(S.payment)}</textarea></div>
+    <div class="field"><label>משפט סיום לחתימה</label><input class="in" id="s_signature" value="${esc(S.signature)}"></div>
+    <button class="btn pri" data-act="saveSettings">שמירה</button>
+  </div>
+  <div class="grid" style="align-content:start">
+    <div class="card"><h3>💾 גיבוי ושחזור</h3><p class="muted small" style="margin-top:0">הנתונים נשמרים רק בדפדפן הזה. כדי לעבור מחשב או לשמור עותק, יש להוריד קובץ גיבוי.</p>
+      <div class="row"><button class="btn" data-act="exportData">⬇ הורדת גיבוי</button><label class="btn">⬆ שחזור מגיבוי<input type="file" accept=".json" hidden onchange="importData(this.files[0])"></label></div></div>
+    <div class="card"><h3>🧪 נתוני דוגמה</h3><div class="row"><button class="btn" data-act="demo">טעינת נתוני דוגמה</button><button class="btn danger" data-act="wipe">מחיקת כל הנתונים</button></div></div>
+  </div></div>`;
+}
+
+/* ============ modals ============ */
+function modal(html){
+  closeModal();
+  const ov = document.createElement('div'); ov.className='ov'; ov.id='ov';
+  ov.innerHTML = `<div class="modal">${html}</div>`;
+  ov.addEventListener('mousedown', e=>{ if(e.target===ov) closeModal(); });
+  document.body.appendChild(ov);
+  const f = ov.querySelector('input,textarea,select'); f && f.focus();
+}
+function closeModal(){ $('#ov')?.remove(); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+const val = id => document.getElementById(id)?.value?.trim() ?? '';
+
+function studentForm(s={}){
+  modal(`<h2>${s.id?'עריכת משתתף':'משתתף חדש'}</h2>
+   <div class="field"><label>שם מלא *</label><input class="in" id="f_name" value="${esc(s.name)}"></div>
+   <div class="f2"><div class="field"><label>מייל</label><input class="in" id="f_email" dir="ltr" value="${esc(s.email)}"></div>
+   <div class="field"><label>טלפון</label><input class="in" id="f_phone" dir="ltr" value="${esc(s.phone)}"></div></div>
+   <div class="field"><label>סטטוס</label><select class="in" id="f_status">${[['active','פעיל'],['lead','מתעניין'],['done','סיים']].map(([k,l])=>`<option value="${k}" ${(s.status||'active')===k?'selected':''}>${l}</option>`).join('')}</select></div>
+   <div class="field"><label>הערות</label><textarea class="in" id="f_notes" placeholder="רקע, מטרות, מה חשוב לו/לה ללמוד...">${esc(s.notes)}</textarea></div>
+   <div class="acts"><button class="btn pri" onclick="saveStudent('${s.id||''}')">שמירה</button><button class="btn ghost" onclick="closeModal()">ביטול</button>
+   ${s.id?`<button class="btn ghost danger" style="margin-inline-start:auto" onclick="delStudent('${s.id}')">מחיקה</button>`:''}</div>`);
+}
+function saveStudent(id){
+  const name=val('f_name'); if(!name) return toast('צריך למלא שם');
+  const data={name,email:val('f_email'),phone:val('f_phone'),status:val('f_status'),notes:val('f_notes')};
+  if(id) Object.assign(student(id),data); else db.students.push({id:uid(),created:todayISO(),...data});
+  save(); closeModal(); rerender(); toast('נשמר ✓');
+}
+function delStudent(id){
+  if(!confirm('למחוק את המשתתף? הוא יוסר גם מהסשנים.')) return;
+  db.students=db.students.filter(s=>s.id!==id);
+  db.sessions.forEach(s=>s.studentIds=s.studentIds.filter(x=>x!==id));
+  save(); closeModal(); location.hash='students'; rerender();
+}
+
+function sessionForm(s={}, preStudent){
+  const isNew=!s.id;
+  if(isNew){ s={date:todayISO(),time:'18:00',duration:90,status:'planned',price:db.settings.price,studentIds:preStudent?[preStudent]:[],paid:{}};
+    if(preStudent){ const st=studentStats(preStudent); const nm=sortedModules().find(m=>!st.mods.has(m.id)); if(nm) s.moduleId=nm.id; } }
+  modal(`<h2>${isNew?'סשן חדש':'עריכת סשן'}</h2>
+   <div class="f3"><div class="field"><label>תאריך</label><input class="in" type="date" id="f_date" value="${esc(s.date)}"></div>
+   <div class="field"><label>שעה</label><input class="in" type="time" id="f_time" value="${esc(s.time)}"></div>
+   <div class="field"><label>משך (דקות)</label><input class="in" type="number" id="f_dur" value="${esc(s.duration)}"></div></div>
+   <div class="f2"><div class="field"><label>נושא מתוכנית הלימוד</label><select class="in" id="f_mod"><option value="">— נושא חופשי —</option>${sortedModules().map(m=>`<option value="${m.id}" ${s.moduleId===m.id?'selected':''}>${m.num}. ${esc(m.title)}</option>`).join('')}</select></div>
+   <div class="field"><label>כותרת (לא חובה)</label><input class="in" id="f_title" value="${esc(s.title)}" placeholder="אם ריק, ייכנס שם הנושא"></div></div>
+   <div class="field"><label>משתתפים</label><div class="checks" id="f_studs">${db.students.length?db.students.map(st=>`<label class="chk"><input type="checkbox" value="${st.id}" ${s.studentIds.includes(st.id)?'checked':''}>${esc(st.name)}</label>`).join(''):'<span class="muted small">עוד אין משתתפים. כדאי להוסיף קודם משתתף.</span>'}</div></div>
+   <div class="f2"><div class="field"><label>סטטוס</label><div class="tabs" id="f_status">${[['planned','מתוכנן'],['done','הועבר']].map(([k,l])=>`<button type="button" data-v="${k}" class="${s.status===k?'on':''}" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('donebox').style.display=this.dataset.v==='done'?'':'none'">${l}</button>`).join('')}</div></div>
+   <div class="field"><label>מחיר למשתתף (₪)</label><input class="in" type="number" id="f_price" value="${esc(s.price)}"></div></div>
+   <div id="donebox" style="${s.status==='done'?'':'display:none'}">
+     <div class="field"><label>מה עשינו בסשן (שורה לכל נקודה. אם ריק, ייכנסו הנקודות מתוכנית הלימוד)</label><textarea class="in" id="f_high" placeholder="בנינו יחד דף נחיתה&#10;חיברנו את הפרויקט ל-GitHub">${esc((s.highlights||[]).join('\n'))}</textarea></div>
+     <div class="field"><label>משימה לתרגול (אם ריק, תיכנס המשימה מתוכנית הלימוד)</label><textarea class="in" id="f_hw" style="min-height:60px">${esc(s.homework)}</textarea></div>
+     <div class="field"><label>מי שילם?</label><div class="checks" id="f_paid">${s.studentIds.map(id=>student(id)).filter(Boolean).map(st=>`<label class="chk"><input type="checkbox" value="${st.id}" ${s.paid?.[st.id]?'checked':''}>${esc(st.name)}</label>`).join('')||'<span class="muted small">אפשר לסמן אחרי השמירה</span>'}</div></div>
+   </div>
+   <div class="field"><label>הערות פנימיות</label><textarea class="in" id="f_notes" style="min-height:56px">${esc(s.notes)}</textarea></div>
+   <div class="acts"><button class="btn pri" onclick="saveSession('${s.id||''}')">שמירה</button>
+   ${isNew?'':`<button class="btn pink" onclick="saveSession('${s.id}',true)">שמירה ושליחת סיכום</button>`}
+   <button class="btn ghost" onclick="closeModal()">ביטול</button>
+   ${isNew?'':`<button class="btn ghost danger" style="margin-inline-start:auto" onclick="delSession('${s.id}')">מחיקה</button>`}</div>`);
+}
+function saveSession(id, thenMail){
+  const studentIds=[...document.querySelectorAll('#f_studs input:checked')].map(i=>i.value);
+  const status=document.querySelector('#f_status button.on')?.dataset.v||'planned';
+  const paid={}; document.querySelectorAll('#f_paid input').forEach(i=>{ if(i.checked) paid[i.value]=true; });
+  const data={date:val('f_date')||todayISO(),time:val('f_time'),duration:+val('f_dur')||90,moduleId:val('f_mod'),title:val('f_title'),studentIds,status,price:+val('f_price')||0,
+    highlights:val('f_high').split('\n').map(x=>x.trim()).filter(Boolean),homework:val('f_hw'),notes:val('f_notes')};
+  let s;
+  if(id){ s=sessionById(id); const old=s.paid||{}; Object.assign(s,data); s.paid={}; studentIds.forEach(x=>{ if(paid[x]||(old[x]&&!document.querySelector(`#f_paid input[value="${x}"]`))) s.paid[x]=true; }); }
+  else { s={id:uid(),...data,paid}; db.sessions.push(s); }
+  save(); closeModal();
+  if(thenMail && s.status==='done'){ openMail({type:'summary',sessionId:s.id}); return; }
+  rerender(); toast('הסשן נשמר ✓');
+}
+function delSession(id){ if(!confirm('למחוק את הסשן?')) return; db.sessions=db.sessions.filter(s=>s.id!==id); db.mails=db.mails.filter(m=>m.sessionId!==id); save(); closeModal(); rerender(); }
+function togglePaid(sessId, sid, on){ const s=sessionById(sessId); s.paid=s.paid||{}; if(on) s.paid[sid]=true; else delete s.paid[sid]; save(); rerender(); toast(on?'סומן כשולם ✓':'הסימון בוטל'); }
+
+function moduleForm(m){
+  const isNew=!m; m=m||{num:(Math.max(0,...db.modules.map(x=>x.num))+1),title:'',goal:'',points:[],commands:[],tips:[],homework:''};
+  modal(`<h2>${isNew?'נושא חדש':'עריכת נושא'}</h2>
+   <div class="f2"><div class="field"><label>מספר</label><input class="in" type="number" id="f_num" value="${m.num}"></div><div class="field"><label>שם הנושא *</label><input class="in" id="f_mtitle" value="${esc(m.title)}"></div></div>
+   <div class="field"><label>מטרת הסשן</label><input class="in" id="f_goal" value="${esc(m.goal)}"></div>
+   <div class="field"><label>מה לומדים (שורה לכל נקודה)</label><textarea class="in" id="f_points">${esc(m.points.join('\n'))}</textarea></div>
+   <div class="field"><label>פקודות לזכור (שורה לכל פקודה)</label><textarea class="in" id="f_cmds" dir="ltr" style="text-align:left;min-height:64px">${esc(m.commands.join('\n'))}</textarea></div>
+   <div class="field"><label>טיפים (שורה לכל טיפ)</label><textarea class="in" id="f_tips" style="min-height:64px">${esc(m.tips.join('\n'))}</textarea></div>
+   <div class="field"><label>משימה לתרגול</label><textarea class="in" id="f_mhw" style="min-height:56px">${esc(m.homework)}</textarea></div>
+   <div class="acts"><button class="btn pri" onclick="saveModule('${m.id||''}')">שמירה</button><button class="btn ghost" onclick="closeModal()">ביטול</button>
+   ${isNew?'':`<button class="btn ghost danger" style="margin-inline-start:auto" onclick="delModule('${m.id}')">מחיקה</button>`}</div>`);
+}
+function saveModule(id){
+  const lines = x => val(x).split('\n').map(s=>s.trim()).filter(Boolean);
+  const title=val('f_mtitle'); if(!title) return toast('צריך שם לנושא');
+  const data={num:+val('f_num')||1,title,goal:val('f_goal'),points:lines('f_points'),commands:lines('f_cmds'),tips:lines('f_tips'),homework:val('f_mhw')};
+  if(id) Object.assign(moduleById(id),data); else db.modules.push({id:uid(),...data});
+  save(); closeModal(); rerender(); toast('נשמר ✓');
+}
+function delModule(id){ if(!confirm('למחוק את הנושא?')) return; db.modules=db.modules.filter(m=>m.id!==id); save(); closeModal(); rerender(); }
+
+/* ============ mail center ============ */
+let mail = {type:'summary', sessionId:'', studentIds:[], note:'', subject:'', subjectEdited:false, bcc:true};
+const MAIL_TYPES = [['summary','סיכום סשן','💌'],['statement','סיכום חשבון','🧾'],['reminder','תזכורת לסשן','⏰'],['welcome','ברוכים הבאים','🌷']];
+function mailTypeBadge(t){ const c={summary:'b-pink',statement:'b-mint',reminder:'b-sky',welcome:'b-lav'}[t]; const l=MAIL_TYPES.find(x=>x[0]===t); return `<span class="badge ${c}">${l?l[2]+' '+l[1]:t}</span>`; }
+function openMail(opts){
+  mail = {type:'summary',sessionId:'',studentIds:[],note:'',subject:'',subjectEdited:false,bcc:true,...opts};
+  if(mail.type==='summary' && mail.sessionId && !opts.studentIds){ const s=sessionById(mail.sessionId); const miss=s.studentIds.filter(id=>!summarySent(s,id)); mail.studentIds = miss.length?miss:[...s.studentIds]; }
+  if(location.hash==='#mail') route(); else location.hash='mail';
+}
+function vMail(){
+  const done = db.sessions.filter(s=>s.status==='done').sort((a,b)=>b.date.localeCompare(a.date));
+  const planned = db.sessions.filter(s=>s.status==='planned').sort((a,b)=>a.date.localeCompare(b.date));
+  const needSession = mail.type==='summary' || mail.type==='reminder';
+  const pool = needSession ? (mail.type==='summary'?done:planned) : [];
+  if(needSession && !pool.find(s=>s.id===mail.sessionId)){ mail.sessionId = pool[0]?.id||''; const s=sessionById(mail.sessionId); mail.studentIds = s?(mail.type==='summary'?(s.studentIds.filter(id=>!summarySent(s,id)).length?s.studentIds.filter(id=>!summarySent(s,id)):[...s.studentIds]):[...s.studentIds]):[]; }
+  const sess = sessionById(mail.sessionId);
+  const candidates = needSession ? (sess?sess.studentIds.map(student).filter(Boolean):[]) : db.students;
+  const log = [...db.mails].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
+  return header('מרכז דיוורים', 'בוחרים סוג מייל, רואים תצוגה מקדימה, ושולחים ישר מ-Gmail') +
+  `<div class="mailgrid"><div class="grid" style="align-content:start">
+    <div class="card">
+      <div class="field"><label>סוג הדיוור</label><div class="checks">${MAIL_TYPES.map(([k,l,e])=>`<label class="chk"><input type="radio" name="mt" value="${k}" ${mail.type===k?'checked':''} onchange="mail.type=this.value;mail.subjectEdited=false;mail.sessionId='';rerender()">${e} ${l}</label>`).join('')}</div></div>
+      ${needSession?`<div class="field"><label>${mail.type==='summary'?'איזה סשן?':'לאיזה סשן מתוכנן?'}</label>
+        ${pool.length?`<select class="in" onchange="mail.sessionId=this.value;mail.subjectEdited=false;const s=sessionById(this.value);mail.studentIds=s?[...s.studentIds]:[];rerender()">${pool.map(s=>`<option value="${s.id}" ${s.id===mail.sessionId?'selected':''}>${fdate(s.date)} · ${esc(sessTitle(s))} (${s.studentIds.length})</option>`).join('')}</select>`:`<div class="muted small">${mail.type==='summary'?'אין עדיין סשנים שהועברו':'אין סשנים מתוכננים'}</div>`}</div>`:''}
+      <div class="field"><label>נמענים</label><div class="checks">${candidates.length?candidates.map(st=>`<label class="chk" title="${esc(st.email||'אין מייל')}"><input type="checkbox" value="${st.id}" ${mail.studentIds.includes(st.id)?'checked':''} onchange="mailToggle('${st.id}',this.checked)">${esc(st.name)}${!st.email?' ⚠':''}${mail.type==='summary'&&sess&&summarySent(sess,st.id)?' ✓':''}</label>`).join(''):'<span class="muted small">אין נמענים</span>'}</div>
+        ${mail.type==='summary'&&sess&&sess.studentIds.some(id=>summarySent(sess,id))?'<div class="muted small" style="margin-top:6px">✓ = כבר קיבלו סיכום לסשן הזה</div>':''}
+        ${mail.type==='statement'&&mail.studentIds.length>1?'<div class="muted small" style="margin-top:6px">בסיכום חשבון כדאי לבחור משתתף אחד, כי כל אחד מקבל את החשבון שלו.</div>':''}</div>
+      ${mail.studentIds.length>1?`<label class="chk" style="margin-bottom:14px"><input type="checkbox" ${mail.bcc?'checked':''} onchange="mail.bcc=this.checked">שליחה בעותק מוסתר (BCC), כך שהנמענים לא יראו זה את המייל של זה</label>`:''}
+      <div class="field"><label>נושא המייל</label><input class="in" id="m_subject" value="${esc(mail.subject)}" oninput="mail.subject=this.value;mail.subjectEdited=true"></div>
+      <div class="field"><label>מילה אישית (לא חובה)</label><textarea class="in" id="m_note" placeholder="היה כיף לראות את ההתקדמות שלך היום..." oninput="mail.note=this.value;mailPreview()">${esc(mail.note)}</textarea></div>
+      <div class="list" style="gap:8px">
+        <button class="btn pri" style="justify-content:center" onclick="sendGmail()">✉ העתקה ופתיחה ב-Gmail</button>
+        <div class="row" style="gap:8px"><button class="btn" style="flex:1;justify-content:center" onclick="copyMail()">⧉ העתקת המייל המעוצב</button><button class="btn" style="flex:1;justify-content:center" onclick="sendMailto()">תוכנת מייל אחרת</button></div>
+        <button class="btn mint" style="justify-content:center" onclick="markSent()">✓ סימון כנשלח</button>
+      </div>
+      <div class="hint" style="margin-top:14px"><b>איך זה עובד:</b> לוחצים על "העתקה ופתיחה ב-Gmail". המייל המעוצב מועתק, ו-Gmail נפתח עם הנמענים והנושא. בגוף המייל לוחצים <b>Ctrl+V</b> ושולחים. המייל מסומן כנשלח אוטומטית.</div>
+    </div>
+    <div class="card"><h3>🕊 נשלחו לאחרונה</h3>${log.length?`<div class="list">${log.map(m=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc(m.subject)}</b></div><div class="s">${mailTypeBadge(m.type)} ${m.studentIds.map(id=>esc(student(id)?.name||'')).join(', ')} · ${fdate(m.date.slice(0,10))}</div></div><button class="btn sm ghost" title="ביטול הסימון" onclick="unlogMail('${m.id}')">✕</button></div>`).join('')}</div>`:'<div class="muted small">עוד לא נשלחו דיוורים</div>'}</div>
+  </div>
+  <div class="preview"><div class="bar2"><i></i><i></i><i></i><span style="margin-inline-start:8px" id="m_to"></span></div><div id="m_preview"></div></div></div>`;
+}
+function mailMount(){ mailPreview(); }
+function mailToggle(id,on){ mail.studentIds = on?[...new Set([...mail.studentIds,id])]:mail.studentIds.filter(x=>x!==id); mail.subjectEdited||(mail.subject=''); rerender(); }
+function mailRecipients(){ return mail.studentIds.map(student).filter(Boolean); }
+function mailPreview(){
+  const r = buildMail(); if(!mail.subjectEdited){ mail.subject=r.subject; const i=$('#m_subject'); if(i) i.value=r.subject; }
+  $('#m_preview').innerHTML = r.html;
+  const rec = mailRecipients();
+  $('#m_to').textContent = rec.length? 'אל: '+rec.map(s=>s.email||s.name+' (אין מייל)').join(', ') : 'לא נבחרו נמענים';
+}
+
+/* email building blocks: tables + inline styles so it survives pasting into Gmail */
+const E = {
+  font:"font-family:Arial,'Segoe UI',Helvetica,sans-serif;",
+  wrap(inner){ return `<div dir="rtl" style="background:#F6F3FD;padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #ECE6FA;direction:rtl;text-align:right"><tr><td style="padding:0">${inner}</td></tr></table></div>`; },
+  hero(kicker,title,sub,bg='#EDE6FE',fg='#4B3A9E'){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};padding:32px 32px 28px;text-align:right">
+     <div style="font-size:13px;color:${fg};opacity:.8;font-weight:bold;letter-spacing:.3px">${kicker}</div>
+     <div style="font-size:26px;line-height:1.3;color:#2D2A45;font-weight:bold;margin-top:6px">${title}</div>
+     ${sub?`<div style="font-size:14px;color:#5E5A7A;margin-top:8px">${sub}</div>`:''}</td></tr></table>`; },
+  p(t){ return `<div style="padding:0 32px;font-size:15px;line-height:1.75;color:#3A3656;margin:22px 0 0">${t}</div>`; },
+  box(icon,title,body,bg,border){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};border-right:4px solid ${border};border-radius:14px;padding:18px 20px;text-align:right">
+     <div style="font-size:15px;font-weight:bold;color:#2D2A45;margin-bottom:8px">${icon}&nbsp; ${title}</div><div style="font-size:14.5px;line-height:1.75;color:#3A3656">${body}</div></td></tr></table></td></tr></table>`; },
+  ul(items){ return items.map(i=>`<div style="padding:3px 0">•&nbsp; ${esc(i)}</div>`).join(''); },
+  codes(items){ return items.map(c=>`<span style="display:inline-block;direction:ltr;font-family:Consolas,'Courier New',monospace;background:#ffffff;border:1px solid #CFE2F5;color:#235B8A;border-radius:8px;padding:3px 10px;margin:3px 0 3px 6px;font-size:13.5px">${esc(c)}</span>`).join(''); },
+  sign(){ const S=db.settings; return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px"><tr><td style="padding:22px 32px 28px;border-top:1px solid #F0ECF9;text-align:right">
+     ${S.signature?`<div style="font-size:15px;color:#3A3656;margin-bottom:10px">${esc(S.signature)}</div>`:''}
+     <div style="font-size:15px;font-weight:bold;color:#2D2A45">${esc(S.instructor||'')}</div>
+     <div style="font-size:13px;color:#7C7896">${esc(S.business||'')}</div>
+     <div style="font-size:13px;color:#7C7896;margin-top:4px;direction:rtl">${[S.phone,S.email,S.site].filter(Boolean).map(esc).join(' &nbsp;·&nbsp; ')}</div></td></tr></table>`; },
+};
+function greet(rec){ return rec.length===1 ? `היי ${esc(firstName(rec[0].name))},` : rec.length ? 'היי לכולם,' : 'היי,'; }
+function buildMail(){
+  const rec = mailRecipients(), S = db.settings;
+  if(mail.type==='summary'){
+    const s = sessionById(mail.sessionId);
+    if(!s) return {subject:'',html:'<div class="empty">בחרי סשן כדי לראות תצוגה מקדימה</div>'};
+    const m = moduleById(s.moduleId) || {points:[],commands:[],tips:[],homework:'',goal:''};
+    const high = s.highlights?.length ? s.highlights : m.points;
+    const hw = s.homework || m.homework;
+    const mods = sortedModules(); const nextMod = m.num ? mods.find(x=>x.num>m.num) : null;
+    const nextSess = db.sessions.filter(x=>x.status==='planned' && x.date>=s.date && x.studentIds.some(id=>mail.studentIds.includes(id))).sort((a,b)=>a.date.localeCompare(b.date))[0];
+    const subject = `סיכום הסשן: ${sessTitle(s)} ✨`;
+    let html = E.hero(`סיכום סשן${m.num?' '+m.num:''} · ${fdate(s.date)}`, esc(sessTitle(s)), m.goal?esc(m.goal):'')
+      + E.p(`${greet(rec)}<br>תודה על הסשן! ריכזתי כאן את כל מה שעשינו, כדי שיהיה קל לחזור לזה ולהמשיך לתרגל.`)
+      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
+      + (high.length?E.box('✦','מה עשינו היום',E.ul(high),'#F3EFFE','#B9A6F5'):'')
+      + (m.commands?.length?E.box('⌨','פקודות שכדאי לזכור',E.codes(m.commands),'#EDF6FE','#9CCBF2'):'')
+      + (m.tips?.length?E.box('💡','טיפים',E.ul(m.tips),'#EAF8F1','#94DDBA'):'')
+      + (hw?E.box('🎯','משימה לתרגול',esc(hw),'#FFF2EA','#FFC3A3'):'')
+      + ((nextSess||nextMod)?E.box('📅','מה בסשן הבא', nextSess?`<b>${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}</b><br>${esc(sessTitle(nextSess))}`:`נמשיך ל<b>${esc(nextMod.title)}</b>. נתאם מועד בקרוב.`,'#FFF8DE','#F2D46B'):'')
+      + E.p('יש שאלות? אפשר פשוט לענות למייל הזה.')
+      + E.sign();
+    return {subject, html:E.wrap(html)};
+  }
+  if(mail.type==='statement'){
+    const st = rec[0];
+    if(!st) return {subject:'',html:'<div class="empty">בחרי משתתף כדי לראות את סיכום החשבון</div>'};
+    const ss = db.sessions.filter(s=>s.status==='done'&&s.studentIds.includes(st.id)).sort((a,b)=>a.date.localeCompare(b.date));
+    const charged = ss.reduce((a,s)=>a+(+s.price||0),0), paid = ss.filter(s=>s.paid?.[st.id]).reduce((a,s)=>a+(+s.price||0),0), bal=charged-paid;
+    const rows = ss.map(s=>`<tr><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:14px;color:#3A3656">${fdate(s.date)}</td><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:14px;color:#2D2A45">${esc(sessTitle(s))}</td><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:14px;color:#2D2A45;white-space:nowrap">${money(s.price)}</td><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:13px;white-space:nowrap">${s.paid?.[st.id]?'<span style="background:#D3F2E4;color:#1D6B4B;border-radius:99px;padding:2px 10px">שולם</span>':'<span style="background:#FFE3D4;color:#9A4A26;border-radius:99px;padding:2px 10px">לתשלום</span>'}</td></tr>`).join('');
+    const tot = (l,v,c='#2D2A45',b=false)=>`<tr><td style="padding:6px 0;font-size:14px;color:#5E5A7A">${l}</td><td style="padding:6px 0;font-size:${b?'20':'15'}px;color:${c};font-weight:bold;text-align:left">${v}</td></tr>`;
+    const subject = bal>0 ? `סיכום חשבון: ${money(bal)} לתשלום` : 'סיכום חשבון: הכל שולם, תודה! 💚';
+    let html = E.hero('סיכום חשבון', esc(st.name), `נכון ל${fdateLong(todayISO())}`,'#E3F6EC','#1D6B4B')
+      + E.p(`${greet([st])}<br>${bal>0?'מצרפת סיכום של הסשנים שלנו ושל מה שנשאר לתשלום.':'מצרפת סיכום של הסשנים שלנו. הכל מסודר ושולם, תודה רבה!'}`)
+      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
+      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #ECE6FA;border-radius:14px;overflow:hidden;border-collapse:separate"><tr style="background:#F6F3FD"><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">תאריך</th><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">נושא</th><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">סכום</th><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">סטטוס</th></tr>${rows||'<tr><td colspan="4" style="padding:14px;color:#7C7896">אין סשנים</td></tr>'}</table></td></tr></table>`
+      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FBFAFF;border-radius:14px;padding:12px 18px"><tr><td style="padding:10px 18px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${tot('סה״כ סשנים',ss.length)}${tot('סה״כ חויב',money(charged))}${tot('שולם',money(paid),'#1D6B4B')}${tot('יתרה לתשלום',money(bal),bal>0?'#C7653A':'#1D6B4B',true)}</table></td></tr></table></td></tr></table>`
+      + (bal>0&&S.payment?E.box('💳','פרטי תשלום',esc(S.payment).replace(/\n/g,'<br>'),'#EAF8F1','#94DDBA'):'')
+      + E.p('תודה על השיתוף פעולה! בכל שאלה אפשר לענות למייל הזה.')
+      + E.sign();
+    return {subject, html:E.wrap(html)};
+  }
+  if(mail.type==='reminder'){
+    const s = sessionById(mail.sessionId);
+    if(!s) return {subject:'',html:'<div class="empty">בחרי סשן מתוכנן</div>'};
+    const m = moduleById(s.moduleId);
+    const subject = `תזכורת: נפגשים ב${fdateLong(s.date)}${s.time?' ב-'+s.time:''} 📅`;
+    let html = E.hero('תזכורת לסשן', esc(sessTitle(s)), `${fdateLong(s.date)}${s.time?' · '+esc(s.time):''}${s.duration?' · '+s.duration+' דקות':''}`,'#E3F0FD','#235B8A')
+      + E.p(`${greet(rec)}<br>רק מזכירה שאנחנו נפגשים בקרוב! הנה מה שמחכה לנו:`)
+      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
+      + (m?.points?.length?E.box('✦','על מה נעבוד',E.ul(m.points),'#F3EFFE','#B9A6F5'):'')
+      + E.box('🎒','להכנה לפני הסשן',E.ul(['מחשב טעון עם חיבור לאינטרנט','Claude Code מותקן ופתוח','שאלות או דברים שנתקעתם בהם מאז הפעם הקודמת']),'#FFF8DE','#F2D46B')
+      + E.p('אם צריך לשנות מועד, אפשר פשוט לענות למייל הזה.')
+      + E.sign();
+    return {subject, html:E.wrap(html)};
+  }
+  // welcome
+  const subject = `ברוכים הבאים ל${S.business||'סדנת Claude Code'}! 🌷`;
+  let html = E.hero('ברוכים הבאים', 'מתחילים ללמוד Claude Code ✨', 'שמחה מאוד שהצטרפת. הנה כל מה שצריך לדעת לפני שמתחילים.','#FDE6EF','#9E3366')
+    + E.p(`${greet(rec)}<br>Claude Code הוא עוזר שכותב קוד יחד איתך. מתארים לו במילים מה רוצים לבנות, והוא בונה, מסביר ומתקן. במפגשים נלמד צעד אחר צעד, בלי צורך בניסיון קודם בתכנות.`)
+    + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
+    + E.box('🗺','מה נלמד בתוכנית',sortedModules().map(m=>`<div style="padding:3px 0"><b style="color:#6E55D3">${m.num}.</b>&nbsp; ${esc(m.title)}</div>`).join(''),'#F3EFFE','#B9A6F5')
+    + E.box('🎒','לפני הסשן הראשון',E.ul(['לפתוח חשבון ב-claude.ai (מנוי Pro ומעלה כולל את Claude Code)','להוריד את אפליקציית Claude לדסקטופ','לחשוב על רעיון קטן שהייתם רוצים לבנות']),'#FFF8DE','#F2D46B')
+    + E.p('מחכה לראות אותך! בכל שאלה אפשר לענות למייל הזה.')
+    + E.sign();
+  return {subject, html:E.wrap(html)};
+}
+function mailCheck(){
+  const rec = mailRecipients();
+  if(!rec.length){ toast('צריך לבחור לפחות נמען אחד'); return null; }
+  const r = buildMail(); r.subject = mail.subject || r.subject; r.rec = rec;
+  const noMail = rec.filter(s=>!s.email); if(noMail.length) toast(`שימי לב: אין מייל ל${noMail.map(s=>firstName(s.name)).join(', ')}`);
+  return r;
+}
+async function copyRich(html){
+  const text = (()=>{ const d=document.createElement('div'); d.innerHTML=html; d.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(d); const t=d.innerText; d.remove(); return t; })();
+  try{ await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})]); return true; }
+  catch(e){ const d=document.createElement('div'); d.contentEditable='true'; d.innerHTML=html; d.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(d); const r=document.createRange(); r.selectNodeContents(d); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); const ok=document.execCommand('copy'); sel.removeAllRanges(); d.remove(); return ok; }
+}
+async function copyMail(){ const r=buildMail(); if(await copyRich(r.html)) toast('המייל המעוצב הועתק. אפשר להדביק עם Ctrl+V'); else toast('ההעתקה לא הצליחה'); }
+function addrs(r){ const emails=r.rec.map(s=>s.email).filter(Boolean); const useBcc = emails.length>1 && mail.bcc; return {to: useBcc?(db.settings.email||''):emails.join(','), bcc: useBcc?emails.join(','):''}; }
+async function sendGmail(){
+  const r = mailCheck(); if(!r) return;
+  const ok = await copyRich(r.html);
+  const a = addrs(r);
+  const url = 'https://mail.google.com/mail/?view=cm&fs=1' + (a.to?'&to='+encodeURIComponent(a.to):'') + (a.bcc?'&bcc='+encodeURIComponent(a.bcc):'') + '&su='+encodeURIComponent(r.subject);
+  window.open(url,'_blank');
+  logMail(r);
+  toast(ok?'Gmail נפתח. בגוף המייל לוחצים Ctrl+V ושולחים 💌':'Gmail נפתח, אבל ההעתקה לא הצליחה. אפשר ללחוץ על "העתקת המייל המעוצב"');
+}
+function sendMailto(){
+  const r = mailCheck(); if(!r) return;
+  const d=document.createElement('div'); d.innerHTML=r.html; d.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(d); let body=d.innerText.replace(/\n{3,}/g,'\n\n'); d.remove();
+  if(body.length>1800) body=body.slice(0,1800)+'\n...';
+  const a = addrs(r);
+  location.href = `mailto:${encodeURIComponent(a.to)}?${a.bcc?'bcc='+encodeURIComponent(a.bcc)+'&':''}subject=${encodeURIComponent(r.subject)}&body=${encodeURIComponent(body)}`;
+  logMail(r);
+}
+function markSent(){ const r=mailCheck(); if(!r) return; logMail(r); toast('סומן כנשלח ✓'); }
+function logMail(r){
+  db.mails.push({id:uid(),date:new Date().toISOString(),type:mail.type,sessionId:mail.sessionId||'',studentIds:r.rec.map(s=>s.id),subject:r.subject});
+  save(); setTimeout(rerender,300);
+}
+function unlogMail(id){ db.mails=db.mails.filter(m=>m.id!==id); save(); rerender(); toast('הסימון בוטל'); }
+
+/* ============ actions ============ */
+const ACTIONS = {
+  newStudent:()=>studentForm(),
+  editStudent:id=>studentForm(student(id)),
+  newSession:id=>sessionForm({},id),
+  editSession:id=>sessionForm(JSON.parse(JSON.stringify(sessionById(id)))),
+  mailSession:(id,el)=>openMail({type:'summary',sessionId:id,...(el.dataset.sid?{studentIds:[el.dataset.sid]}:{})}),
+  mailStatement:id=>openMail({type:'statement',studentIds:[id]}),
+  payAll:id=>{ if(!confirm('לסמן את כל הסשנים של המשתתף כשולמו?')) return; db.sessions.forEach(s=>{ if(s.status==='done'&&s.studentIds.includes(id)&&(billMonth==='all'||s.date.startsWith(billMonth))){ s.paid=s.paid||{}; s.paid[id]=true; } }); save(); rerender(); toast('סומן כשולם ✓'); },
+  editModule:id=>moduleForm(id?moduleById(id):null),
+  resetModules:()=>{ if(!confirm('לשחזר את תוכנית הלימוד המקורית? שינויים שעשית בנושאים יימחקו.')) return; db.modules=defaultModules(); save(); rerender(); },
+  saveSettings:()=>{ ['instructor','business','email','phone','site','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
+  exportData:()=>{ const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`claude-studio-backup-${todayISO()}.json`; a.click(); },
+  demo:()=>{ if((db.students.length||db.sessions.length) && !confirm('זה יחליף את הנתונים הקיימים בנתוני דוגמה. להמשיך?')) return; loadDemo(); },
+  wipe:()=>{ if(!confirm('למחוק את כל הנתונים? כדאי להוריד גיבוי קודם.')) return; if(!confirm('בטוח? אי אפשר לבטל את זה.')) return; db=defaults(); save(); location.hash='dashboard'; rerender(); },
+};
+document.addEventListener('click', e=>{ const a=e.target.closest('[data-act]'); if(!a) return; e.preventDefault(); ACTIONS[a.dataset.act]?.(a.dataset.id, a, e); });
+function importData(file){ if(!file) return; const fr=new FileReader(); fr.onload=()=>{ try{ const d=JSON.parse(fr.result); if(!d.students||!d.sessions) throw 0; if(!confirm('לשחזר מהגיבוי? הנתונים הנוכחיים יוחלפו.')) return; db={...defaults(),...d}; save(); rerender(); toast('השחזור הצליח ✓'); }catch(e){ toast('הקובץ לא תקין'); } }; fr.readAsText(file); }
+
+function loadDemo(){
+  const keep = db.settings;
+  db = defaults(); db.settings = {...keep, email: keep.email||'', payment: keep.payment||'ביט / פייבוקס למספר 050-0000000\nאו העברה בנקאית (הפרטים יישלחו לפי בקשה)'};
+  const S = [
+    {id:'d1',name:'נועה לוי',email:'noa@example.com',phone:'050-1111111',status:'active',notes:'מעצבת גרפית, רוצה לבנות תיק עבודות אונליין'},
+    {id:'d2',name:'יוסי כהן',email:'yossi@example.com',phone:'052-2222222',status:'active',notes:'בעל עסק קטן, רוצה לבנות מערכת הזמנות'},
+    {id:'d3',name:'מיכל אברהם',email:'michal@example.com',phone:'054-3333333',status:'active',notes:''},
+    {id:'d4',name:'דניאל שפירא',email:'daniel@example.com',phone:'053-4444444',status:'done',notes:'סיים את כל התוכנית 🎉'},
+    {id:'d5',name:'רותם בר',email:'rotem@example.com',phone:'',status:'lead',notes:'שמעה על הסדנה מחברה, מתעניינת בקבוצה'},
+  ];
+  db.students = S.map(s=>({...s,created:dayOffset(-60)}));
+  const mk=(o,id,date,time,mod,studs,status,paid,extra={})=>({id,date:dayOffset(o),time,duration:90,moduleId:mod,title:'',studentIds:studs,status,price:350,paid:Object.fromEntries(paid.map(x=>[x,true])),highlights:[],homework:'',notes:'',...extra});
+  db.sessions = [
+    mk(-49,'x1',0,'18:00','m1',['d4'],'done',['d4']),
+    mk(-42,'x2',0,'18:00','m2',['d4'],'done',['d4']),
+    mk(-35,'x3',0,'18:00','m3',['d4'],'done',['d4']),
+    mk(-28,'x4',0,'18:00','m4',['d4'],'done',['d4']),
+    mk(-21,'x5',0,'20:00','m1',['d1','d2'],'done',['d1','d2']),
+    mk(-14,'x6',0,'20:00','m2',['d1','d2'],'done',['d1']),
+    mk(-7,'x7',0,'20:00','m3',['d1','d2'],'done',[] ,{highlights:['תכננו ב-Plan mode את תיק העבודות של נועה','עברנו על מצבי ההרשאות והגדרנו הרשאות קבועות','יוסי בנה טופס הזמנה ראשון']}),
+    mk(-3,'x8',0,'10:00','m1',['d3'],'done',['d3']),
+    mk(-14,'x9',0,'18:00','m5',['d4'],'done',['d4']),
+    mk(-10,'x10',0,'18:00','m6',['d4'],'done',[]),
+    mk(2,'x11',0,'20:00','m4',['d1','d2'],'planned',[]),
+    mk(4,'x12',0,'10:00','m2',['d3'],'planned',[]),
+  ];
+  db.sessions.forEach(s=>{ if(s.id==='x1'||s.id==='x2') s.date=dayOffset(s.id==='x1'?-70:-63); if(s.id==='x3') s.date=dayOffset(-56); if(s.id==='x4') s.date=dayOffset(-45); });
+  db.mails = ['x1','x2','x3','x4','x5','x6','x9','x10'].map(sid=>{const s=db.sessions.find(x=>x.id===sid); return {id:uid(),date:s.date+'T20:00:00.000Z',type:'summary',sessionId:sid,studentIds:[...s.studentIds],subject:'סיכום הסשן: '+sessTitle(s)+' ✨'};});
+  save(); location.hash='dashboard'; rerender(); toast('נתוני הדוגמה נטענו 🌷');
+}
+
+route();
+</script>
+</body>
+</html>
