@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>סטודיו Claude Code · ניהול סשנים</title>
+<title>ספיד אוטומציות · ניהול סשנים</title>
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F7F5FC; --card:#FFFFFF; --ink:#2D2A45; --muted:#7C7896; --line:#ECE8F6; --soft:#F3F0FB;
-  --lav:#E4DBFD; --lav-d:#6E55D3; --mint:#D3F2E4; --mint-d:#25875F; --peach:#FFE3D4; --peach-d:#C7653A;
-  --pink:#FCDCE8; --pink-d:#B8467A; --sky:#D8ECFC; --sky-d:#2F76B3; --butter:#FFF3CC; --butter-d:#9A7410;
-  --r:18px; --shadow:0 1px 2px rgba(45,42,69,.04),0 8px 24px rgba(110,85,211,.07);
+  --bg:#FBF8F5; --card:#FFFFFF; --ink:#1E1B1A; --muted:#857C75; --line:#F0E8E1; --soft:#F8F2EC;
+  --lav:#FFE6D5; --lav-d:#E8620C; --mint:#DDF3E6; --mint-d:#2E8A5B; --peach:#FFEBC8; --peach-d:#B06A00;
+  --pink:#FDE1DA; --pink-d:#C24B37; --sky:#E2EEF8; --sky-d:#3B76A8; --butter:#FFF3CC; --butter-d:#9A7410;
+  --r:18px; --shadow:0 1px 2px rgba(40,30,25,.04),0 8px 24px rgba(232,98,12,.07);
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Rubik','Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5}
@@ -20,13 +21,13 @@ a{color:inherit}
 button,input,select,textarea{font:inherit;color:inherit}
 .app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
 /* sidebar */
-.side{background:linear-gradient(180deg,#FBFAFF 0%,#F4F0FE 100%);border-left:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
+.side{background:linear-gradient(180deg,#FFFBF8 0%,#FBF2EA 100%);border-left:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
 .brand{display:flex;align-items:center;gap:10px;padding:4px 8px 20px}
-.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#CDBEF7,#FAD0E0 60%,#FFE3D4);display:grid;place-items:center;font-weight:700;color:#5B45B8;font-size:18px}
+.logo{width:46px;height:46px;border-radius:14px;background:#fff;display:grid;place-items:center;box-shadow:var(--shadow);padding:6px}.logo img{width:100%;height:100%;object-fit:contain}
 .brand b{display:block;font-size:15px}
 .brand small{color:var(--muted);font-size:12px}
-.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;text-decoration:none;color:#4A4668;font-weight:500;transition:.15s}
-.nav a:hover{background:#EFEAFD}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;text-decoration:none;color:#4A403A;font-weight:500;transition:.15s}
+.nav a:hover{background:#FDEEE3}
 .nav a.on{background:#fff;color:var(--lav-d);box-shadow:var(--shadow)}
 .nav .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px}
 .nav .count{margin-inline-start:auto;background:var(--pink);color:var(--pink-d);font-size:11px;font-weight:600;border-radius:99px;padding:1px 8px}
@@ -38,16 +39,16 @@ main{padding:28px 34px 60px;max-width:1280px;width:100%}
 .top p{margin:4px 0 0;color:var(--muted)}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .btn{border:0;border-radius:12px;padding:9px 16px;font-weight:500;cursor:pointer;background:#fff;box-shadow:inset 0 0 0 1px var(--line);transition:.15s;display:inline-flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap}
-.btn:hover{box-shadow:inset 0 0 0 1px #D9D1F3;background:#FCFBFF}
-.btn.pri{background:var(--lav-d);color:#fff;box-shadow:0 6px 16px rgba(110,85,211,.25)}
-.btn.pri:hover{background:#5E46C2}
+.btn:hover{box-shadow:inset 0 0 0 1px #F3D9C6;background:#FFFCFA}
+.btn.pri{background:var(--lav-d);color:#fff;box-shadow:0 6px 16px rgba(232,98,12,.25)}
+.btn.pri:hover{background:#CF560A}
 .btn.mint{background:var(--mint);color:var(--mint-d);box-shadow:none}
 .btn.pink{background:var(--pink);color:var(--pink-d);box-shadow:none}
 .btn.sm{padding:6px 11px;font-size:13px;border-radius:10px}
 .btn.ghost{background:transparent;box-shadow:none;color:var(--muted)}
 .btn.ghost:hover{background:var(--soft);color:var(--ink)}
 .btn.danger{color:#C2415B}
-.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;border:1px solid #F0ECFA}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;border:1px solid #F3ECE6}
 .card h3{margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:8px}
 .grid{display:grid;gap:18px}
 .g4{grid-template-columns:repeat(4,1fr)}
@@ -58,10 +59,10 @@ main{padding:28px 34px 60px;max-width:1280px;width:100%}
 .kpi .val{font-size:30px;font-weight:700;margin-top:6px;letter-spacing:-.5px}
 .kpi .sub{font-size:12px;opacity:.75;margin-top:2px}
 .kpi .emo{position:absolute;left:16px;top:14px;font-size:24px;opacity:.9}
-.k1{background:var(--lav);color:#4B3A9E}.k2{background:var(--mint);color:#1D6B4B}.k3{background:var(--sky);color:#235B8A}.k4{background:var(--peach);color:#9A4A26}
+.k1{background:var(--lav);color:#A2440A}.k2{background:var(--mint);color:#1D6B4B}.k3{background:var(--sky);color:#235B8A}.k4{background:var(--peach);color:#9A4A26}
 .list{display:flex;flex-direction:column;gap:10px}
 .item{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;background:var(--soft);border:1px solid transparent;transition:.15s}
-.item:hover{border-color:#E2DBF8;background:#F7F4FE}
+.item:hover{border-color:#F6DCCB;background:#FDF3EC}
 .item .grow{flex:1;min-width:0}
 .item .t{font-weight:600}
 .item .s{font-size:13px;color:var(--muted)}
@@ -79,7 +80,7 @@ table.tb{width:100%;border-collapse:separate;border-spacing:0}
 .tb th{font-size:12px;color:var(--muted);font-weight:500;text-align:right;padding:8px 12px;border-bottom:1px solid var(--line)}
 .tb td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
 .tb tr:last-child td{border-bottom:0}
-.tb tr:hover td{background:#FBFAFF}
+.tb tr:hover td{background:#FFFBF8}
 .num{font-variant-numeric:tabular-nums}
 /* students */
 .scard{display:flex;flex-direction:column;gap:12px;cursor:pointer;transition:.15s}
@@ -87,28 +88,28 @@ table.tb{width:100%;border-collapse:separate;border-spacing:0}
 .scard .hd{display:flex;gap:12px;align-items:center}
 .scard .av{width:46px;height:46px;font-size:16px}
 .prog{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
-.prog i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#B9A6F5,#F4B3CE)}
+.prog i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#FFB27A,#FF7A2F)}
 .muted{color:var(--muted)}
 .small{font-size:13px}
 /* inputs */
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.field label{font-size:13px;font-weight:500;color:#4A4668}
-.in{width:100%;border:1px solid var(--line);background:#FCFBFF;border-radius:12px;padding:10px 12px;outline:none;transition:.15s}
-.in:focus{border-color:#BCADF2;background:#fff;box-shadow:0 0 0 4px #EEE9FD}
+.field label{font-size:13px;font-weight:500;color:#4A403A}
+.in{width:100%;border:1px solid var(--line);background:#FFFCFA;border-radius:12px;padding:10px 12px;outline:none;transition:.15s}
+.in:focus{border-color:#F4B48A;background:#fff;box-shadow:0 0 0 4px #FDEBDD}
 textarea.in{min-height:84px;resize:vertical}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
 .f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 14px}
 .checks{display:flex;flex-wrap:wrap;gap:8px}
 .chk{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:99px;background:var(--soft);cursor:pointer;font-size:14px;border:1px solid transparent;user-select:none}
 .chk input{accent-color:var(--lav-d)}
-.chk:has(input:checked){background:var(--lav);border-color:#CFC2F8;color:#4B3A9E}
+.chk:has(input:checked){background:var(--lav);border-color:#F8C9A8;color:#A2440A}
 .search{max-width:280px}
 .tabs{display:inline-flex;background:#fff;border-radius:12px;padding:4px;box-shadow:inset 0 0 0 1px var(--line);gap:2px;flex-wrap:wrap}
 .tabs button{border:0;background:transparent;padding:7px 14px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:500}
 .tabs button.on{background:var(--lav);color:var(--lav-d)}
 /* modal */
-.ov{position:fixed;inset:0;background:rgba(45,42,69,.28);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto;animation:fade .15s}
-.modal{background:#fff;border-radius:22px;width:100%;max-width:640px;padding:26px;box-shadow:0 30px 80px rgba(45,42,69,.25);animation:pop .18s}
+.ov{position:fixed;inset:0;background:rgba(40,30,25,.28);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto;animation:fade .15s}
+.modal{background:#fff;border-radius:22px;width:100%;max-width:640px;padding:26px;box-shadow:0 30px 80px rgba(40,30,25,.25);animation:pop .18s}
 .modal h2{margin:0 0 18px;font-size:20px}
 .modal .acts{display:flex;justify-content:flex-start;gap:10px;margin-top:8px;flex-direction:row}
 @keyframes fade{from{opacity:0}}
@@ -131,15 +132,15 @@ textarea.in{min-height:84px;resize:vertical}
 .mx td.c.p{background:var(--butter);color:var(--butter-d)}
 .mx td.nm{white-space:nowrap;font-weight:500;padding-inline-end:10px}
 /* modules */
-.mod{border-radius:var(--r);padding:18px;background:#fff;box-shadow:var(--shadow);border:1px solid #F0ECFA;display:flex;flex-direction:column;gap:10px}
+.mod{border-radius:var(--r);padding:18px;background:#fff;box-shadow:var(--shadow);border:1px solid #F3ECE6;display:flex;flex-direction:column;gap:10px}
 .mod .n{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-weight:700}
-.mod ul{margin:0;padding-inline-start:18px;color:#4A4668;font-size:14px}
-code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#F1EEFB;color:#5B45B8;padding:2px 7px;border-radius:7px;font-size:13px;direction:ltr;display:inline-block}
+.mod ul{margin:0;padding-inline-start:18px;color:#4A403A;font-size:14px}
+code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#FCEDE2;color:#C2520A;padding:2px 7px;border-radius:7px;font-size:13px;direction:ltr;display:inline-block}
 /* mail */
 .mailgrid{display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:start}
-.preview{background:#F2EFF9;border-radius:var(--r);padding:22px;max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:20px}
+.preview{background:#F5EEE8;border-radius:var(--r);padding:22px;max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:20px}
 .preview .bar2{display:flex;gap:6px;margin-bottom:12px;align-items:center;color:var(--muted);font-size:12px}
-.preview .bar2 i{width:10px;height:10px;border-radius:50%;background:#E3DDF3;display:inline-block}
+.preview .bar2 i{width:10px;height:10px;border-radius:50%;background:#EBDCD0;display:inline-block}
 .hint{font-size:12.5px;color:var(--muted);background:var(--butter);border-radius:12px;padding:10px 12px;line-height:1.55}
 .hint b{color:var(--butter-d)}
 .sep{height:1px;background:var(--line);margin:16px 0}
@@ -166,7 +167,7 @@ code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#F1EEFB;col
 <body>
 <div class="app">
   <aside class="side">
-    <div class="brand"><div class="logo">✦</div><div><b id="brandName">סטודיו Claude Code</b><small>ניהול סשנים ודיוורים</small></div></div>
+    <div class="brand"><div class="logo"><img src="logo.png" alt="ספיד אוטומציות"></div><div><b id="brandName">ספיד אוטומציות</b><small>ניהול סשנים ודיוורים</small></div></div>
     <nav class="nav" id="nav"></nav>
     <div class="foot">💾 הנתונים נשמרים בדפדפן הזה בלבד. מומלץ לגבות מדי פעם במסך ההגדרות.</div>
   </aside>
@@ -176,46 +177,51 @@ code,.code{font-family:Consolas,'Cascadia Code',monospace;background:#F1EEFB;col
 <script>
 /* ============ data ============ */
 const KEY = 'cc-studio-v1';
-const PASTELS = [['#E4DBFD','#5B45B8'],['#D3F2E4','#1D6B4B'],['#FFE3D4','#9A4A26'],['#FCDCE8','#9E3366'],['#D8ECFC','#235B8A'],['#FFF3CC','#7D5E0A']];
+const PASTELS = [['#FFE6D5','#C2520A'],['#D3F2E4','#1D6B4B'],['#FFE3D4','#9A4A26'],['#FDE1DA','#9E3366'],['#D8ECFC','#235B8A'],['#FFF3CC','#7D5E0A']];
 
 function defaultModules(){
   return [
-    {id:'m1',num:1,title:'היכרות והתקנה',goal:'להבין מה זה Claude Code ולהריץ אותו בפעם הראשונה',
+    {id:'m0',num:1,title:'הקמה, חיבור לגיט ואתר תדמית ראשון',goal:'להתקין הכל, להתחבר ולבנות אתר ראשון כבר בסשן הראשון',
+      points:['התקנו את Claude במחשב','נרשמנו ל-Claude Code (מנוי Pro ומעלה)','התחברנו ל-Git ול-GitHub','ראינו דוגמה לאתר דמו','יצרנו אתר תדמית ראשוני'],
+      commands:['claude','git status','git push'],
+      tips:['תבנית לבקשה טובה: "אני רוצה [מה לשנות] באתר. המטרה: [למה]. סגנון: [צבעים / תחושה]. לפני שאתה מתחיל, תציג לי תוכנית קצרה. אל תעלה לגיט עד שאאשר."','כשהכל נראה טוב, פשוט לכתוב: "תעלה את השינויים לגיט"'],
+      homework:'להשלים באתר טקסטים, תמונות ולוגו, לבדוק איך הוא נראה בטלפון, לבקש "תעלה את השינויים לגיט", ולחבר את הריפו ל-Vercel דרך vercel.com/new.'},
+    {id:'m1',num:2,title:'היכרות והתקנה',goal:'להבין מה זה Claude Code ולהריץ אותו בפעם הראשונה',
       points:['מה זה Claude Code ובמה הוא שונה מצ׳אט רגיל','התקנה על המחשב והתחברות לחשבון','היכרות עם הטרמינל ועם אפליקציית הדסקטופ','הבקשה הראשונה: לתת ל-Claude לבנות משהו קטן'],
       commands:['claude','/help','/login'],
       tips:['אפשר לכתוב ל-Claude בעברית רגילה, בדיוק כמו לאדם','לפתוח את Claude תמיד מתוך תיקיית הפרויקט'],
       homework:'להתקין את Claude Code, לפתוח תיקייה חדשה ולבקש ממנו לבנות דף HTML פשוט עם הודעת "שלום".'},
-    {id:'m2',num:2,title:'עבודה עם קבצים ושיחה נכונה',goal:'לנהל שיחה יעילה ולתת ל-Claude לקרוא ולערוך קבצים',
+    {id:'m2',num:3,title:'עבודה עם קבצים ושיחה נכונה',goal:'לנהל שיחה יעילה ולתת ל-Claude לקרוא ולערוך קבצים',
       points:['איך מנסחים בקשה טובה: הקשר, מטרה ודוגמה','הפניה לקבצים עם @','אישור עריכות וקריאת השינויים','עצירה באמצע עם Esc ותיקון כיוון'],
       commands:['@שם-קובץ','/clear','Esc'],
       tips:['בקשה אחת ברורה עדיפה על חמש בקשות מעורבבות','אחרי משימה גדולה כדאי לפתוח שיחה חדשה עם /clear'],
       homework:'לבקש מ-Claude לשפר את הדף מהשיעור הקודם: להוסיף עיצוב, תמונה וכפתור.'},
-    {id:'m3',num:3,title:'הרשאות ומצבי עבודה',goal:'לשלוט במה ש-Claude רשאי לעשות לבד',
+    {id:'m3',num:4,title:'הרשאות ומצבי עבודה',goal:'לשלוט במה ש-Claude רשאי לעשות לבד',
       points:['מה Claude שואל לפני שהוא פועל ולמה','מעבר בין מצבי עבודה עם Shift+Tab','Plan mode: לתכנן לפני שכותבים קוד','הגדרת הרשאות קבועות לפקודות בטוחות'],
       commands:['Shift+Tab','/permissions'],
       tips:['במשימה גדולה מתחילים ב-Plan mode ומאשרים תוכנית','לא לאשר פקודות שלא מבינים, תמיד אפשר לשאול "מה זה עושה?"'],
       homework:'לתכנן ב-Plan mode פרויקט קטן (למשל רשימת משימות) ולאשר את התוכנית לפני הביצוע.'},
-    {id:'m4',num:4,title:'CLAUDE.md וזיכרון',goal:'ללמד את Claude על הפרויקט כדי שלא נחזור על עצמנו',
+    {id:'m4',num:5,title:'CLAUDE.md וזיכרון',goal:'ללמד את Claude על הפרויקט כדי שלא נחזור על עצמנו',
       points:['מה זה קובץ CLAUDE.md ולמה הוא חשוב','יצירה אוטומטית עם /init','מה כדאי לכתוב בו: סגנון, כללים, פקודות','זיכרון אישי מול זיכרון של פרויקט'],
       commands:['/init','/memory'],
       tips:['כל פעם שמתקנים את Claude על אותו דבר פעמיים, זה סימן להוסיף כלל ל-CLAUDE.md','לשמור את הקובץ קצר וממוקד'],
       homework:'להריץ /init בפרויקט, לקרוא את הקובץ שנוצר ולהוסיף לו 3 כללים משלך.'},
-    {id:'m5',num:5,title:'Git ו-GitHub',goal:'לשמור גרסאות ולגבות את העבודה בענן',
+    {id:'m5',num:6,title:'Git ו-GitHub',goal:'לשמור גרסאות ולגבות את העבודה בענן',
       points:['מה זה Git ולמה צריך אותו','commit: נקודת שמירה עם הסבר','חיבור לריפו ב-GitHub ודחיפה (push)','לבקש מ-Claude לעשות commit בשבילך'],
       commands:['git status','git add .','git commit -m "..."','git push'],
       tips:['commit קטן ותכוף עדיף על אחד ענק','אפשר פשוט לכתוב ל-Claude: "תעשה commit לשינויים"'],
       homework:'ליצור ריפו ב-GitHub, לחבר אליו את הפרויקט ולדחוף את הגרסה הראשונה.'},
-    {id:'m6',num:6,title:'העלאה לאוויר עם Vercel',goal:'להפוך את הפרויקט לאתר חי עם כתובת',
+    {id:'m6',num:7,title:'העלאה לאוויר עם Vercel',goal:'להפוך את הפרויקט לאתר חי עם כתובת',
       points:['חיבור Vercel לחשבון GitHub','ייבוא הריפו ופריסה ראשונה','עדכון אוטומטי בכל push','חיבור דומיין משלך'],
       commands:['git push'],
       tips:['התוכנית החינמית של Vercel מספיקה לפרויקטים אישיים','כל push לענף main מעדכן את האתר תוך דקה'],
       homework:'להעלות את הפרויקט ל-Vercel ולשלוח לי את הקישור לאתר החי.'},
-    {id:'m7',num:7,title:'MCP, Skills ופקודות',goal:'לחבר את Claude לכלים נוספים ולהרחיב את היכולות שלו',
+    {id:'m7',num:8,title:'MCP, Skills ופקודות',goal:'לחבר את Claude לכלים נוספים ולהרחיב את היכולות שלו',
       points:['מה זה MCP ואיך מחברים שרת','Skills: הוראות מוכנות למשימות חוזרות','פקודות סלאש מותאמות אישית','בחירת מודל לפי המשימה'],
       commands:['/mcp','claude mcp add','/model'],
       tips:['להתחיל עם חיבור אחד שימושי ולא עשרה בבת אחת','Skill טוב חוסך כתיבת אותן הוראות בכל פעם מחדש'],
       homework:'לחבר שרת MCP אחד (למשל לדפדפן או ל-GitHub) ולהשתמש בו במשימה אמיתית.'},
-    {id:'m8',num:8,title:'עבודה מתקדמת וטיפים',goal:'לעבוד מהר יותר ולנהל פרויקטים גדולים',
+    {id:'m8',num:9,title:'עבודה מתקדמת וטיפים',goal:'לעבוד מהר יותר ולנהל פרויקטים גדולים',
       points:['המשך שיחה קודמת וחזרה אחורה','דחיסת שיחה ארוכה עם /compact','חלוקת משימה גדולה לשלבים','בדיקה עצמית: לבקש מ-Claude לבדוק את העבודה שלו'],
       commands:['claude -c','/resume','/compact','Esc Esc'],
       tips:['לבקש תמיד מ-Claude להריץ ולבדוק את מה שבנה','שיחה ממוקדת אחת לכל משימה'],
@@ -223,7 +229,7 @@ function defaultModules(){
   ];
 }
 function defaults(){
-  return {settings:{instructor:'',business:'סטודיו Claude Code',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:''},
+  return {settings:{instructor:'',business:'ספיד אוטומציות',email:'',phone:'',price:350,payment:'',signature:'מחכה לראות מה תבנו! ✨',site:'',guide:''},
     students:[],sessions:[],modules:defaultModules(),mails:[]};
 }
 function load(){
@@ -294,7 +300,7 @@ const NAV = [
 function renderNav(route){
   const pend = pendingSummaries().reduce((a,x)=>a+x.miss.length,0);
   $('#nav').innerHTML = NAV.map(([k,l,ic,bg])=>`<a href="#${k}" class="${route===k||(route==='student'&&k==='students')?'on':''}"><span class="ic" style="background:${bg}">${ic}</span>${l}${k==='mail'&&pend?`<span class="count">${pend}</span>`:''}</a>`).join('');
-  $('#brandName').textContent = db.settings.business || 'סטודיו Claude Code';
+  $('#brandName').textContent = db.settings.business || 'ספיד אוטומציות';
 }
 function route(){
   const [r,arg] = (location.hash.slice(1)||'dashboard').split('/');
@@ -505,12 +511,16 @@ function vSettings(){
     <div class="field"><label>המייל שלך</label><input class="in" id="s_email" value="${esc(S.email)}" dir="ltr" placeholder="you@gmail.com"></div>
     <div class="field"><label>טלפון</label><input class="in" id="s_phone" value="${esc(S.phone)}" dir="ltr"></div>
     <div class="field"><label>מחיר ברירת מחדל לסשן (₪)</label><input class="in" id="s_price" type="number" value="${esc(S.price)}"></div>
-    <div class="field"><label>אתר / קישור</label><input class="in" id="s_site" value="${esc(S.site)}" dir="ltr" placeholder="https://"></div></div>
+    <div class="field"><label>אתר / קישור</label><input class="in" id="s_site" value="${esc(S.site)}" dir="ltr" placeholder="https://"></div>
+    <div class="field" style="grid-column:1/-1"><label>קישור למדריך המלא (יופיע בכל מייל סיכום)</label><input class="in" id="s_guide" value="${esc(S.guide)}" dir="ltr" placeholder="https://"></div></div>
     <div class="field"><label>פרטי תשלום (יופיעו בסיכום החשבון)</label><textarea class="in" id="s_payment" placeholder="למשל: ביט / פייבוקס למספר 050-0000000, או העברה בנקאית">${esc(S.payment)}</textarea></div>
     <div class="field"><label>משפט סיום לחתימה</label><input class="in" id="s_signature" value="${esc(S.signature)}"></div>
     <button class="btn pri" data-act="saveSettings">שמירה</button>
   </div>
   <div class="grid" style="align-content:start">
+    <div class="card"><h3>🚀 שליחה דרך Resend</h3><p class="muted small" style="margin-top:0">הסיסמה שהגדרת ב-Vercel במשתנה ADMIN_PASSWORD. היא נשמרת רק בדפדפן הזה ולא נכנסת לקובץ הגיבוי.</p>
+      <div class="field"><label>סיסמת שליחה</label><input class="in" type="password" id="s_pass" dir="ltr" value="${esc(getPass())}" autocomplete="off"></div>
+      <div class="row"><button class="btn pri" data-act="savePass">שמירה ובדיקת חיבור</button><span class="small muted" id="passStatus"></span></div></div>
     <div class="card"><h3>💾 גיבוי ושחזור</h3><p class="muted small" style="margin-top:0">הנתונים נשמרים רק בדפדפן הזה. כדי לעבור מחשב או לשמור עותק, יש להוריד קובץ גיבוי.</p>
       <div class="row"><button class="btn" data-act="exportData">⬇ הורדת גיבוי</button><label class="btn">⬆ שחזור מגיבוי<input type="file" accept=".json" hidden onchange="importData(this.files[0])"></label></div></div>
     <div class="card"><h3>🧪 נתוני דוגמה</h3><div class="row"><button class="btn" data-act="demo">טעינת נתוני דוגמה</button><button class="btn danger" data-act="wipe">מחיקת כל הנתונים</button></div></div>
@@ -645,11 +655,12 @@ function vMail(){
       <div class="field"><label>נושא המייל</label><input class="in" id="m_subject" value="${esc(mail.subject)}" oninput="mail.subject=this.value;mail.subjectEdited=true"></div>
       <div class="field"><label>מילה אישית (לא חובה)</label><textarea class="in" id="m_note" placeholder="היה כיף לראות את ההתקדמות שלך היום..." oninput="mail.note=this.value;mailPreview()">${esc(mail.note)}</textarea></div>
       <div class="list" style="gap:8px">
-        <button class="btn pri" style="justify-content:center" onclick="sendGmail()">✉ העתקה ופתיחה ב-Gmail</button>
+        <button class="btn pri" style="justify-content:center;padding:12px" id="resendBtn" onclick="sendResend()">🚀 שליחה עכשיו</button>
+        <button class="btn" style="justify-content:center" onclick="sendGmail()">✉ העתקה ופתיחה ב-Gmail</button>
         <div class="row" style="gap:8px"><button class="btn" style="flex:1;justify-content:center" onclick="copyMail()">⧉ העתקת המייל המעוצב</button><button class="btn" style="flex:1;justify-content:center" onclick="sendMailto()">תוכנת מייל אחרת</button></div>
         <button class="btn mint" style="justify-content:center" onclick="markSent()">✓ סימון כנשלח</button>
       </div>
-      <div class="hint" style="margin-top:14px"><b>איך זה עובד:</b> לוחצים על "העתקה ופתיחה ב-Gmail". המייל המעוצב מועתק, ו-Gmail נפתח עם הנמענים והנושא. בגוף המייל לוחצים <b>Ctrl+V</b> ושולחים. המייל מסומן כנשלח אוטומטית.</div>
+      <div class="hint" style="margin-top:14px"><b>שליחה עכשיו:</b> המייל יוצא ישר דרך Resend מהדומיין שלך. כל נמען מקבל מייל אישי עם השם שלו, ותשובות מגיעות למייל שבהגדרות.<br><b>Gmail:</b> המייל המעוצב מועתק ו-Gmail נפתח. בגוף המייל לוחצים <b>Ctrl+V</b> ושולחים.</div>
     </div>
     <div class="card"><h3>🕊 נשלחו לאחרונה</h3>${log.length?`<div class="list">${log.map(m=>`<div class="item" style="padding:9px 12px"><div class="grow"><div class="small"><b>${esc(m.subject)}</b></div><div class="s">${mailTypeBadge(m.type)} ${m.studentIds.map(id=>esc(student(id)?.name||'')).join(', ')} · ${fdate(m.date.slice(0,10))}</div></div><button class="btn sm ghost" title="ביטול הסימון" onclick="unlogMail('${m.id}')">✕</button></div>`).join('')}</div>`:'<div class="muted small">עוד לא נשלחו דיוורים</div>'}</div>
   </div>
@@ -668,25 +679,26 @@ function mailPreview(){
 /* email building blocks: tables + inline styles so it survives pasting into Gmail */
 const E = {
   font:"font-family:Arial,'Segoe UI',Helvetica,sans-serif;",
-  wrap(inner){ return `<div dir="rtl" style="background:#F6F3FD;padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #ECE6FA;direction:rtl;text-align:right"><tr><td style="padding:0">${inner}</td></tr></table></div>`; },
-  hero(kicker,title,sub,bg='#EDE6FE',fg='#4B3A9E'){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};padding:32px 32px 28px;text-align:right">
+  wrap(inner){ return `<div dir="rtl" style="background:#FBF5F0;padding:24px 10px;${E.font}"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #F1E5DB;direction:rtl;text-align:right"><tr><td style="padding:18px 32px 14px;border-top:5px solid #F26A12;text-align:right"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:middle"><img src="${E.logo()}" alt="" width="40" height="37" style="display:block;width:40px;height:auto;border:0"></td><td style="vertical-align:middle;padding-right:10px;font-size:16px;font-weight:bold;color:#1E1B1A">${esc(db.settings.business||'')}</td></tr></table></td></tr><tr><td style="padding:0">${inner}</td></tr></table></div>`; },
+  logo(){ return new URL('logo.png', location.href).href; },
+  hero(kicker,title,sub,bg='#FFE8D6',fg='#A2440A'){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};padding:32px 32px 28px;text-align:right">
      <div style="font-size:13px;color:${fg};opacity:.8;font-weight:bold;letter-spacing:.3px">${kicker}</div>
-     <div style="font-size:26px;line-height:1.3;color:#2D2A45;font-weight:bold;margin-top:6px">${title}</div>
-     ${sub?`<div style="font-size:14px;color:#5E5A7A;margin-top:8px">${sub}</div>`:''}</td></tr></table>`; },
-  p(t){ return `<div style="padding:0 32px;font-size:15px;line-height:1.75;color:#3A3656;margin:22px 0 0">${t}</div>`; },
+     <div style="font-size:26px;line-height:1.3;color:#1E1B1A;font-weight:bold;margin-top:6px">${title}</div>
+     ${sub?`<div style="font-size:14px;color:#6B605A;margin-top:8px">${sub}</div>`:''}</td></tr></table>`; },
+  p(t){ return `<div style="padding:0 32px;font-size:15px;line-height:1.75;color:#3A322D;margin:22px 0 0">${t}</div>`; },
   box(icon,title,body,bg,border){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:${bg};border-right:4px solid ${border};border-radius:14px;padding:18px 20px;text-align:right">
-     <div style="font-size:15px;font-weight:bold;color:#2D2A45;margin-bottom:8px">${icon}&nbsp; ${title}</div><div style="font-size:14.5px;line-height:1.75;color:#3A3656">${body}</div></td></tr></table></td></tr></table>`; },
+     <div style="font-size:15px;font-weight:bold;color:#1E1B1A;margin-bottom:8px">${icon}&nbsp; ${title}</div><div style="font-size:14.5px;line-height:1.75;color:#3A322D">${body}</div></td></tr></table></td></tr></table>`; },
   ul(items){ return items.map(i=>`<div style="padding:3px 0">•&nbsp; ${esc(i)}</div>`).join(''); },
   codes(items){ return items.map(c=>`<span style="display:inline-block;direction:ltr;font-family:Consolas,'Courier New',monospace;background:#ffffff;border:1px solid #CFE2F5;color:#235B8A;border-radius:8px;padding:3px 10px;margin:3px 0 3px 6px;font-size:13.5px">${esc(c)}</span>`).join(''); },
-  sign(){ const S=db.settings; return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px"><tr><td style="padding:22px 32px 28px;border-top:1px solid #F0ECF9;text-align:right">
-     ${S.signature?`<div style="font-size:15px;color:#3A3656;margin-bottom:10px">${esc(S.signature)}</div>`:''}
-     <div style="font-size:15px;font-weight:bold;color:#2D2A45">${esc(S.instructor||'')}</div>
-     <div style="font-size:13px;color:#7C7896">${esc(S.business||'')}</div>
-     <div style="font-size:13px;color:#7C7896;margin-top:4px;direction:rtl">${[S.phone,S.email,S.site].filter(Boolean).map(esc).join(' &nbsp;·&nbsp; ')}</div></td></tr></table>`; },
+  sign(){ const S=db.settings; return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px"><tr><td style="padding:22px 32px 28px;border-top:1px solid #F3EAE2;text-align:right">
+     ${S.signature?`<div style="font-size:15px;color:#3A322D;margin-bottom:10px">${esc(S.signature)}</div>`:''}
+     <div style="font-size:15px;font-weight:bold;color:#1E1B1A">${esc(S.instructor||'')}</div>
+     <div style="font-size:13px;color:#857C75">${esc(S.business||'')}</div>
+     <div style="font-size:13px;color:#857C75;margin-top:4px;direction:rtl">${[S.phone,S.email,S.site].filter(Boolean).map(esc).join(' &nbsp;·&nbsp; ')}</div></td></tr></table>`; },
 };
 function greet(rec){ return rec.length===1 ? `היי ${esc(firstName(rec[0].name))},` : rec.length ? 'היי לכולם,' : 'היי,'; }
-function buildMail(){
-  const rec = mailRecipients(), S = db.settings;
+function buildMail(recOverride){
+  const rec = recOverride || mailRecipients(), S = db.settings;
   if(mail.type==='summary'){
     const s = sessionById(mail.sessionId);
     if(!s) return {subject:'',html:'<div class="empty">בחרי סשן כדי לראות תצוגה מקדימה</div>'};
@@ -698,12 +710,13 @@ function buildMail(){
     const subject = `סיכום הסשן: ${sessTitle(s)} ✨`;
     let html = E.hero(`סיכום סשן${m.num?' '+m.num:''} · ${fdate(s.date)}`, esc(sessTitle(s)), m.goal?esc(m.goal):'')
       + E.p(`${greet(rec)}<br>תודה על הסשן! ריכזתי כאן את כל מה שעשינו, כדי שיהיה קל לחזור לזה ולהמשיך לתרגל.`)
-      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
-      + (high.length?E.box('✦','מה עשינו היום',E.ul(high),'#F3EFFE','#B9A6F5'):'')
+      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
+      + (high.length?E.box('✦','מה עשינו היום',E.ul(high),'#FFF1E6','#FFB27A'):'')
       + (m.commands?.length?E.box('⌨','פקודות שכדאי לזכור',E.codes(m.commands),'#EDF6FE','#9CCBF2'):'')
       + (m.tips?.length?E.box('💡','טיפים',E.ul(m.tips),'#EAF8F1','#94DDBA'):'')
       + (hw?E.box('🎯','משימה לתרגול',esc(hw),'#FFF2EA','#FFC3A3'):'')
       + ((nextSess||nextMod)?E.box('📅','מה בסשן הבא', nextSess?`<b>${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}</b><br>${esc(sessTitle(nextSess))}`:`נמשיך ל<b>${esc(nextMod.title)}</b>. נתאם מועד בקרוב.`,'#FFF8DE','#F2D46B'):'')
+      + (/^https?:\/\//.test(S.guide||'')?E.box('📘','המדריך המלא',`כל השלבים עם צילומי מסך, במקום אחד:<br><a href="${esc(S.guide)}" style="display:inline-block;margin-top:10px;background:#F26A12;color:#ffffff;text-decoration:none;font-weight:bold;border-radius:10px;padding:10px 18px">לפתיחת המדריך ←</a>`,'#FFF4EC','#F26A12'):'')
       + E.p('יש שאלות? אפשר פשוט לענות למייל הזה.')
       + E.sign();
     return {subject, html:E.wrap(html)};
@@ -713,14 +726,14 @@ function buildMail(){
     if(!st) return {subject:'',html:'<div class="empty">בחרי משתתף כדי לראות את סיכום החשבון</div>'};
     const ss = db.sessions.filter(s=>s.status==='done'&&s.studentIds.includes(st.id)).sort((a,b)=>a.date.localeCompare(b.date));
     const charged = ss.reduce((a,s)=>a+(+s.price||0),0), paid = ss.filter(s=>s.paid?.[st.id]).reduce((a,s)=>a+(+s.price||0),0), bal=charged-paid;
-    const rows = ss.map(s=>`<tr><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:14px;color:#3A3656">${fdate(s.date)}</td><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:14px;color:#2D2A45">${esc(sessTitle(s))}</td><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:14px;color:#2D2A45;white-space:nowrap">${money(s.price)}</td><td style="padding:10px 12px;border-bottom:1px solid #F0ECF9;font-size:13px;white-space:nowrap">${s.paid?.[st.id]?'<span style="background:#D3F2E4;color:#1D6B4B;border-radius:99px;padding:2px 10px">שולם</span>':'<span style="background:#FFE3D4;color:#9A4A26;border-radius:99px;padding:2px 10px">לתשלום</span>'}</td></tr>`).join('');
-    const tot = (l,v,c='#2D2A45',b=false)=>`<tr><td style="padding:6px 0;font-size:14px;color:#5E5A7A">${l}</td><td style="padding:6px 0;font-size:${b?'20':'15'}px;color:${c};font-weight:bold;text-align:left">${v}</td></tr>`;
+    const rows = ss.map(s=>`<tr><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:14px;color:#3A322D">${fdate(s.date)}</td><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:14px;color:#1E1B1A">${esc(sessTitle(s))}</td><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:14px;color:#1E1B1A;white-space:nowrap">${money(s.price)}</td><td style="padding:10px 12px;border-bottom:1px solid #F3EAE2;font-size:13px;white-space:nowrap">${s.paid?.[st.id]?'<span style="background:#D3F2E4;color:#1D6B4B;border-radius:99px;padding:2px 10px">שולם</span>':'<span style="background:#FFE3D4;color:#9A4A26;border-radius:99px;padding:2px 10px">לתשלום</span>'}</td></tr>`).join('');
+    const tot = (l,v,c='#1E1B1A',b=false)=>`<tr><td style="padding:6px 0;font-size:14px;color:#6B605A">${l}</td><td style="padding:6px 0;font-size:${b?'20':'15'}px;color:${c};font-weight:bold;text-align:left">${v}</td></tr>`;
     const subject = bal>0 ? `סיכום חשבון: ${money(bal)} לתשלום` : 'סיכום חשבון: הכל שולם, תודה! 💚';
     let html = E.hero('סיכום חשבון', esc(st.name), `נכון ל${fdateLong(todayISO())}`,'#E3F6EC','#1D6B4B')
       + E.p(`${greet([st])}<br>${bal>0?'מצרפת סיכום של הסשנים שלנו ושל מה שנשאר לתשלום.':'מצרפת סיכום של הסשנים שלנו. הכל מסודר ושולם, תודה רבה!'}`)
-      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
-      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #ECE6FA;border-radius:14px;overflow:hidden;border-collapse:separate"><tr style="background:#F6F3FD"><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">תאריך</th><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">נושא</th><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">סכום</th><th style="padding:10px 12px;font-size:12px;color:#7C7896;text-align:right;font-weight:normal">סטטוס</th></tr>${rows||'<tr><td colspan="4" style="padding:14px;color:#7C7896">אין סשנים</td></tr>'}</table></td></tr></table>`
-      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FBFAFF;border-radius:14px;padding:12px 18px"><tr><td style="padding:10px 18px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${tot('סה״כ סשנים',ss.length)}${tot('סה״כ חויב',money(charged))}${tot('שולם',money(paid),'#1D6B4B')}${tot('יתרה לתשלום',money(bal),bal>0?'#C7653A':'#1D6B4B',true)}</table></td></tr></table></td></tr></table>`
+      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
+      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F1E5DB;border-radius:14px;overflow:hidden;border-collapse:separate"><tr style="background:#FBF5F0"><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">תאריך</th><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">נושא</th><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">סכום</th><th style="padding:10px 12px;font-size:12px;color:#857C75;text-align:right;font-weight:normal">סטטוס</th></tr>${rows||'<tr><td colspan="4" style="padding:14px;color:#857C75">אין סשנים</td></tr>'}</table></td></tr></table>`
+      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px"><tr><td style="padding:0 32px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFBF8;border-radius:14px;padding:12px 18px"><tr><td style="padding:10px 18px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${tot('סה״כ סשנים',ss.length)}${tot('סה״כ חויב',money(charged))}${tot('שולם',money(paid),'#1D6B4B')}${tot('יתרה לתשלום',money(bal),bal>0?'#C7653A':'#1D6B4B',true)}</table></td></tr></table></td></tr></table>`
       + (bal>0&&S.payment?E.box('💳','פרטי תשלום',esc(S.payment).replace(/\n/g,'<br>'),'#EAF8F1','#94DDBA'):'')
       + E.p('תודה על השיתוף פעולה! בכל שאלה אפשר לענות למייל הזה.')
       + E.sign();
@@ -733,8 +746,8 @@ function buildMail(){
     const subject = `תזכורת: נפגשים ב${fdateLong(s.date)}${s.time?' ב-'+s.time:''} 📅`;
     let html = E.hero('תזכורת לסשן', esc(sessTitle(s)), `${fdateLong(s.date)}${s.time?' · '+esc(s.time):''}${s.duration?' · '+s.duration+' דקות':''}`,'#E3F0FD','#235B8A')
       + E.p(`${greet(rec)}<br>רק מזכירה שאנחנו נפגשים בקרוב! הנה מה שמחכה לנו:`)
-      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
-      + (m?.points?.length?E.box('✦','על מה נעבוד',E.ul(m.points),'#F3EFFE','#B9A6F5'):'')
+      + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
+      + (m?.points?.length?E.box('✦','על מה נעבוד',E.ul(m.points),'#FFF1E6','#FFB27A'):'')
       + E.box('🎒','להכנה לפני הסשן',E.ul(['מחשב טעון עם חיבור לאינטרנט','Claude Code מותקן ופתוח','שאלות או דברים שנתקעתם בהם מאז הפעם הקודמת']),'#FFF8DE','#F2D46B')
       + E.p('אם צריך לשנות מועד, אפשר פשוט לענות למייל הזה.')
       + E.sign();
@@ -742,10 +755,10 @@ function buildMail(){
   }
   // welcome
   const subject = `ברוכים הבאים ל${S.business||'סדנת Claude Code'}! 🌷`;
-  let html = E.hero('ברוכים הבאים', 'מתחילים ללמוד Claude Code ✨', 'שמחה מאוד שהצטרפת. הנה כל מה שצריך לדעת לפני שמתחילים.','#FDE6EF','#9E3366')
+  let html = E.hero('ברוכים הבאים', 'מתחילים ללמוד Claude Code ✨', 'שמחה מאוד שהצטרפת. הנה כל מה שצריך לדעת לפני שמתחילים.','#FDE6DF','#B0412C')
     + E.p(`${greet(rec)}<br>Claude Code הוא עוזר שכותב קוד יחד איתך. מתארים לו במילים מה רוצים לבנות, והוא בונה, מסביר ומתקן. במפגשים נלמד צעד אחר צעד, בלי צורך בניסיון קודם בתכנות.`)
-    + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FEEEF4','#F2A9C6'):'')
-    + E.box('🗺','מה נלמד בתוכנית',sortedModules().map(m=>`<div style="padding:3px 0"><b style="color:#6E55D3">${m.num}.</b>&nbsp; ${esc(m.title)}</div>`).join(''),'#F3EFFE','#B9A6F5')
+    + (mail.note?E.box('💬','מילה אישית',esc(mail.note).replace(/\n/g,'<br>'),'#FDEEEA','#F2B1A3'):'')
+    + E.box('🗺','מה נלמד בתוכנית',sortedModules().map(m=>`<div style="padding:3px 0"><b style="color:#E8620C">${m.num}.</b>&nbsp; ${esc(m.title)}</div>`).join(''),'#FFF1E6','#FFB27A')
     + E.box('🎒','לפני הסשן הראשון',E.ul(['לפתוח חשבון ב-claude.ai (מנוי Pro ומעלה כולל את Claude Code)','להוריד את אפליקציית Claude לדסקטופ','לחשוב על רעיון קטן שהייתם רוצים לבנות']),'#FFF8DE','#F2D46B')
     + E.p('מחכה לראות אותך! בכל שאלה אפשר לענות למייל הזה.')
     + E.sign();
@@ -782,6 +795,31 @@ function sendMailto(){
   location.href = `mailto:${encodeURIComponent(a.to)}?${a.bcc?'bcc='+encodeURIComponent(a.bcc)+'&':''}subject=${encodeURIComponent(r.subject)}&body=${encodeURIComponent(body)}`;
   logMail(r);
 }
+const PASS_KEY='cc-studio-pass';
+function getPass(){ try{ return localStorage.getItem(PASS_KEY)||''; }catch(e){ return ''; } }
+async function api(body){
+  const r = await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json','x-admin-password':getPass()},body:JSON.stringify(body)});
+  const d = await r.json().catch(()=>({error:r.status===404?'השליחה עובדת רק באתר שעלה ל-Vercel':'שגיאה '+r.status}));
+  if(!r.ok) throw new Error(d.error||('שגיאה '+r.status));
+  return d;
+}
+async function testPass(){
+  const st=$('#passStatus'); if(st) st.textContent='בבדיקה...';
+  try{ const d=await api({test:true}); if(st) st.innerHTML=`<span style="color:var(--mint-d)">✓ מחובר. השולח: ${esc(d.from)}</span>`; }
+  catch(e){ if(st) st.innerHTML=`<span style="color:#C2415B">${esc(e.message)}</span>`; }
+}
+function htmlText(html){ const d=document.createElement('div'); d.innerHTML=html; d.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(d); const t=d.innerText.replace(/\n{3,}/g,'\n\n'); d.remove(); return t; }
+async function sendResend(){
+  const r = mailCheck(); if(!r) return;
+  if(!getPass()){ toast('קודם צריך להגדיר סיסמת שליחה בהגדרות'); location.hash='settings'; return; }
+  const withMail = r.rec.filter(s=>s.email);
+  if(!withMail.length) return toast('לנמענים שנבחרו אין כתובת מייל');
+  if(!confirm(`לשלוח ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} עכשיו?\n\n${withMail.map(s=>s.name+' <'+s.email+'>').join('\n')}`)) return;
+  const emails = withMail.map(s=>{ const b=buildMail([s]); const subject = mail.subjectEdited? mail.subject : b.subject; return {to:[s.email],subject,html:b.html,text:htmlText(b.html),replyTo:db.settings.email}; });
+  const btn=$('#resendBtn'); if(btn){ btn.disabled=true; btn.textContent='בשליחה...'; }
+  try{ await api({emails}); logMail({...r,rec:withMail}); toast(`נשלח ✓ ${withMail.length===1?'מייל אחד':withMail.length+' מיילים'} יצאו לדרך 💌`); }
+  catch(e){ toast('השליחה נכשלה: '+e.message); if(btn){ btn.disabled=false; btn.textContent='🚀 שליחה עכשיו'; } }
+}
 function markSent(){ const r=mailCheck(); if(!r) return; logMail(r); toast('סומן כנשלח ✓'); }
 function logMail(r){
   db.mails.push({id:uid(),date:new Date().toISOString(),type:mail.type,sessionId:mail.sessionId||'',studentIds:r.rec.map(s=>s.id),subject:r.subject});
@@ -800,7 +838,8 @@ const ACTIONS = {
   payAll:id=>{ if(!confirm('לסמן את כל הסשנים של המשתתף כשולמו?')) return; db.sessions.forEach(s=>{ if(s.status==='done'&&s.studentIds.includes(id)&&(billMonth==='all'||s.date.startsWith(billMonth))){ s.paid=s.paid||{}; s.paid[id]=true; } }); save(); rerender(); toast('סומן כשולם ✓'); },
   editModule:id=>moduleForm(id?moduleById(id):null),
   resetModules:()=>{ if(!confirm('לשחזר את תוכנית הלימוד המקורית? שינויים שעשית בנושאים יימחקו.')) return; db.modules=defaultModules(); save(); rerender(); },
-  saveSettings:()=>{ ['instructor','business','email','phone','site','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
+  savePass:()=>{ try{ localStorage.setItem(PASS_KEY,val('s_pass')); }catch(e){} testPass(); },
+  saveSettings:()=>{ ['instructor','business','email','phone','site','guide','payment','signature'].forEach(k=>db.settings[k]=val('s_'+k)); db.settings.price=+val('s_price')||0; save(); rerender(); toast('ההגדרות נשמרו ✓'); },
   exportData:()=>{ const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`claude-studio-backup-${todayISO()}.json`; a.click(); },
   demo:()=>{ if((db.students.length||db.sessions.length) && !confirm('זה יחליף את הנתונים הקיימים בנתוני דוגמה. להמשיך?')) return; loadDemo(); },
   wipe:()=>{ if(!confirm('למחוק את כל הנתונים? כדאי להוריד גיבוי קודם.')) return; if(!confirm('בטוח? אי אפשר לבטל את זה.')) return; db=defaults(); save(); location.hash='dashboard'; rerender(); },
