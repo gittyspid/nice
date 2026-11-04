@@ -681,10 +681,21 @@ const E = {
   tip(t){ return `<div style="background:${C.okSoft};border:1px solid #BFE8D2;border-radius:12px;padding:10px 16px;font-size:14.5px;line-height:1.65;color:${C.ink};margin-top:12px"><b>טיפ:</b> ${esc(t)}</div>`; },
   note(t){ return `<div style="background:${C.orangeSoft};border:1px solid ${C.orangeLine};border-radius:12px;padding:12px 16px;font-size:15px;line-height:1.7;color:${C.ink};margin-top:16px">💬 ${esc(t).replace(/\n/g,'<br>')}</div>`; },
   // "next session": the planned date if there is one, and what the next topic in the program covers
-  nextBox(nextSess, m){
+  nextBox(nextSess, m, s, rec){
     const all = defaultModules();
-    const nm = (nextSess && all.find(x=>x.id===nextSess.moduleId)) || (m.num ? all.find(x=>x.num===m.num+1) : null);
-    if(!nextSess && !nm) return '';
+    // whose program progress counts: the chosen clients, or the session's clients when sending to extra addresses only
+    const ids = (rec&&rec.length ? rec.map(r=>r.id) : (s?.studentIds||[]));
+    const doneMods = new Set(db.sessions.filter(x=>x.status==='done' && x.studentIds.some(id=>ids.includes(id))).map(x=>x.moduleId));
+    if(s?.moduleId) doneMods.add(s.moduleId);
+    const nm = (nextSess && all.find(x=>x.id===nextSess.moduleId))
+      || (m.num ? all.find(x=>x.num===m.num+1) : null)
+      || (!nextSess && !m.num ? all.find(x=>!doneMods.has(x.id)) : null);  // free topic: first program topic not done yet
+    if(!nextSess && !nm){
+      // finished the whole program
+      return `<div style="background:${C.okSoft};border:1px solid #BFE8D2;border-radius:14px;padding:14px 18px;margin-top:16px;text-align:right">
+        <div style="font-size:17px;font-weight:700;color:${C.ink}">🎉 סיימת את כל התוכנית!</div>
+        <div style="font-size:14px;line-height:1.6;color:${C.ink2};margin-top:4px">עברנו יחד את כל ${all.length} הסשנים. מכאן ממשיכים לבנות לבד, ואני כאן לכל שאלה או לליווי נוסף.</div></div>`;
+    }
     const when = nextSess ? `${fdateLong(nextSess.date)}${nextSess.time?' בשעה '+esc(nextSess.time):''}` : 'נתאם מועד בקרוב';
     const title = nextSess ? sessTitle(nextSess) : nm.title;
     const items = nm ? (nm.steps||[]).slice(0,4).map(x=>x.t) : [];
@@ -724,7 +735,7 @@ function buildMail(recOverride){
     ${E.lists(m.have||[], next)}
     ${m.prompt?E.h2('להמשך העבודה: מבנה של פרומפט טוב')+E.prompt(m.prompt):''}
     ${m.tip?E.tip(m.tip):(m.tips?.length?E.tip(m.tips[0]):'')}
-    ${E.nextBox(nextSess, m)}
+    ${E.nextBox(nextSess, m, s, rec)}
     ${summaryFiles(s)?E.button(summaryFiles(s).page,'לצפייה בסיכום באתר ←')+`<div style="font-size:13px;color:${C.muted};margin-top:8px">📎 הסיכום מצורף גם כקובץ PDF</div>`:''}
     ${E.sign()}`;
   return {subject, html:E.wrap(html)};
